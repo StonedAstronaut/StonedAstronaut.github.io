@@ -19,3 +19,34 @@ var tipuesearch_stem = {"words": [
      {"word": "javascript", "stem": "script"},
      {"word": "javascript", "stem": "js"}
 ]};
+
+var tipuesearch_pages;
+
+exclude_pages = ['/archives.html', '/tags.html', '/index.html', '/categories.html', '/search.html'];
+
+function showGetResult()
+{
+     var result = new Array();
+     var scriptUrl = 'sitemap.xml';
+     $.ajax({
+        url: scriptUrl,
+        type: 'GET',
+        dataType: 'xml',
+        async: false,
+        success: function(xml) {
+            $(xml).find('url').each(function(){
+                var loc = $(this).find('loc').text();
+                if ($.inArray(loc, exclude_pages) < 0) {
+                    result.push(loc);
+                }
+            });
+        },
+        error: function() {
+            alert('An error occurred while processing XML file.'); 
+        }
+     });
+     return result;
+}
+
+var r = showGetResult();
+tipuesearch_pages = r;

@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Новые команды в Linux для старых решений - Astro blog</title>
+    <title>О сайте - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,21 +11,16 @@
 
     <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
 
-<link rel="canonical" href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">
+<link rel="canonical" href="https://stonedastronaut.github.io/pages/o-saite.html">
 
         <meta name="author" content="Petr Kalmykov" />
-        <meta name="keywords" content="linux" />
-        <meta name="description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..." />
+        <meta name="description" content="Привет. Этот блог сделан на Pelican. Здесь буду размещать всякие материалы о IT. Пример кода: @app.route(&#39;/&#39;) def index(): return render_template(&#39;index.html&#39;, posts=blog.posts)" />
 
-        <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Новые команды в Linux для старых решений"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"/>
-        <meta property="og:description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..."/>
-        <meta property="article:published_time" content="2015-05-20" />
-            <meta property="article:section" content="misc" />
-            <meta property="article:tag" content="linux" />
-            <meta property="article:author" content="Petr Kalmykov" />
+    <meta property="og:site_name" content="Astro blog" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="О сайте"/>
+    <meta property="og:url" content="https://stonedastronaut.github.io/pages/o-saite.html"/>
+    <meta property="og:description" content="Привет. Этот блог сделан на Pelican. Здесь буду размещать всякие материалы о IT. Пример кода: @app.route(&#39;/&#39;) def index(): return render_template(&#39;index.html&#39;, posts=blog.posts)" />
 
 
     <!-- Bootstrap -->
@@ -56,7 +51,7 @@ Astro blog            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                         <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
+                         <li class="active"><a href="https://stonedastronaut.github.io/pages/o-saite.html">
                              О сайте
                           </a></li>
             </ul>
@@ -78,74 +73,20 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"
-                       rel="bookmark"
-                       title="Permalink to Новые команды в Linux для старых решений">
-                        Новые команды в Linux для старых решений
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-05-20T18:17:00+06:00"> Wed 20 May 2015</time>
-    </span>
-
-
-
-<span class="label label-default">Tags</span>
-	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
-<hr />
-<h3 id="netstat-ss">вместо <em>netstat</em> используем <em>ss</em>:</h3>
-<div class="highlight"><pre>ss -lpn
+    <section id="content" class="body">
+        <h1 class="entry-title">О сайте</h1>
+        
+        <div class="entry-content">
+            <h2 id="_1">Привет.</h2>
+<p>Этот блог сделан на <strong>Pelican</strong>.</p>
+<p>Здесь буду размещать всякие материалы о IT.</p>
+<p>Пример кода:</p>
+<div class="highlight"><pre><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+   <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">&#39;index.html&#39;</span><span class="p">,</span> <span class="n">posts</span><span class="o">=</span><span class="n">blog</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>
 </pre></div>
-
-
-<h3 id="ifconfig-ip-addr">вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
-<p>Раньше для вкл/выкл определенного интерфейса использовали</p>
-<div class="highlight"><pre>ifconfig eth0 up
-</pre></div>
-
-
-<p>теперь так:</p>
-<div class="highlight"><pre>ip link <span class="nb">set </span>dev eth0 up
-</pre></div>
-
-
-<p>Для конфигурирования интерфейса:</p>
-<div class="highlight"><pre>ifconfig eth0 10.0.0.2/16
-</pre></div>
-
-
-<p>теперь:</p>
-<div class="highlight"><pre>ip addr dev eth0 add 10.0.0.2/16
-</pre></div>
-
-
-<h3 id="ps-aux-grep-pgrep-af">вместо <em>ps aux | grep ...</em> используем <em>pgrep -af</em></h3>
-<div class="highlight"><pre>ps aux <span class="p">|</span> grep rtorrent
-</pre></div>
-
-
-<p>теперь:</p>
-<div class="highlight"><pre>pgrep -af rtorrent
-</pre></div>
-            </div>
-            <!-- /.entry-content -->
-        </article>
+        </div>
     </section>
-
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
