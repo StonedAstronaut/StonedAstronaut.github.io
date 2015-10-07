@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = 'Petr Kalmykov'
+AUTHOR = 'Stoned Astronaut'
 SITENAME = 'Astro blog'
 SITEURL = ''
 
