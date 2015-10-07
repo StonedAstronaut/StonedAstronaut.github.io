@@ -1,5 +1,6 @@
 title: О сайте
 date: 2015-01-20 15:50:00
+slug: about
 status: published
 
 ## Привет.

@@ -56,6 +56,7 @@ LINKS = (('Pelican', 'http://getpelican.com/'),
 # Social widget
 SOCIAL = (('github','https://github.com/StonedAstronaut'),
           ('google-plus', 'https://plus.google.com/u/0/113483139834962824849/posts'),
+          ('rss','/feeds/all.atom.xml'),
           )
 
 DISPLAY_TAGS_ON_SIDEBAR = True
