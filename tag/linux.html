@@ -106,18 +106,15 @@ Astro blog            </a>
 	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>[TOC]</p>
-<p>Screen navigation
-Word navigation
-Special navigation
-Paragraph navigation
-Search navigation
-Navigation from command line</p>
+                <div class="summary">
 <p>If you don’t have an emacs editor, install emacs editor as we discussed earlier.</p>
 <p>Notation used in this article:</p>
 <p>C-a : Ctrl-a
 M-a : Meta-a ( If you don’t have Meta key, use Esc key )
-C-M-a ...</p>
+C-M-a : Ctrl-Meta-a</p>
+<h3 id="1-emacs-line-navigation">1.  Emacs Line Navigation</h3>
+<p>Following four navigation can be done line by line.</p>
+<p>C-p ...</p>
                     <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/emacs-navigation-options-en.html">more ...</a>
                 </div>
             </article>
@@ -159,7 +156,7 @@ C-M-a ...</p>
 	<a href="https://stonedastronaut.github.io/tag/crypt.html">crypt</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><h2>Создаём разделы физические</h2>
+                <div class="summary"><h2 id="_1">Создаём разделы физические</h2>
 <p>Вот такая структура диска.</p>
 <ul>
 <li>
@@ -169,7 +166,7 @@ C-M-a ...</p>
 <p><code>/dev/sda2 -&gt; LVM</code></p>
 </li>
 </ul>
-<h3>Шифруем раздел LVM</h3>
+<h3 id="lvm">Шифруем раздел LVM</h3>
 <div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
 </pre></div>
 
@@ -179,7 +176,7 @@ C-M-a ...</p>
 </pre></div>
 
 
-<h3>Создаём разделы на LVM</h3>
+<h3 id="lvm_1">Создаём разделы на LVM</h3>
 <p>создаём физический раздел LVM:</p>
 <div class="highlight"><pre>pvcreate /dev/mapper/lvm
 </pre></div>
@@ -231,12 +228,12 @@ C-M-a ...</p>
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary"><p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
 <hr />
-<h3>вместо <em>netstat</em> используем <em>ss</em>:</h3>
+<h3 id="netstat-ss">вместо <em>netstat</em> используем <em>ss</em>:</h3>
 <div class="highlight"><pre>ss -lpn
 </pre></div>
 
 
-<h3>вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
+<h3 id="ifconfig-ip-addr">вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
 <p>Раньше для вкл/выкл определенного интерфейса использовали</p>
 <div class="highlight"><pre>ifconfig eth0 up
 </pre></div>
@@ -309,7 +306,7 @@ C-M-a ...</p>
 <li>badblocks из пакета e2fsprogs</li>
 </ol>
 <p>Все тесты проводить на <strong>НЕ</strong> смонтированном hdd.</p>
-<h3>smartctl:</h3>
+<h3 id="smartctl">smartctl:</h3>
 <div class="highlight"><pre><span class="c"># smartctl -a /dev/sdX</span>
 </pre></div>
 

@@ -15,13 +15,13 @@
 
         <meta name="author" content="Petr Kalmykov" />
         <meta name="keywords" content="emacs,linux" />
-        <meta name="description" content="[TOC] Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a ..." />
+        <meta name="description" content="If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a : Ctrl-Meta-a 1. Emacs Line Navigation Following four navigation can be done line by line. C-p ..." />
 
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Emacs navigation options"/>
         <meta property="og:url" content="https://stonedastronaut.github.io/emacs-navigation-options-en.html"/>
-        <meta property="og:description" content="[TOC] Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a ..."/>
+        <meta property="og:description" content="If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a : Ctrl-Meta-a 1. Emacs Line Navigation Following four navigation can be done line by line. C-p ..."/>
         <meta property="article:published_time" content="2015-08-03" />
             <meta property="article:section" content="misc" />
             <meta property="article:tag" content="emacs" />
@@ -102,80 +102,64 @@ Astro blog            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>[TOC]</p>
-<p>Screen navigation
-Word navigation
-Special navigation
-Paragraph navigation
-Search navigation
-Navigation from command line</p>
+                    <div class="toc">
+                    <div class="toc">
+<ul>
+<li><a href="#1-emacs-line-navigation">1.  Emacs Line Navigation</a></li>
+<li><a href="#2-emacs-screen-navigation">2. Emacs Screen Navigation</a></li>
+<li><a href="#3-emacs-special-navigation">3. Emacs Special Navigation</a></li>
+<li><a href="#4-emacs-word-navigation">4. Emacs Word Navigation</a></li>
+<li><a href="#5-emacs-paragraph-navigation">5. Emacs Paragraph Navigation</a></li>
+<li><a href="#6-emacs-search-navigation">6. Emacs Search Navigation</a></li>
+<li><a href="#7-emacs-navigation-from-command-line">7. Emacs Navigation from Command Line</a></li>
+</ul>
+</div>
+                    </div>
+                
 <p>If you don’t have an emacs editor, install emacs editor as we discussed earlier.</p>
 <p>Notation used in this article:</p>
 <p>C-a : Ctrl-a
 M-a : Meta-a ( If you don’t have Meta key, use Esc key )
 C-M-a : Ctrl-Meta-a</p>
-<h1>1.  Emacs Line Navigation</h1>
-<div class="highlight"><pre>Following four navigation can be done line by line.
-
-C-p : go to previous line
+<h3 id="1-emacs-line-navigation">1.  Emacs Line Navigation</h3>
+<p>Following four navigation can be done line by line.</p>
+<p>C-p : go to previous line
 C-n : go to next line
 C-f : go forward one character
-C-b : go backward one character
-
-Repeat factor
-
-By using the repeat factor in EMACS we can do this operation for N times. For example, when you want to go down by 10 lines, then type C-u 10 C-p
-
-Within a line if you want to navigate to different position, you have following two options.
-
-C-a : go to the starting of the current line.
-C-e : go to the end of the current line.
-
-At thegeekstuff, we love Vim editor. We’ve written lot of articles on Vim editor. If you are new to the Vim editor, refer to our Vim editor navigation fundamentals article.
-</pre></div>
-
-
-<ol>
-<li>
-<p>Emacs Screen Navigation</p>
+C-b : go backward one character</p>
+<p>Repeat factor</p>
+<p>By using the repeat factor in EMACS we can do this operation for N times. For example, when you want to go down by 10 lines, then type C-u 10 C-p</p>
+<p>Within a line if you want to navigate to different position, you have following two options.</p>
+<p>C-a : go to the starting of the current line.
+C-e : go to the end of the current line.</p>
+<p>At thegeekstuff, we love Vim editor. We’ve written lot of articles on Vim editor. If you are new to the Vim editor, refer to our Vim editor navigation fundamentals article.</p>
+<h3 id="2-emacs-screen-navigation">2. Emacs Screen Navigation</h3>
 <p>Following three navigation can be done in relation to text shown in the screen.</p>
 <p>C-v : Jump forward one full screen.
 M-v : Jump backwards one full screen. ( If you dont have Meta key, use ESC key )
 C-l : Make the current line as center line of window.</p>
 <p>You can also use Page Up, Page Down for screen navigation.</p>
-</li>
-<li>
-<p>Emacs Special Navigation</p>
+<h3 id="3-emacs-special-navigation">3. Emacs Special Navigation</h3>
 <p>Following are couple of special navigation that are used to go to the start or end of buffer.</p>
 <p>M-&lt; : Go to the start of file
 M-&gt; : Go to the end of file</p>
-</li>
-<li>
-<p>Emacs Word Navigation</p>
+<h3 id="4-emacs-word-navigation">4. Emacs Word Navigation</h3>
 <p>Following are two word navigation keys.</p>
 <p>M-f : navigate a word forward.
 M-b : navigate a word backward.</p>
-</li>
-<li>
-<p>Emacs Paragraph Navigation</p>
+<h3 id="5-emacs-paragraph-navigation">5. Emacs Paragraph Navigation</h3>
 <p>M-a : Go to the beginning of the current paragraph. By pressing M-a again and again move to the previous paragraph beginnings.
 M-e : Go to the end of the current paragraph. By pressing M-e again and again move to the next paragraph end, and again.</p>
-</li>
-<li>
-<p>Emacs Search Navigation</p>
+<h3 id="6-emacs-search-navigation">6. Emacs Search Navigation</h3>
 <p>When you want to search by giving the plain text,</p>
 <p>C-s : Type Ctrl+s followed by the word to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
 C-r : Do a reverse search. All other explanation are like Ctrl+s</p>
 <p>When you want to search using regular expression,</p>
 <p>C-M-s : Type Ctrl+s followed by the regex to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
 C-M-r : Do a reverse search. All other explanation are like Ctrl+Meta+s</p>
-</li>
-<li>
-<p>Emacs Navigation from Command Line</p>
+<h3 id="7-emacs-navigation-from-command-line">7. Emacs Navigation from Command Line</h3>
 <p>Emacs +N filename: Go to the Nth line of the file after opening it.</p>
 <p>$ emacs +10 /etc/passwd</p>
-</li>
-</ol>
             </div>
             <!-- /.entry-content -->
         </article>

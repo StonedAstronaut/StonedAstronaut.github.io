@@ -174,7 +174,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h2>Передача аргументов внутрь обертки</h2>
+<h2 id="_1">Передача аргументов внутрь обертки</h2>
 <p>Также можно, а точнее это и нужно, передавать агрументы внутрь ф-ии декоратора, оборачиваемой ф-ии.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">just_func</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">):</span>
@@ -198,7 +198,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h2>Декор методов в классах</h2>
+<h2 id="_2">Декор методов в классах</h2>
 <p>Всё то же самое за исключением, что метод отличается от ф-ии тем, что первым аргументом метода, всегда является ссылка на свой класс.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">class_method</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">some</span><span class="p">):</span>
@@ -224,7 +224,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h2>Передача *args и **kwargs декорируемой ф-ии</h2>
+<h2 id="42args-4242kwargs-">Передача *args и **kwargs декорируемой ф-ии</h2>
 <p>Ничего волшебного:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">just_func</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -243,7 +243,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h2>Передача аргументов декоратору</h2>
+<h2 id="_3">Передача аргументов декоратору</h2>
 <p>Логично возникает вопрос: "А как же передать аргументы в декоратор, если декоратор по определению должен принимать на вход только имя декорируемой ф-ии?".</p>
 <p>Решение есть, но не лёгкое. Задекорируем декоратор (crazy).</p>
 <div class="highlight"><pre><span class="c"># ф-ия создающая декоратор</span>
@@ -348,7 +348,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h2>Подводя итоги</h2>
+<h2 id="_4">Подводя итоги</h2>
 <p>В общем этот длиннопост переработанный изхабра, создавался когда я врубался в подсмотренный код в django, где в 4 строках скрыто целая тьма смысла и материала для изучения. Там создавался класс mixin в котором декорировался некий метод который обезапасивал доступ к сайту. Ацкая смесь без развернутых пояснений на англ. языке. Ну вот собственно с декораторами вроде разобрался.</p>
 <p>Где еще применяется декорирование?</p>
 <p>Декораторы могут быть использованы для расширения возможностей функций из сторонних библиотек (код которых мы не можем изменять), или для упрощения отладки (мы не хотим изменять код, который ещё не устоялся).

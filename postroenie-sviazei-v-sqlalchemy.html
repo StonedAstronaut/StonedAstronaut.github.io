@@ -110,7 +110,7 @@ Astro blog            </a>
 <li>MTM (many-to-many) - многие к многим</li>
 </ul>
 <p>Релизация этих связей:</p>
-<h3>OTM :</h3>
+<h3 id="otm">OTM :</h3>
 <p>Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для того что-бы получить по Ребенку Родителя, необходимо указать в relationship, свойство backref.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
@@ -124,7 +124,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h3>MTO :</h3>
+<h3 id="mto">MTO :</h3>
 <p>Здесь построение отношения похоже на предыдущий, только ForeignKey указывается в Родителе, вместе с relationship()</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
@@ -139,7 +139,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h3>OTO :</h3>
+<h3 id="oto">OTO :</h3>
 <p>Со связью один-к-одному вообще всё просто, это та же связь один-к-многим, только в relationship добавляется еще одно свойство, которое вытягивает из другой таблицы только 1 элемент</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
@@ -166,7 +166,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h3>MTM :</h3>
+<h3 id="mtm">MTM :</h3>
 <p>Данная связь реализуется при помощи вспомагательной ассоциативной таблицы, которую необходимо создать до создания связанных таблиц.</p>
 <div class="highlight"><pre><span class="n">association_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&#39;association&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
     <span class="n">Column</span><span class="p">(</span><span class="s">&#39;left_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;left.id&#39;</span><span class="p">)),</span>

@@ -107,7 +107,7 @@ Astro blog            </a>
 <li>badblocks из пакета e2fsprogs</li>
 </ol>
 <p>Все тесты проводить на <strong>НЕ</strong> смонтированном hdd.</p>
-<h3>smartctl:</h3>
+<h3 id="smartctl">smartctl:</h3>
 <div class="highlight"><pre><span class="c"># smartctl -a /dev/sdX</span>
 </pre></div>
 
@@ -117,13 +117,13 @@ Astro blog            </a>
 <li>5 Reallocated_Sector_Ct - указывает на количество использованных запасных блоков, заложенных "про запас" в случае когда hdd начинает сыпаться;</li>
 <li>9 Power_On_Hours - название говорит само за себя, сколько бедный hdd отмаслал часов;</li>
 </ul>
-<h3>hdparm:</h3>
+<h3 id="hdparm">hdparm:</h3>
 <div class="highlight"><pre><span class="c"># hdparm -t /dev/sdX</span>
 </pre></div>
 
 
 <p>Команда покажет, скорость записи на hdd. Данную команду необходимо выполнить несколько раз, для б/м достоверной картины.</p>
-<h3>badblocks:</h3>
+<h3 id="badblocks">badblocks:</h3>
 <div class="highlight"><pre><span class="c"># badblocks -vs /dev/sdX</span>
 </pre></div>
 

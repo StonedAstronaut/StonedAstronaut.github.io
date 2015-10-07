@@ -105,7 +105,7 @@ Astro blog            </a>
 	<a href="https://stonedastronaut.github.io/tag/crypt.html">crypt</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><h2>Создаём разделы физические</h2>
+                <div class="summary"><h2 id="_1">Создаём разделы физические</h2>
 <p>Вот такая структура диска.</p>
 <ul>
 <li>
@@ -115,7 +115,7 @@ Astro blog            </a>
 <p><code>/dev/sda2 -&gt; LVM</code></p>
 </li>
 </ul>
-<h3>Шифруем раздел LVM</h3>
+<h3 id="lvm">Шифруем раздел LVM</h3>
 <div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
 </pre></div>
 
@@ -125,7 +125,7 @@ Astro blog            </a>
 </pre></div>
 
 
-<h3>Создаём разделы на LVM</h3>
+<h3 id="lvm_1">Создаём разделы на LVM</h3>
 <p>создаём физический раздел LVM:</p>
 <div class="highlight"><pre>pvcreate /dev/mapper/lvm
 </pre></div>
