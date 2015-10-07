@@ -1,130 +1,64 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-	<meta charset="utf-8">
-	<title>Tags — Astro blog</title>
-	<meta name="description" content="The Tags page lists all tags used to classify the posts. Each post has at least one tag helping readers find out easily what they are looking for.">
-	<meta name="author" content="Petr Kalmykov">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-	<!--[if lt IE 9]>
-		<script src="https://stonedastronaut.github.io/theme/html5.js"></script>
-		<![endif]-->
-	<link href="https://stonedastronaut.github.io/theme/css/ipython.css" rel="stylesheet">
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/simplex/bootstrap.min.css" rel="stylesheet">
-	<link href="https://stonedastronaut.github.io/theme/css/local.css" rel="stylesheet">
-	<link href="https://stonedastronaut.github.io/theme/css/pygments.css" rel="stylesheet">
-<style type="text/css" media="screen">
-ul.tagcloud {
-	list-style: none;
-	padding: 0;
-	padding-top: 7em;
-	padding-bottom: 7em;
-	width: 50%;
-	margin-left: 25%;
-}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="https://stonedastronaut.github.io/tags.html" />
 
-ul.tagcloud li {
-	display: inline-block;
-}
+    <title>  Astro blog &mdash; Tags
+</title>
 
-li.tag-1 {
-	font-size: 150%;
-}
 
-li.tag-2 {
-	font-size: 120%;
-}
 
-li.tag-3 {
-	font-size: 100%;
-}
 
-li.tag-4 {
-	font-size: 80%;
-}
-</style>
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
+
 <body>
-<div class="container">
-	<div class="page-header">
-		<h1><a href="https://stonedastronaut.github.io/">Astro blog</a>
-			<br>	</div>
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-<h1>Tags</h1>
-<div class="text-center">
-<ul class="tagcloud">
-</ul>
-</div>
-		</div>
-	</div> 	<!-- <hr> -->
-</div> <!-- /container -->
-<footer class="aw-footer bg-danger">
-	<div class="container"> <!-- footer -->
-		<div class="row">
-			<div class="col-md-10 col-md-offset-1">
-				<div class="row">
-					<div class="col-md-3">
-						<h4>Navigation</h4>
-						<ul class="list-unstyled my-list-style">
-							<li><a href="https://stonedastronaut.github.io">Astro blog</a></li>
-							<li><a href="https://stonedastronaut.github.io/pages/about.html"><i class="fa fa-About "></i> About</a></li>
-							<li><a href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml"><i class="fa fa-rss "></i> atom</a></li>
-						</ul>
-					</div>
-					<div class="col-md-3">
-						<h4>Author</h4>
-						<ul class="list-unstyled my-list-style">
-							<li><a href="https://github.com/StonedAstronaut">github</a></li>
-							<li><a href="https://plus.google.com/u/0/113483139834962824849/posts">google-plus</a></li>
-						</ul>
-					</div>
-					<div class="col-md-3">
-						<h4>Categories</h4>
-						<ul class="list-unstyled my-list-style">
-							<li><a href="https://stonedastronaut.github.io/category/misc.html">misc (8)</a></li>
-						</ul>
-					</div>
-					<div class="col-md-3">
-						<h4>Links</h4>
-						<ul class="list-unstyled my-list-style">
-							<li><a href="http://getpelican.com/">Pelican</a></li>
-							<li><a href="http://python.org/">Python.org</a></li>
-							<li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-							<li><a href="#">You can modify those links in your config file</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</footer>
-<div class="container">
-	<div class="row">
-		<div class="col-md-12 text-center center-block aw-bottom">
-			<p>&copy; Petr Kalmykov 2015</p>
-			<p>Powered by Pelican</p>
-		</div>
-	</div>
-</div>
-<!-- JavaScript -->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$("div.collapseheader").click(function () {
-		$header = $(this).children("span").first();
-		$codearea = $(this).children(".input_area");
-		$codearea.slideToggle(500, function () {
-			$header.text(function () {
-				return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
-			});
-		});
-	});
-});
-</script>
-</body>
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <h1 class="header-name">
+        <a class="nodec" href="https://stonedastronaut.github.io">Astro blog</a>
+      </h1>
+      <h3 class="header-text"></h3>
+      <ul class="header-menu list-inline">
+      </ul>
+    </div>
+  </div>
+</header> <!-- /.header -->  <div class="container">
+  <h1>Tags on Astro blog</h1>
+  <ul class="list-unstyled">
+      <li><a href="https://stonedastronaut.github.io/tag/backup.html">backup</a> (1)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/crypt.html">crypt</a> (1)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/github.html">github</a> (1)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/habr.html">habr</a> (5)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/links.html">links</a> (1)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/linux.html">linux</a> (2)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/pelican.html">pelican</a> (1)</li>
+      <li><a href="https://stonedastronaut.github.io/tag/relax.html">relax</a> (1)</li>
+  </ul>
+  </div>
+<footer class="footer">
+  <div class="container">
+    <p class="text-center">
+      Petr Kalmykov, <a href="" target="_blank"></a> unless otherwise noted.
+    </p>
+    <div class="text-center">
+      Generated by <a href="http://getpelican.com" target="_blank">Pelican</a> with the <a href="http://github.com/nairobilug/pelican-alchemy">alchemy</a> theme.
+    </div>
+  </div>
+</footer> <!-- /.footer -->
+  <script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+  <script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+</body> <!-- 42 -->
+
 </html>
