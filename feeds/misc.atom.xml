@@ -548,6 +548,15 @@ Special navigation
 Paragraph navigation
 Search navigation
 Navigation from command line&lt;/p&gt;
+&lt;h1&gt;Table of Contents&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="#example"&gt;Example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#example2"&gt;Example2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#third-example"&gt;Third Example&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Example&lt;/h2&gt;
+&lt;h2&gt;Example2&lt;/h2&gt;
+&lt;h2&gt;Third Example&lt;/h2&gt;
 &lt;p&gt;If you don’t have an emacs editor, install emacs editor as we discussed earlier.&lt;/p&gt;
 &lt;p&gt;Notation used in this article:&lt;/p&gt;
 &lt;p&gt;C-a : Ctrl-a
