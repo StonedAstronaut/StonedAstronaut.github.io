@@ -1,76 +1,51 @@
 <!DOCTYPE html>
-<html lang="en-US">
-    <head>
-        <meta charset="utf-8"> 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="Petr Kalmykov" />
-        <meta name="copyright" content="Petr Kalmykov" />
-
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary">
-
-<meta name="keywords" content="habr, misc, " />
-
-<meta property="og:title" content="10 заповедей безличного программирования "/>
-<meta property="og:url" content="https://stonedastronaut.github.io/10-zapovedei-bezlichnogo-programmirovaniia.html" />
-<meta property="og:description" content="Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди: Пойми и свыкнись с ..." />
-<meta property="og:site_name" content="Astro blog" />
-<meta property="og:article:author" content="Petr Kalmykov" />
-<meta property="og:article:published_time" content="2015-08-03T19:49:58+06:00" />
-<meta name="twitter:title" content="10 заповедей безличного программирования ">
-<meta name="twitter:description" content="Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди: Пойми и свыкнись с ...">
-
-        <title>10 заповедей безличного программирования  · Astro blog
-</title>
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="https://stonedastronaut.github.io/theme/css/pygments.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="https://stonedastronaut.github.io/theme/css/elegant.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="https://stonedastronaut.github.io/theme/css/custom.css" media="screen">
-        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Astro blog - Full Atom Feed" />
-    </head>
-    <body>
-        <div id="content-sans-footer">
-        <div class="navbar navbar-static-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="https://stonedastronaut.github.io/"><span class=site-name>Astro blog</span></a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav pull-right top-menu">
-                            <li ><a href="https://stonedastronaut.github.io">Home</a></li>
-                            <li ><a href="https://stonedastronaut.github.io/pages/about.html">About</a></li>
-                            <li ><a href="https://stonedastronaut.github.io/categories.html">Categories</a></li>
-                            <li ><a href="https://stonedastronaut.github.io/tags.html">Tags</a></li>
-                            <li ><a href="https://stonedastronaut.github.io/archives.html">Archives</a></li>
-                            <li><form class="navbar-search" action="https://stonedastronaut.github.io/search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span1"></div>
-                <div class="span10">
-<article>
-<div class="row-fluid">
-    <header class="page-header span10 offset2">
-    <h1><a href="https://stonedastronaut.github.io/10-zapovedei-bezlichnogo-programmirovaniia.html"> 10 заповедей безличного программирования  </a></h1>
-    </header>
-</div>
-
-<div class="row-fluid">
-        <div class="span8 offset2 article-content">
-
-            
-            <p>Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди:</p>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<title>10 заповедей безличного программирования — Astro blog</title>
+	<meta name="description" content="Title: 10 заповедей безличного программирования; Date: 2015-08-03; Author: Petr Kalmykov">
+	<meta name="author" content="Petr Kalmykov">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+		<script src="https://stonedastronaut.github.io/theme/html5.js"></script>
+		<![endif]-->
+	<link href="https://stonedastronaut.github.io/theme/css/ipython.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/simplex/bootstrap.min.css" rel="stylesheet">
+	<link href="https://stonedastronaut.github.io/theme/css/local.css" rel="stylesheet">
+	<link href="https://stonedastronaut.github.io/theme/css/pygments.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+	<div class="page-header">
+		<h1><a href="https://stonedastronaut.github.io/">Astro blog</a>
+			<br>	</div>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+<div class="article" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="text-center article-header">
+		<h1 itemprop="name headline" class="article-title">10 заповедей безличного программирования</h1>
+		<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+			<h4 itemprop="name">Petr Kalmykov</h4>
+		</span>
+		<time datetime="2015-08-03T19:49:58+06:00" itemprop="datePublished">Mon 03 August 2015</time>
+	</div>
+	<div>
+		Category:
+		<span itemprop="articleSection">
+			<a href="https://stonedastronaut.github.io/category/misc.html" rel="category">misc</a>
+		</span>
+	</div>
+ 
+	<div>
+		Tags:
+		<span itemprop="keywords">
+			<a href="https://stonedastronaut.github.io/tag/habr.html" rel="tag">habr</a>
+		</span>
+	</div>
+	<div itemprop="articleBody" class="article-body"><p>Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди:</p>
 <ol>
 <li>
 <p>Пойми и свыкнись с тем, что ты будешь совершать ошибки. Суть в том, что их нужно находить до того, как они на что-то повлияют. В нашей индустрии, к счастью, ошибки редко могут привести к фатальным результатам (это не относится к тем, кто работает над ПО управления ракетами в Лаборатории реактивного движения). Мы можем (и должны) учиться, смеяться над собой и двигаться дальше.</p>
@@ -103,55 +78,76 @@
 <p>Критикуй код, а не человека, — будь добр к программисту, но не к коду. Пусть все твои комментарии будут положительными и направленными на улучшение кода. Указывай в комментариях на местные стандарты, спецификации, улучшение производительности и т. д.</p>
 </li>
 </ol>
-<p>©habrahabr</p>
-            
-            
-            <hr/>
-        </div>
-        <section>
-        <div class="span2" style="float:right;font-size:0.9em;">
-            <h4>Published</h4>
-            <time pubdate="pubdate" datetime="2015-08-03T19:49:58+06:00">Aug 3, 2015</time>
-            <h4>Category</h4>
-            <a class="category-link" href="https://stonedastronaut.github.io/categories.html#misc-ref">misc</a>
-            <h4>Tags</h4>
-            <ul class="list-of-tags tags-in-article">
-                <li><a href="https://stonedastronaut.github.io/tags.html#habr-ref">habr
-                    <span>5</span>
-</a></li>
-            </ul>
-<h4>Contact</h4>
-    <a href="https://github.com/StonedAstronaut" title="My github Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-github sidebar-social-links"></i></a>
-    <a href="https://plus.google.com/u/0/113483139834962824849/posts" title="My google-plus Profile" class="sidebar-social-links" target="_blank">
-    <i class="fa fa-google-plus sidebar-social-links"></i></a>
-        </div>
-        </section>
+<p>©habrahabr</p></div>
+	<hr>
+	<h2>Comments</h2>
 </div>
-</article>
-                </div>
-                <div class="span1"></div>
-            </div>
-        </div>
-        <div id="push"></div>
-    </div>
-<footer>
-<div id="footer">
-    <ul class="footer-content">
-        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
-    </ul>
+		</div>
+	</div> 	<!-- <hr> -->
+</div> <!-- /container -->
+<footer class="aw-footer bg-danger">
+	<div class="container"> <!-- footer -->
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<div class="row">
+					<div class="col-md-3">
+						<h4>Navigation</h4>
+						<ul class="list-unstyled my-list-style">
+							<li><a href="https://stonedastronaut.github.io">Astro blog</a></li>
+							<li><a href="https://stonedastronaut.github.io/pages/about.html"><i class="fa fa-About "></i> About</a></li>
+							<li><a href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml"><i class="fa fa-rss "></i> atom</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h4>Author</h4>
+						<ul class="list-unstyled my-list-style">
+							<li><a href="https://github.com/StonedAstronaut">github</a></li>
+							<li><a href="https://plus.google.com/u/0/113483139834962824849/posts">google-plus</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h4>Categories</h4>
+						<ul class="list-unstyled my-list-style">
+							<li><a href="https://stonedastronaut.github.io/category/misc.html">misc (8)</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h4>Links</h4>
+						<ul class="list-unstyled my-list-style">
+							<li><a href="http://getpelican.com/">Pelican</a></li>
+							<li><a href="http://python.org/">Python.org</a></li>
+							<li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+							<li><a href="#">You can modify those links in your config file</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 text-center center-block aw-bottom">
+			<p>&copy; Petr Kalmykov 2015</p>
+			<p>Powered by Pelican</p>
+		</div>
+	</div>
 </div>
-</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-        <script>
-            function validateForm(query)
-            {
-                return (query.length > 0);
-            }
-        </script>
-
-    
-    </body>
-    <!-- Theme: Elegant built for Pelican
-    License : http://oncrashreboot.com/pelican-elegant -->
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$("div.collapseheader").click(function () {
+		$header = $(this).children("span").first();
+		$codearea = $(this).children(".input_area");
+		$codearea.slideToggle(500, function () {
+			$header.text(function () {
+				return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
+			});
+		});
+	});
+});
+</script>
+</body>
 </html>
