@@ -587,7 +587,9 @@ Navigation from command line&lt;/p&gt;
 &lt;p&gt;C-a : Ctrl-a
 M-a : Meta-a ( If you don’t have Meta key, use Esc key )
 C-M-a : Ctrl-Meta-a&lt;/p&gt;
-&lt;h2&gt;Emacs Line Navigation&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Line Navigation&lt;/p&gt;
 &lt;p&gt;Following four navigation can be done line by line.&lt;/p&gt;
 &lt;p&gt;C-p : go to previous line
 C-n : go to next line
@@ -604,36 +606,40 @@ C-e : go to the end of the current line.&lt;/p&gt;
 &lt;p&gt;C-v : Jump forward one full screen.
 M-v : Jump backwards one full screen. ( If you dont have Meta key, use ESC key )
 C-l : Make the current line as center line of window.&lt;/p&gt;
-&lt;p&gt;You can also use Page Up, Page Down for screen navigation.
-3. Emacs Special Navigation&lt;/p&gt;
+&lt;p&gt;You can also use Page Up, Page Down for screen navigation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Special Navigation&lt;/p&gt;
 &lt;p&gt;Following are couple of special navigation that are used to go to the start or end of buffer.&lt;/p&gt;
 &lt;p&gt;M-&amp;lt; : Go to the start of file
 M-&amp;gt; : Go to the end of file&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Emacs Word Navigation&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Word Navigation&lt;/p&gt;
 &lt;p&gt;Following are two word navigation keys.&lt;/p&gt;
 &lt;p&gt;M-f : navigate a word forward.
 M-b : navigate a word backward.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Emacs Paragraph Navigation&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Paragraph Navigation&lt;/p&gt;
 &lt;p&gt;M-a : Go to the beginning of the current paragraph. By pressing M-a again and again move to the previous paragraph beginnings.
 M-e : Go to the end of the current paragraph. By pressing M-e again and again move to the next paragraph end, and again.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Emacs Search Navigation&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Search Navigation&lt;/p&gt;
 &lt;p&gt;When you want to search by giving the plain text,&lt;/p&gt;
 &lt;p&gt;C-s : Type Ctrl+s followed by the word to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
 C-r : Do a reverse search. All other explanation are like Ctrl+s&lt;/p&gt;
 &lt;p&gt;When you want to search using regular expression,&lt;/p&gt;
 &lt;p&gt;C-M-s : Type Ctrl+s followed by the regex to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
 C-M-r : Do a reverse search. All other explanation are like Ctrl+Meta+s&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Emacs Navigation from Command Line&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Emacs Navigation from Command Line&lt;/p&gt;
 &lt;p&gt;Emacs +N filename: Go to the Nth line of the file after opening it.&lt;/p&gt;
-&lt;p&gt;$ emacs +10 /etc/passwd&lt;/p&gt;</summary><category term="emacs"></category><category term="linux"></category></entry><entry><title>MySQL шпаргалки</title><link href="https://stonedastronaut.github.io/mysql-shpargalki.html" rel="alternate"></link><updated>2015-08-03T18:28:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-08-03:mysql-shpargalki.html</id><summary type="html">&lt;p&gt;Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных.
+&lt;p&gt;$ emacs +10 /etc/passwd&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="emacs"></category><category term="linux"></category></entry><entry><title>MySQL шпаргалки</title><link href="https://stonedastronaut.github.io/mysql-shpargalki.html" rel="alternate"></link><updated>2015-08-03T18:28:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-08-03:mysql-shpargalki.html</id><summary type="html">&lt;p&gt;Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных.
 Сегодня я решил опубликовать свои шпаргалки, на самые часто встречающиеся ошибки при работе с MySQL.&lt;/p&gt;
 &lt;p&gt;Работа с бекапами
 Делаем бекап
