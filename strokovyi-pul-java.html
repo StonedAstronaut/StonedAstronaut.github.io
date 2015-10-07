@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Строковый пул Java - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="https://stonedastronaut.github.io/strokovyi-pul-java.html">
+
+        <meta name="author" content="Petr Kalmykov" />
+        <meta name="keywords" content="java,programming" />
+        <meta name="description" content="Строковый пул, или множество строк, Java располагается в области памяти, именуемой Java Heap – куча, в которой хранятся все переменные, созданные программно вашим приложением. Естественно, появление этой структуры связано с оптимизацией способов хранения строк как объектов в языке. Тип String – один из самых часто используемых в Java и довольно дорогой для ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Строковый пул Java"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/strokovyi-pul-java.html"/>
+        <meta property="og:description" content="Строковый пул, или множество строк, Java располагается в области памяти, именуемой Java Heap – куча, в которой хранятся все переменные, созданные программно вашим приложением. Естественно, появление этой структуры связано с оптимизацией способов хранения строк как объектов в языке. Тип String – один из самых часто используемых в Java и довольно дорогой для ..."/>
+        <meta property="article:published_time" content="2015-07-30" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="java" />
+            <meta property="article:tag" content="programming" />
+            <meta property="article:author" content="Petr Kalmykov" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
+                             О сайте
+                          </a></li>
+                        <li class="active">
+                            <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/strokovyi-pul-java.html"
+                       rel="bookmark"
+                       title="Permalink to Строковый пул Java">
+                        Строковый пул Java
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-30T21:39:00+06:00"> Thu 30 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/java.html">java</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/programming.html">programming</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr />
+<p>Строковый пул, или множество строк, Java располагается в области памяти, именуемой <strong>Java Heap</strong> – <strong>куча</strong>, в которой хранятся все переменные, созданные программно вашим приложением. Естественно, появление этой структуры связано с оптимизацией способов хранения строк как объектов в языке.</p>
+<p>Тип <strong>String</strong> – один из самых часто используемых в Java и довольно дорогой для хранения: <strong>4</strong>-символьная строка занимает <strong>56 байт</strong> памяти, т.е. реальные данные (4 символа) занимают только <strong>14%</strong> выделенной под объект памяти. В связи с этим возникает необходимость оптимизировать способ хранения строк в памяти виртуальной машины. Так, было решено использовать подход Flyweight (<em>приспособленец</em>): если используется множество одинаковых данных (объектов), то гораздо экономнее создать только <em>один</em> экземпляр, чем несколько копий.</p>
+<hr />
+<h2>1. Работа пула на примерах.</h2>
+<p>Давайте рассмотрим следующий пример:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StringConcatenationExample</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="n">str2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="s">&quot;abc&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Выводом этого фрагмента кода будет следующее:</p>
+<div class="highlight"><pre><span class="nb">true</span>
+<span class="nb">true</span>
+</pre></div>
+
+
+<p>Как видите, <code>str1</code> и <code>str2</code> ссылаются на один и тот же объект (т.к. равенство <code>==</code> будет достигнуто только в случае равенства ссылок). Изобразить это можно следующим образом:</p>
+<p><img alt="Java Pool" src="/static/img/java_pool.png" title="Java Pool" /></p>
+<p>Как видите, если вы создаете новый объект <code>String</code> и вручную, т.е. литерами, задаете его значение (<code>"Hello, world"</code>), а объект с таким значением уже есть в пуле, то новая строка не создается, а просто переменная, являющаяся указателем, ссылается на уже созданный объект с тем же значением. Равенство, естественно, проверяется методом <code>String.equals(String)</code>. Таким образом, строковые переменные, имеющие при инициализации одинаковые значения, будут указывать на один и тот же объект.</p>
+<p>Теперь вы понимаете, почему строки в Java являются неизменяемыми: если бы в одном потоке была создана строка, и с таким же значением в другом потоке была бы создана еще одна строка, то изменение строки в одном из потоков повлекло бы ее изменение в другом.</p>
+<p>Сравним результат выполнения предыдущего фрагмента кода с этим:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StringConcatenationExample</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span><span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">str3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;abc&quot;</span><span class="o">);</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="n">str2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="n">str3</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Вывод в данном случае будет:</p>
+<div class="highlight"><pre><span class="nb">true</span>
+<span class="nb">false</span>
+</pre></div>
+
+
+<p>т.к. объекты, на которые указывают <code>str1</code> и <code>str3</code> уже отличаются, ведь для создания <code>str3</code> был вручную вызван конструктор (<code>new</code>), что повлекло создание нового объекта. И теперь этот объект помещается не в строковом пуле, а в "обычном" сегменте памяти JVM.</p>
+<p>Теперь рассмотрим такой пример:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StringConcatenationExample</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span><span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="s">&quot;ab&quot;</span><span class="o">;</span>
+
+        <span class="n">str2</span> <span class="o">=</span> <span class="n">str2</span><span class="o">+</span><span class="s">&quot;c&quot;</span><span class="o">;</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;str1 :&quot;</span> <span class="o">+</span><span class="n">str1</span><span class="o">+</span><span class="s">&quot;, str2 :&quot;</span><span class="o">+</span><span class="n">str2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="n">str2</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Вывод:</p>
+<div class="highlight"><pre><span class="n">str1</span> <span class="o">:</span><span class="n">abc</span><span class="o">,</span> <span class="n">str2</span> <span class="o">:</span><span class="n">abc</span>
+<span class="kc">false</span>
+</pre></div>
+
+
+<p>Как было указано выше, строки в Java, как объекты, изменить нельзя. Поэтому когда в коде программы мы "изменили" <code>str2</code> на самом деле был создан новый объект-строка с новым значением. При этом <code>str1</code>, очевидно, остался указывать на тот же объект, что и раньше, поэтому равенство <code>str1 == str2</code> на этот раз не выполнилось.</p>
+<p>Теперь рассмотрим код, где для конкатенации используется <code>StringBuffer</code>. Его использование гарантирует то, что строка находится не в строковом пуле, а в "нормальной" области памяти.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">StringConcatenationExample</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span><span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+    <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="s">&quot;abc&quot;</span><span class="o">;</span>
+
+        <span class="n">BufferedReader</span> <span class="n">bufferRead</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Type in a string :&quot;</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="n">bufferRead</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;str1 :&quot;</span> <span class="o">+</span><span class="n">str1</span><span class="o">+</span><span class="s">&quot;, str2 :&quot;</span><span class="o">+</span><span class="n">str2</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str1</span> <span class="o">==</span> <span class="n">str2</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Результатом выполнения этого кода будет следующий вывод:</p>
+<div class="highlight"><pre>Type in a string :abc
+str1 :abc, str2 :abc
+false
+</pre></div>
+
+
+<p>Таким образом, в результате тестирования вышележащих сниппетов можно заключить, что строковые переменные будут ссылаться на один и тот же строковый объект только в том случае, если эти объекты были инициализированы одинаковыми значениями.</p>
+<h2>2. Ручное помещение строки в пул</h2>
+<p>Как мы заметили, строковый пул не всегда используется автоматически. Но что же делать, если его использование может существенно уменьшить количество используемой памяти? Пусть мы создаем класс, описывающий адрес человека. Как известно, более 10 миллионов человек сегодня проживает в Москве. Представляете, как много места может занять использование отдельного объекта-строки для каждого из жителей Москвы? Для того, чтобы вручную поместить строку в пул, необходимо использовать метод <code>String.intern()</code>. Рассмотрим пример:</p>
+<div class="highlight"><pre>String <span class="nv">s1</span> <span class="o">=</span> <span class="s2">&quot;abc&quot;</span><span class="p">;</span>
+String <span class="nv">s2</span><span class="o">=</span> <span class="s2">&quot;abc&quot;</span><span class="p">;</span>
+
+String <span class="nv">s3</span> <span class="o">=</span> new String<span class="o">(</span><span class="s2">&quot;abc&quot;</span><span class="o">)</span><span class="p">;</span>
+
+System.out.println<span class="o">(</span><span class="nv">s1</span> <span class="o">==</span> s2<span class="o">)</span><span class="p">;</span>
+System.out.println<span class="o">(</span><span class="nv">s1</span> <span class="o">==</span> s3<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">s3</span> <span class="o">=</span> s3.intern<span class="o">()</span><span class="p">;</span>
+System.out.println<span class="o">(</span><span class="nv">s1</span><span class="o">==</span>s3<span class="o">)</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Результат выполнения этого кода будет представлять из себя следующий набор строк:</p>
+<div class="highlight"><pre><span class="nb">true</span>
+<span class="nb">false</span>
+<span class="nb">true</span>
+</pre></div>
+
+
+<p>То есть вызов этого метода равносилен созданию строки, для которой значение введено заново с использованием литер.</p>
+<p>Но будьте аккуратны. До Java 7 в памяти существовала отдельная область <em>PermGen</em>, в которой и располагался пул, которому было отведено ограниченное количество памяти. Начиная с <strong>Java 7</strong>, строковый пул помещается в <strong>той же</strong> области кучи, <strong>что и все</strong> остальные объекты, что делает строки доступными для сборщика мусора. Указать объем отводимой под строки памяти (которые хранятся в виде хэш-мапа) можно с использованием опции <code>XX:StringTableSize</code>. Так Вы, фактически, создаете свой <em>собственный</em> пул строк, но впрочем, не забивайте голову.</p>
+<p><a href="http://examples.javacodegeeks.com/core-java/lang/string/java-string-pool-example/"><em>©javacodegeeks</em></a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="#" target="_blank">
+                You can modify those links in your config file
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Petr Kalmykov
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

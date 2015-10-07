@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Диагностика hdd средствами unix - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="https://stonedastronaut.github.io/drafts/diagnostika-hdd-sredstvami-unix.html">
+
+        <meta name="author" content="Petr Kalmykov" />
+        <meta name="description" content="Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп. Для теста hdd использую 3 утилиты: smartctl из пакета smartmontools hdparm badblocks из пакета e2fsprogs Все тесты проводить на НЕ смонтированном hdd. smartctl: # smartctl -a /dev/sdX отсюда интересует несколько ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Диагностика hdd средствами unix"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/diagnostika-hdd-sredstvami-unix.html"/>
+        <meta property="og:description" content="Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп. Для теста hdd использую 3 утилиты: smartctl из пакета smartmontools hdparm badblocks из пакета e2fsprogs Все тесты проводить на НЕ смонтированном hdd. smartctl: # smartctl -a /dev/sdX отсюда интересует несколько ..."/>
+        <meta property="article:published_time" content="2015-02-09" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:author" content="Petr Kalmykov" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
+                             О сайте
+                          </a></li>
+                        <li class="active">
+                            <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/drafts/diagnostika-hdd-sredstvami-unix.html"
+                       rel="bookmark"
+                       title="Permalink to Диагностика hdd средствами unix">
+                        Диагностика hdd средствами unix
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-02-09T22:08:00+06:00"> Mon 09 February 2015</time>
+    </span>
+
+
+
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr />
+<p>Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп.</p>
+<p>Для теста <em>hdd</em> использую 3 утилиты:</p>
+<ol>
+<li>smartctl из пакета smartmontools</li>
+<li>hdparm</li>
+<li>badblocks из пакета e2fsprogs</li>
+</ol>
+<p>Все тесты проводить на <strong>НЕ</strong> смонтированном hdd.</p>
+<h3>smartctl:</h3>
+<div class="highlight"><pre><span class="c"># smartctl -a /dev/sdX</span>
+</pre></div>
+
+
+<p>отсюда интересует несколько параметров:</p>
+<ul>
+<li>5 Reallocated_Sector_Ct - указывает на количество использованных запасных блоков, заложенных "про запас" в случае когда hdd начинает сыпаться;</li>
+<li>9 Power_On_Hours - название говорит само за себя, сколько бедный hdd отмаслал часов;</li>
+</ul>
+<h3>hdparm:</h3>
+<div class="highlight"><pre><span class="c"># hdparm -t /dev/sdX</span>
+</pre></div>
+
+
+<p>Команда покажет, скорость записи на hdd. Данную команду необходимо выполнить несколько раз, для б/м достоверной картины.</p>
+<h3>badblocks:</h3>
+<div class="highlight"><pre><span class="c"># badblocks -vs /dev/sdX</span>
+</pre></div>
+
+
+<p>Команда с говорящим названием покажет, сколько битых блоком имеет поверхность hdd. Пояснение к ключам:</p>
+<p>-w — разрешает запись на жесткий диск, не заботясь о сохранности данных. <strong>Никогда не используйте для дисков, на которых есть нужная вам информация!</strong> Несколько ускоряет тестирование.</p>
+<p>-v — выводит информацию об ошибках на экран.</p>
+<p>-s — выводит статус выполнения проверки в %. Для жесткого диска большого объема проверка может длиться несколько часов, поэтому, возможно, вам захочется наблюдать за ходом выполнения в процентах. Эта опция несколько замедляет работу утилиты, поэтому, если вы запускаете проверку, например, на ночь, эту опцию можно опустить.</p>
+<p>стырено <a href="http://www.ubuntu.sumy.ua/2013/04/%D0%B4%D0%B8%D0%B0%D0%B3%D0%BD%D0%BE%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BE%D1%81%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D0%B8-%D0%BF%D1%80%D0%BE.html">отсюда</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="#" target="_blank">
+                You can modify those links in your config file
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Petr Kalmykov
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

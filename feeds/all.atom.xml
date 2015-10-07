@@ -308,7 +308,7 @@
 
 
 &lt;hr /&gt;
-&lt;p&gt;Скопипащенно &lt;em&gt;©&lt;a href="http://habrahabr.ru/post/141411/"&gt;отсюда&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</summary><category term="python"></category><category term="programming"></category></entry><entry><title>10 заповедей безличного программирования</title><link href="https://stonedastronaut.github.io/10-zapovedei-bezlichnogo-programmirovaniia.html" rel="alternate"></link><updated>2015-08-03T19:49:58+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-08-03:10-zapovedei-bezlichnogo-programmirovaniia.html</id><summary type="html">&lt;p&gt;Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди:&lt;/p&gt;
+&lt;p&gt;Скопипащенно &lt;em&gt;©&lt;a href="http://habrahabr.ru/post/141411/"&gt;отсюда&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</summary><category term="python"></category><category term="programming"></category><category term="habr"></category></entry><entry><title>10 заповедей безличного программирования</title><link href="https://stonedastronaut.github.io/10-zapovedei-bezlichnogo-programmirovaniia.html" rel="alternate"></link><updated>2015-08-03T19:49:58+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-08-03:10-zapovedei-bezlichnogo-programmirovaniia.html</id><summary type="html">&lt;p&gt;Эти заповеди были описаны в книге «Психология компьютерного программирования», написанной в 1971 году. Несмотря на возраст, слова до сих пор актуальны. Я не читал саму книгу, но нашёл пост о ней в блоге Стивена Уайетта Буша. Стивену её посоветовал перед смертью его отец. Вот эти заповеди:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;Пойми и свыкнись с тем, что ты будешь совершать ошибки. Суть в том, что их нужно находить до того, как они на что-то повлияют. В нашей индустрии, к счастью, ошибки редко могут привести к фатальным результатам (это не относится к тем, кто работает над ПО управления ракетами в Лаборатории реактивного движения). Мы можем (и должны) учиться, смеяться над собой и двигаться дальше.&lt;/p&gt;
@@ -478,7 +478,139 @@
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Учимся на своих ошибках и не забываем: хорошо написанная программа – плюс один в карму!&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;©GeekBrains&lt;/em&gt;&lt;/p&gt;</summary><category term="habr"></category></entry><entry><title>LVM on LUKS на примере arch</title><link href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html" rel="alternate"></link><updated>2015-07-26T03:53:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-26:lvm-on-luks-na-primere-arch.html</id><summary type="html">&lt;h2&gt;Создаём разделы физические&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;©GeekBrains&lt;/em&gt;&lt;/p&gt;</summary><category term="habr"></category></entry><entry><title>Строковый пул Java</title><link href="https://stonedastronaut.github.io/strokovyi-pul-java.html" rel="alternate"></link><updated>2015-07-30T21:39:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-30:strokovyi-pul-java.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;Строковый пул, или множество строк, Java располагается в области памяти, именуемой &lt;strong&gt;Java Heap&lt;/strong&gt; – &lt;strong&gt;куча&lt;/strong&gt;, в которой хранятся все переменные, созданные программно вашим приложением. Естественно, появление этой структуры связано с оптимизацией способов хранения строк как объектов в языке.&lt;/p&gt;
+&lt;p&gt;Тип &lt;strong&gt;String&lt;/strong&gt; – один из самых часто используемых в Java и довольно дорогой для хранения: &lt;strong&gt;4&lt;/strong&gt;-символьная строка занимает &lt;strong&gt;56 байт&lt;/strong&gt; памяти, т.е. реальные данные (4 символа) занимают только &lt;strong&gt;14%&lt;/strong&gt; выделенной под объект памяти. В связи с этим возникает необходимость оптимизировать способ хранения строк в памяти виртуальной машины. Так, было решено использовать подход Flyweight (&lt;em&gt;приспособленец&lt;/em&gt;): если используется множество одинаковых данных (объектов), то гораздо экономнее создать только &lt;em&gt;один&lt;/em&gt; экземпляр, чем несколько копий.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;1. Работа пула на примерах.&lt;/h2&gt;
+&lt;p&gt;Давайте рассмотрим следующий пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Выводом этого фрагмента кода будет следующее:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Как видите, &lt;code&gt;str1&lt;/code&gt; и &lt;code&gt;str2&lt;/code&gt; ссылаются на один и тот же объект (т.к. равенство &lt;code&gt;==&lt;/code&gt; будет достигнуто только в случае равенства ссылок). Изобразить это можно следующим образом:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Java Pool" src="/static/img/java_pool.png" title="Java Pool" /&gt;&lt;/p&gt;
+&lt;p&gt;Как видите, если вы создаете новый объект &lt;code&gt;String&lt;/code&gt; и вручную, т.е. литерами, задаете его значение (&lt;code&gt;"Hello, world"&lt;/code&gt;), а объект с таким значением уже есть в пуле, то новая строка не создается, а просто переменная, являющаяся указателем, ссылается на уже созданный объект с тем же значением. Равенство, естественно, проверяется методом &lt;code&gt;String.equals(String)&lt;/code&gt;. Таким образом, строковые переменные, имеющие при инициализации одинаковые значения, будут указывать на один и тот же объект.&lt;/p&gt;
+&lt;p&gt;Теперь вы понимаете, почему строки в Java являются неизменяемыми: если бы в одном потоке была создана строка, и с таким же значением в другом потоке была бы создана еще одна строка, то изменение строки в одном из потоков повлекло бы ее изменение в другом.&lt;/p&gt;
+&lt;p&gt;Сравним результат выполнения предыдущего фрагмента кода с этим:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str3&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Вывод в данном случае будет:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;т.к. объекты, на которые указывают &lt;code&gt;str1&lt;/code&gt; и &lt;code&gt;str3&lt;/code&gt; уже отличаются, ведь для создания &lt;code&gt;str3&lt;/code&gt; был вручную вызван конструктор (&lt;code&gt;new&lt;/code&gt;), что повлекло создание нового объекта. И теперь этот объект помещается не в строковом пуле, а в "обычном" сегменте памяти JVM.&lt;/p&gt;
+&lt;p&gt;Теперь рассмотрим такой пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ab&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;c&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;str1 :&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;, str2 :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Вывод:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;abc&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;abc&lt;/span&gt;
+&lt;span class="kc"&gt;false&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Как было указано выше, строки в Java, как объекты, изменить нельзя. Поэтому когда в коде программы мы "изменили" &lt;code&gt;str2&lt;/code&gt; на самом деле был создан новый объект-строка с новым значением. При этом &lt;code&gt;str1&lt;/code&gt;, очевидно, остался указывать на тот же объект, что и раньше, поэтому равенство &lt;code&gt;str1 == str2&lt;/code&gt; на этот раз не выполнилось.&lt;/p&gt;
+&lt;p&gt;Теперь рассмотрим код, где для конкатенации используется &lt;code&gt;StringBuffer&lt;/code&gt;. Его использование гарантирует то, что строка находится не в строковом пуле, а в "нормальной" области памяти.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.BufferedReader&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.IOException&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.InputStreamReader&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="kd"&gt;throws&lt;/span&gt; &lt;span class="n"&gt;IOException&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;BufferedReader&lt;/span&gt; &lt;span class="n"&gt;bufferRead&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;BufferedReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;InputStreamReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;in&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;print&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Type in a string :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bufferRead&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;readLine&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;str1 :&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;, str2 :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Результатом выполнения этого кода будет следующий вывод:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Type in a string :abc
+str1 :abc, str2 :abc
+false
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Таким образом, в результате тестирования вышележащих сниппетов можно заключить, что строковые переменные будут ссылаться на один и тот же строковый объект только в том случае, если эти объекты были инициализированы одинаковыми значениями.&lt;/p&gt;
+&lt;h2&gt;2. Ручное помещение строки в пул&lt;/h2&gt;
+&lt;p&gt;Как мы заметили, строковый пул не всегда используется автоматически. Но что же делать, если его использование может существенно уменьшить количество используемой памяти? Пусть мы создаем класс, описывающий адрес человека. Как известно, более 10 миллионов человек сегодня проживает в Москве. Представляете, как много места может занять использование отдельного объекта-строки для каждого из жителей Москвы? Для того, чтобы вручную поместить строку в пул, необходимо использовать метод &lt;code&gt;String.intern()&lt;/code&gt;. Рассмотрим пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;String &lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+String &lt;span class="nv"&gt;s2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+String &lt;span class="nv"&gt;s3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; new String&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; s2&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; s3&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;s3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; s3.intern&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;s3&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Результат выполнения этого кода будет представлять из себя следующий набор строк:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;То есть вызов этого метода равносилен созданию строки, для которой значение введено заново с использованием литер.&lt;/p&gt;
+&lt;p&gt;Но будьте аккуратны. До Java 7 в памяти существовала отдельная область &lt;em&gt;PermGen&lt;/em&gt;, в которой и располагался пул, которому было отведено ограниченное количество памяти. Начиная с &lt;strong&gt;Java 7&lt;/strong&gt;, строковый пул помещается в &lt;strong&gt;той же&lt;/strong&gt; области кучи, &lt;strong&gt;что и все&lt;/strong&gt; остальные объекты, что делает строки доступными для сборщика мусора. Указать объем отводимой под строки памяти (которые хранятся в виде хэш-мапа) можно с использованием опции &lt;code&gt;XX:StringTableSize&lt;/code&gt;. Так Вы, фактически, создаете свой &lt;em&gt;собственный&lt;/em&gt; пул строк, но впрочем, не забивайте голову.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://examples.javacodegeeks.com/core-java/lang/string/java-string-pool-example/"&gt;&lt;em&gt;©javacodegeeks&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;</summary><category term="java"></category><category term="programming"></category></entry><entry><title>LVM on LUKS на примере arch</title><link href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html" rel="alternate"></link><updated>2015-07-26T03:53:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-26:lvm-on-luks-na-primere-arch.html</id><summary type="html">&lt;h2&gt;Создаём разделы физические&lt;/h2&gt;
 &lt;p&gt;Вот такая структура диска.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -584,7 +716,90 @@ mount /dev/sda1 /mnt/boot
 &lt;/ul&gt;
 &lt;p&gt;А &lt;em&gt;что&lt;/em&gt; читаете &lt;strong&gt;Вы&lt;/strong&gt;?&lt;/p&gt;
 &lt;hr /&gt;
-&lt;p&gt;&lt;em&gt;©geekbrains&lt;/em&gt;&lt;/p&gt;</summary><category term="geekbrains"></category></entry><entry><title>52 вопроса, которые вы должны задать на собеседовании</title><link href="https://stonedastronaut.github.io/52-voprosa-kotorye-vy-dolzhny-zadat-na-sobesedovanii.html" rel="alternate"></link><updated>2015-07-16T16:30:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-16:52-voprosa-kotorye-vy-dolzhny-zadat-na-sobesedovanii.html</id><summary type="html">&lt;p&gt;Вы, наверное, уже знаете, что интервью — это не просто очередной этап при устройстве на работу, это также ваша возможность разобраться, подходит ли вам эта работа. Для этого важно задать некоторые вопросы. Что вы хотите знать об этой должности? О компании? О подразделении? О команде? О корпоративной культуре?&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;©geekbrains&lt;/em&gt;&lt;/p&gt;</summary><category term="geekbrains"></category></entry><entry><title>Роликовые коньки (inline skates)</title><link href="https://stonedastronaut.github.io/rolikovye-konki-inline-skates.html" rel="alternate"></link><updated>2015-07-18T18:43:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-18:rolikovye-konki-inline-skates.html</id><summary type="html">&lt;p&gt;Пост о роликовых коньках. Здесь я опишу какие стили катания существуют, и соответсвенно какие ролики выбрать под понравившийся стиль, если Вы новичёк в этом вопросе.&lt;/p&gt;
+&lt;p&gt;Преамбула: независимо от того кто Вы и что Вы думаете, покупая роликовые коньки Вы должны знать, что покупка роликов это не только пара "сапог" с колесами, это еще и комплект защиты включая шлем. Данное требования вывел лично на собственном опыте. Лушче быть в броне, дико упасть, подняться и дальше чудить, чем валяться в больнице, просрав сезон катания, и кучу денег/времени на лечение.&lt;/p&gt;
+&lt;p&gt;Минимальный рекомендуемый комплект брони:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;каска&lt;/li&gt;
+&lt;li&gt;наколенники&lt;/li&gt;
+&lt;li&gt;запястья&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Вопрос с влиянием погоды на катание. Безусловно мокрая дорога может стать причиной падения, сила трения между асфальтом/бетоном и колесами уменьшается =&amp;gt; что вероятность подскользнуться растёт. Но если колеса твёрдые, и не гнать 30-40 км в час, то можно вполне скопойно рассекать по лужам. Но я не рекомендую :-) Температурный режим для катания достаточно большой: от -10°C. Но нужен асфальт или бетон. По снегу не пробовал.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Основные стили:&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Fitness&lt;/strong&gt;. Просто катаемся по городу/парку. Вместо ходьбы или пробежки. Не требует каких либо особых навыков. Просто ездим.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;FSK&lt;/strong&gt;. Стиль катания, в котором rider ездит по городу, преодалевая любые препятсвия на своём пути, перепрыгивая их, или просто пробегая не проезжаемые участки пути. Эдакий паркур на колёсах. Здесь понадобятся достаточно сильные ноги и пресс, хотя в процессе осовения данного стиля, они сами собой прокачаются. Используются в основном 2 вида торможения:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=hxl5rb-4zno"&gt;&lt;em&gt;T-stop&lt;/em&gt;&lt;/a&gt;. Очень простой в исполнении, и самый важный, без уверенного исполнения данного торможения, лучше &lt;strong&gt;не&lt;/strong&gt; выезжать на улицу.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=xTiW14M4obc"&gt;&lt;em&gt;Parallel slide&lt;/em&gt;&lt;/a&gt;. Один из самых трудных, но самый быстрый вариант торможения. С уверенным исполнением данного слайда, можно разгонятся до скорости света, и ничего не боятся.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Также учимся прыгать в длину и высоту.&lt;/p&gt;
+&lt;p&gt;Для катания в этом стиле нам нужны уже хорошие ролики, с крепкой рамой и хорошими жесткими колесами, диаметром 80 мм.&lt;/p&gt;
+&lt;p&gt;Именно этот стиль мне больше всех нравится.&lt;/p&gt;
+&lt;p&gt;Вот пара ссылок на видео с Greg Mirzoyan, наверное лучший FSK rider:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=xnxZ1pSBCTI"&gt;Greg Mirzoyan - London 2011&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=YifU8QmNcGQ"&gt;6 years with Greg Mirzoyan&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Agressive&lt;/strong&gt;. Думаю название говорит само за себя. Это те самые ребята на рампах, ямах, и скользящие по перилкам. Дико травмоопасный стиль.Многие райдеры в этом стиле не признают защиту, якобы она мешает выполнять трюки, но при этом разбиваются частенько в кровь, и переломы. В этом стиле используются специальные ролики, которые слабо фиксируют голеностопный сустав, и на которых стоит специальная рама для возможности скользить по перилкам, парапетам и пр. выступам. Носим с собой парафин, иначе особо не поскользим.&lt;/p&gt;
+&lt;p&gt;Ссыль на поглазеть &lt;a href="https://www.youtube.com/watch?v=SsKNNhYXw3w"&gt;THE 2015 XSJADO TEAM&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Slalom&lt;/strong&gt;. Это когда катают вокруг конусов. Берем ролики для FSK, ставим на них колёса 76-80-80-76 (мм, для маневренности), конусы, едем в ближайший парк, или пустую парковку, и кружим вокруг конусов. Удовольствие сомнительное, на мой вгляд, но очень многим такой стиль нравится.&lt;/p&gt;
+&lt;p&gt;Ссыль на поглазеть &lt;a href="https://www.youtube.com/watch?v=oYjD-pgwDUw"&gt;PSWC 2012' Paris Slalom World Cup&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;PowerBlade&lt;/strong&gt;. Не знаю как сильно он распространён, но когда я его увидел, то мне он сразу понравился. Это симбиоз &lt;strong&gt;FSK&lt;/strong&gt; и &lt;strong&gt;Agressive&lt;/strong&gt;, т.е. к харакетрным трюкам FSK добавляем скольжение по всяким выступам и получаем сабж.&lt;/p&gt;
+&lt;p&gt;Ссыль на поглазеть &lt;a href="https://www.youtube.com/watch?v=E8iqCwVOYP0"&gt;PowerBlade the Waterway&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;SpeedSkate&lt;/strong&gt;. Этот стиль для любителей скорости. Особенность здесь заключается в роликах. Сам ботинок выглядит как футбольная бутса, а колеса ставятся большого диаметра, от 100 мм.&lt;/p&gt;
+&lt;p&gt;Ссыль на поглазеть &lt;a href="https://www.youtube.com/watch?v=2OKVSsnMpHo"&gt;Pamplona - Puente la Reina 2014 Inline Speed Skating International Marathon&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Выбор роликов:&lt;/h2&gt;
+&lt;p&gt;Существует несколько самых распространненых производителей роликовых коньков. Настоятельно рекомендовать какой-то опрелённый не буду, потому как будущие свои ролики нужно обязательно мерить. И т.к. ноги у каждого разные Вам может подойти, то что мне не подойдет.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Fitness&lt;/strong&gt;. Да тут и выбирать собственно долго нет смысла. Подойдут любые. Главное на них потом, не начать осваивать FSK или Slalom, иначе кончится может травмами. Если твёрдо уверены, что трюкачить - это не Ваше, то можете брать любые ролики. Но я рекомендую выбирать из списка для FSK. Производители роликов для FSK, также выпускают ролики и для Fitness и др. стилей.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;FSK&lt;/strong&gt;. Здесь могу выделить 3 основных производителя, и еще пару других:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Seba&lt;/li&gt;
+&lt;li&gt;PowerSlide&lt;/li&gt;
+&lt;li&gt;Rollerblade&lt;/li&gt;
+&lt;li&gt;Fila&lt;/li&gt;
+&lt;li&gt;K2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Seba, PowerSlide и RollerBlade - лидеры в производстве роликовых коньков в принципе, и в частности для FSK.&lt;/p&gt;
+&lt;p&gt;Из Seba порекомендую модели FR1 или High. Из моделей Rollerblade - Fusion или Twister. В моделях PowerSlide, увы, не разбираюсь.&lt;/p&gt;
+&lt;p&gt;Fila - та же Seba, только сбоку, да и были скандалы, что Fila тупо копирует Seba при этом продает за такие же деньги. Хотя кому-то Fila пришлась по душе больше, чем Seba. K2 - в основном делает ролики для агрессивщиков, моделей для FSK у них не много.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Agressive&lt;/strong&gt;. USD Xsjado Razors Seba Remz тысячи их... Могу выделить из них Xsjado за их дизайн. Они выполнены очень удобно, скелет ботинка в который мы вставляем ногу, в своей обуви. И крепления сделаны удобно, что надевать и снимать ролики достаточно быстро. В общем идеал если часто надеваем, снимаем ролики.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;И купите Вашему любимцу рюкзак. Лично мне нравится USD рюкзак.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;Защита&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Каска - производители всё те же, что и раньше, но лично у меня TSG. Выбираем понравившийся, меряем, покупаем и наша голова в поряде. По массе выбираем в районе 300 - 450 граммов, меньше будет сдувать ветром, а больше - просто тяжело.&lt;/li&gt;
+&lt;li&gt;Бронь - производители опять таки, всё те же. Но от себя могу сказать, что у Seba годная защита на запястья, а у USD удобная и прочная защита (USD делает для агрессивщиков, а здесь и уровень защиты высокий и всё очень эластично выполено.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Комфорт&lt;/h2&gt;
+&lt;p&gt;Рекомендую приобрести носки для роликов, иначе в обычных могут возникнуть проблемы с мазолями и т.д. Из всех что довелось использовать мне и моим знакомым, самые годные носки у seba. Они потому что не просто носки, а нано-носки :-)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;PS: Роллер спорт достаточно экстремальный и, в зависимости от вида катания, травмоопасный. Но если Вы дружите с головой, купите защиту, и будете выполнять трюки осознавая свои силы, то травм можно избежать вовсе. Но у него есть и неоспоримые плюсы. Тренируется практически всё тело. Некоторые качки, даже сушатся именно на роликах. Человек на роликах попадает, какбы в другое измерение, он вроде уже не пешеход, но еще и не велосипедист. Хотя последних по скорости может смело уделать, даже на 80-х колёсах.&lt;/p&gt;
+&lt;p&gt;пара фоток:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Каска TSG" src="https://stonedastronaut.github.io/images/tsg.jpg" title="Каска TSG" /&gt;
+&lt;img alt="Броня USD" src="https://stonedastronaut.github.io/images/usd.jpg" title="Броня USD" /&gt;
+&lt;img alt="Rollerblade Twister 80" src="https://stonedastronaut.github.io/images/twister.jpg" title="Rollerblade Twister 80" /&gt;
+&lt;img alt="Seba High Black" src="https://stonedastronaut.github.io/images/seba_high.jpg" title="Seba High Black" /&gt;
+&lt;img alt="Xsjado 2.0 Powerblade" src="https://stonedastronaut.github.io/images/xsjado.jpg" title="Xsjado 2.0 Powerblade" /&gt;
+&lt;img alt="USD backpack 2014" src="https://stonedastronaut.github.io/images/usd_back.jpg" title="USD backpack 2014" /&gt;
+&lt;img alt="Seba socks white" src="https://stonedastronaut.github.io/images/seba_socks.jpg" title="Seba socks white" /&gt;&lt;/p&gt;</summary><category term="inline skates"></category><category term="sport"></category></entry><entry><title>52 вопроса, которые вы должны задать на собеседовании</title><link href="https://stonedastronaut.github.io/52-voprosa-kotorye-vy-dolzhny-zadat-na-sobesedovanii.html" rel="alternate"></link><updated>2015-07-16T16:30:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-07-16:52-voprosa-kotorye-vy-dolzhny-zadat-na-sobesedovanii.html</id><summary type="html">&lt;p&gt;Вы, наверное, уже знаете, что интервью — это не просто очередной этап при устройстве на работу, это также ваша возможность разобраться, подходит ли вам эта работа. Для этого важно задать некоторые вопросы. Что вы хотите знать об этой должности? О компании? О подразделении? О команде? О корпоративной культуре?&lt;/p&gt;
 &lt;p&gt;Задавать вопросы бывает сложно. Мы это знаем. Для того, чтобы упростить вам это задание, мы приводим список ключевых вопросов для интервью. Мы определённо не рекомендуем задавать их все. Пожалейте рекрутера!&lt;/p&gt;
 &lt;p&gt;Когда в конце интервью или его части вас спрашивают: «Итак, есть ли у вас к нам вопросы?», то обязательно воспользуйтесь данным списком (попробуйте восстановить в памяти), чтобы убедиться, что вы охватили все интересующие вас моменты и показали ваш профессионализм.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Работа в целом&lt;/strong&gt;&lt;/p&gt;
@@ -707,4 +922,24 @@ mount /dev/sda1 /mnt/boot
 
 
 &lt;p&gt;!!!&lt;strong&gt;раздел на который идет восстановление должен быть &lt;em&gt;НЕ&lt;/em&gt; меньше файла-образа&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;стырено &lt;a href="http://habrahabr.ru/post/233961/"&gt;изхабра&lt;/a&gt;&lt;/p&gt;</summary><category term="habr"></category><category term="linux"></category><category term="backup"></category></entry></feed>
+&lt;p&gt;стырено &lt;a href="http://habrahabr.ru/post/233961/"&gt;изхабра&lt;/a&gt;&lt;/p&gt;</summary><category term="habr"></category><category term="linux"></category><category term="backup"></category></entry><entry><title>Сравнение каталогов в *unix. diff</title><link href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html" rel="alternate"></link><updated>2015-02-04T21:00:00+06:00</updated><author><name>Petr Kalmykov</name></author><id>tag:stonedastronaut.github.io,2015-02-04:sravnenie-katalogov-v-unix-diff.html</id><summary type="html">&lt;p&gt;Сравнение каталогов утилитой diff осуществляется следующим образом:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;diff -urN dir1 dir2  &amp;gt; out.diff
+
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;mc -e out.diff
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;где
+ключи diff&lt;/p&gt;
+&lt;p&gt;-u унифицированный метод&lt;/p&gt;
+&lt;p&gt;-r рекурсивно &lt;/p&gt;
+&lt;p&gt;-N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. "Сравнение каталогов". &lt;/p&gt;
+&lt;p&gt;Возможно использование 'diff' для сравнения некоторых или всех файлов в двух каталогах. Когда оба аргумента-имена файлов для 'diff' ­ каталоги, он сравнивает каждый файл, содержащийся в обоих каталогах, в алфавитном порядке имен файлов. Обычно 'diff' не упоминает о парах неотличающихся файлов, но с опцией '-s' или '--report-identical-files', он будет сообщать и о таких парах. Обычно 'diff' сообщает о подкаталогах, общих для обоих каталогов, не сравнивая файлы в них, но с помощью опции '-r' или '--recursive', он бужет сравнивать соответствующие файлы в дереве каталогов, опускаясь до самых глубоких каталогов.&lt;/p&gt;
+&lt;p&gt;Для имен файлов, содержащихся только в одном каталоге, 'diff' обычно не показывает текста этих файлов, сообщая только, что файлы находятся в одном каталоге и отсутствуют в другом. Можно заставить 'diff' поступать так, как если бы соответствующие файлы существовали и в другом каталоге, но являлись пустыми, тогда в результатах будет присутствовать полный текст таких файлов. (Такие отличия будут рассматриваться как вставки или удаления, в зависимости от того существует файл в первой или второй директории.) Чтобы добиться этого используйте опцию '-N' или '--new-file'.&lt;/p&gt;
+&lt;p&gt;Если в более старом каталоге содержится один или более больших файлов, не содержащихся в более новом, можно уменьшить patch с помощью опции '-P' или '--unidirectional-new-file' вместо '-N'. Эта опция подобна '-N', за исключением того, что она вставляет только содержимое файлов, появившихся во втором каталоге, а не в первом (т.е. добавленных файлов). В начале patch пишется инструкция для пользователей, применяющих patch, - стереть удаленные файлы, перед применением (см. подробнее о составлении patch-ей: "Составление patch-ей").&lt;/p&gt;
+&lt;p&gt;Для игнорирования некоторых файлов при сравнении каталогов, используйте опцию '-x PATTERN' или '--exclude=PATTERN'. Эта опция игнорирует все файлы или поддиректории, чьи базовые имена соответствуют шаблону оболочки PATTERN. В отличие от оболочки, точка в начале имени файла рассматривается так же, как символ &lt;em&gt;. Следует заключать PATTERN в апострофы, чтобы оболочка не истоловала их неправильно. Например, опция '-x '&lt;/em&gt;.[ao]'' игнорирует все файлы, имена которых заканчиваются на '.a' или '.o'.&lt;/p&gt;
+&lt;p&gt;Информация, указанная в этой опции, сохраняется, если ее использовать несколько раз. Например, использование опций '-x 'RCS' -x '*,v'' задает игнорирование всех файлов и подкаталогов, имеющих имя 'RCS' или заканчивающихся на ',v'.&lt;/p&gt;
+&lt;p&gt;Если необходимо использовать эту опцию по несколько раз, можно вместо этого поместить шаблоны в файл, по одному на строку и использовать опцию '-X FILE' или '--exclude-from=FILE'.&lt;/p&gt;
+&lt;p&gt;Если два каталога находились в процессе сравнения и этот процесс был прерван, позже возможно вернуться к сравнению и продолжить его с того же места с помощью опции '-S FILE' или '--starting-file=FILE'. После этого сравниваться будут только файл и FILE и следующеи за ним в алфавитном порядке, в верхнем уровне директории.&lt;/p&gt;
+&lt;p&gt;Стырено с &lt;a href="http://rus-linux.net"&gt;rus-linux.net&lt;/a&gt; и &lt;a href="http://genaev.com"&gt;genaev.com&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="diff"></category></entry></feed>

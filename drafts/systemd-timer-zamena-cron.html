@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Categories - Astro blog</title>
+    <title>systemd timer - замена cron - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,15 +10,19 @@
 
 
 
+<link rel="canonical" href="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html">
 
         <meta name="author" content="Petr Kalmykov" />
+        <meta name="description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для" />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Astro blog"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io"/>
-        <meta property="og:description" content="Astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="systemd timer - замена cron"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html"/>
+        <meta property="og:description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для"/>
+        <meta property="article:published_time" content="2015-07-20" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:author" content="Petr Kalmykov" />
 
 
     <!-- Bootstrap -->
@@ -51,7 +55,7 @@ Astro blog            </a>
                          <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
                              О сайте
                           </a></li>
-                        <li >
+                        <li class="active">
                             <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
                         </li>
             </ul>
@@ -68,36 +72,40 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <section id="categories">
-        <h1>All Categories for Astro blog</h1>
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse-misc">misc <span class="badge pull-right">13</span></a>
-                    </h4>
-                </div>
-                <div id="collapse-misc" class="panel-collapse collapse">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html"
+                       rel="bookmark"
+                       title="Permalink to systemd timer - замена cron">
+                        systemd timer - замена cron
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
                     <div class="panel-body">
-                        <p><span class="categories-timestamp"><time datetime="2015-08-19T00:47:00+06:00">Wed 19 August 2015</time></span> <a href="https://stonedastronaut.github.io/dekoratory-v-python.html">Декораторы в Python</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-08-03T19:49:58+06:00">Mon 03 August 2015</time></span> <a href="https://stonedastronaut.github.io/10-zapovedei-bezlichnogo-programmirovaniia.html">10 заповедей безличного программирования</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-08-03T17:55:00+06:00">Mon 03 August 2015</time></span> <a href="https://stonedastronaut.github.io/vy-razrabotchik-tak-pochemu-vy-do-sikh-por-na-kogo-to-rabotaete.html">Вы разработчик? Так почему вы до сих пор на кого-то работаете?</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-08-03T17:48:02+06:00">Mon 03 August 2015</time></span> <a href="https://stonedastronaut.github.io/9-rasslabliaiushchikh-saitov-dlia-podderzhaniia-spokoistviia-i-khoroshego-nastroeniia.html">9 расслабляющих сайтов для поддержания спокойствия и хорошего настроения</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-08-03T17:42:00+06:00">Mon 03 August 2015</time></span> <a href="https://stonedastronaut.github.io/7-tipichnykh-oshibok-neopytnykh-programmistov.html">7 типичных ошибок неопытных программистов</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-07-30T21:39:00+06:00">Thu 30 July 2015</time></span> <a href="https://stonedastronaut.github.io/strokovyi-pul-java.html">Строковый пул Java</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-07-26T03:53:00+06:00">Sun 26 July 2015</time></span> <a href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">LVM on LUKS на примере arch</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-07-21T22:46:00+06:00">Tue 21 July 2015</time></span> <a href="https://stonedastronaut.github.io/7-sovetov-dlia-professionalnogo-rosta-programmista.html">7 советов для профессионального роста программиста</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-07-18T18:43:00+06:00">Sat 18 July 2015</time></span> <a href="https://stonedastronaut.github.io/rolikovye-konki-inline-skates.html">Роликовые коньки (inline skates)</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-07-16T16:30:00+06:00">Thu 16 July 2015</time></span> <a href="https://stonedastronaut.github.io/52-voprosa-kotorye-vy-dolzhny-zadat-na-sobesedovanii.html">52 вопроса, которые вы должны задать на собеседовании</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-02-21T16:30:00+06:00">Sat 21 February 2015</time></span> <a href="https://stonedastronaut.github.io/kak-poschitat-plotnost-pikselei-dpi.html">Как посчитать плотность пикселей (DPI)</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-02-09T19:30:00+06:00">Mon 09 February 2015</time></span> <a href="https://stonedastronaut.github.io/backup-hdd-sredstvami-gnulinux.html">Backup hdd средствами GNU/Linux</a></p>
-                        <p><span class="categories-timestamp"><time datetime="2015-02-04T21:00:00+06:00">Wed 04 February 2015</time></span> <a href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html">Сравнение каталогов в *unix. diff</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-20T01:15:00+06:00"> Mon 20 July 2015</time>
+    </span>
 
+
+
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr />
+<p>Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.</p>
+<p>Так бгомерзкий systemd в моём обиходе заменил еще и cron...</p>
+<p>Итак, для </p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
     </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
