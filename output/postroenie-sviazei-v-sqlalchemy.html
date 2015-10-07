@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Построение связей в SQLAlchemy - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html">
+
+        <meta name="author" content="Petr Kalmykov" />
+        <meta name="keywords" content="sqlalchemy,orm" />
+        <meta name="description" content="Связи в sqlachemy бывают 4-х видов: OTM (one-to-many) - один к многим MTO (many-to-one) - многие к одному OTO (one-to-one) - один к одному MTM (many-to-many) - многие к многим Релизация этих связей: OTM : Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Построение связей в SQLAlchemy"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html"/>
+        <meta property="og:description" content="Связи в sqlachemy бывают 4-х видов: OTM (one-to-many) - один к многим MTO (many-to-one) - многие к одному OTO (one-to-one) - один к одному MTM (many-to-many) - многие к многим Релизация этих связей: OTM : Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для ..."/>
+        <meta property="article:published_time" content="2015-03-04" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="sqlalchemy" />
+            <meta property="article:tag" content="orm" />
+            <meta property="article:author" content="Petr Kalmykov" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
+                             О сайте
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html"
+                       rel="bookmark"
+                       title="Permalink to Построение связей в SQLAlchemy">
+                        Построение связей в SQLAlchemy
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-03-04T09:30:00+06:00"> Wed 04 March 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">sqlalchemy</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/orm.html">orm</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Связи в sqlachemy бывают 4-х видов:</p>
+<ul>
+<li>OTM (one-to-many) - один к многим</li>
+<li>MTO (many-to-one) - многие к одному</li>
+<li>OTO (one-to-one) - один к одному</li>
+<li>MTM (many-to-many) - многие к многим</li>
+</ul>
+<p>Релизация этих связей:</p>
+<h3 id="otm">OTM :</h3>
+<p>Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для того что-бы получить по Ребенку Родителя, необходимо указать в relationship, свойство backref.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Child&quot;</span><span class="p">,</span> <span class="n">backfer</span><span class="o">=</span><span class="s">&#39;parents&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;childrens&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;parents.id&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="mto">MTO :</h3>
+<p>Здесь построение отношения похоже на предыдущий, только ForeignKey указывается в Родителе, вместе с relationship()</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">child_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;childs.id&#39;</span><span class="p">))</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Child&quot;</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s">&#39;parents&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;childs&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="oto">OTO :</h3>
+<p>Со связью один-к-одному вообще всё просто, это та же связь один-к-многим, только в relationship добавляется еще одно свойство, которое вытягивает из другой таблицы только 1 элемент</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Child&quot;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s">&#39;parents&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;childs&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForegnKey</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Или </p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;parents&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">child_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;childs.id&#39;</span><span class="p">))</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Child&quot;</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="n">backref</span><span class="p">(</span><span class="s">&quot;parents&quot;</span><span class="p">,</span> <span class="n">uselist</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;childs&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="mtm">MTM :</h3>
+<p>Данная связь реализуется при помощи вспомагательной ассоциативной таблицы, которую необходимо создать до создания связанных таблиц.</p>
+<div class="highlight"><pre><span class="n">association_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&#39;association&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s">&#39;left_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;left.id&#39;</span><span class="p">)),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s">&#39;right_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;right.id&#39;</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;left&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">children</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Child&quot;</span><span class="p">,</span>
+                <span class="n">secondary</span><span class="o">=</span><span class="n">association_table</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;right&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>стырено из официальной документации с вольным переводом <a href="http://docs.sqlalchemy.org/en/rel_0_9/orm/basic_relationships.html">оф.документация</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
+                            systemd
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Petr Kalmykov
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43336913-2']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>

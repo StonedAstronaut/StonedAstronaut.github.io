@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Как важно писать хороший код - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/kak-vazhno-pisat-khoroshii-kod.html">
+
+        <meta name="author" content="Petr Kalmykov" />
+        <meta name="keywords" content="habr" />
+        <meta name="description" content="Мне приходится очень много читать код. Это и open source, и всяческие фреймворки, и код enterprise приложений. Именно о последних я хотел бы сегодня поговорить. Большая часть кода enterprise приложений — отстой. Приложения глючат и тормозят, их сложно тестировать, постоянно проблемы с развертыванием и обновлением. Это как бы никого не удивляет ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Как важно писать хороший код"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/kak-vazhno-pisat-khoroshii-kod.html"/>
+        <meta property="og:description" content="Мне приходится очень много читать код. Это и open source, и всяческие фреймворки, и код enterprise приложений. Именно о последних я хотел бы сегодня поговорить. Большая часть кода enterprise приложений — отстой. Приложения глючат и тормозят, их сложно тестировать, постоянно проблемы с развертыванием и обновлением. Это как бы никого не удивляет ..."/>
+        <meta property="article:published_time" content="2015-08-03" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="habr" />
+            <meta property="article:author" content="Petr Kalmykov" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
+                             О сайте
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/kak-vazhno-pisat-khoroshii-kod.html"
+                       rel="bookmark"
+                       title="Permalink to Как важно писать хороший код">
+                        Как важно писать хороший код
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-03T18:16:00+06:00"> Mon 03 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/habr.html">habr</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Мне приходится очень много читать код. Это и open source, и всяческие фреймворки, и код enterprise приложений. Именно о последних я хотел бы сегодня поговорить.</p>
+<p>Большая часть кода enterprise приложений — отстой. Приложения глючат и тормозят, их сложно тестировать, постоянно проблемы с развертыванием и обновлением. Это как бы никого не удивляет.</p>
+<p>Но удивляют люди, написавшие отстойный код. Эти люди, с немалым опытом, знают несколько языков, прочитали много книг, знают ООП, SOLID, рефакторинг, паттерны и другие малопонятные слова. То есть примерно такие, как многие из вас, читающих этот пост.</p>
+<p>Теория разбитых окон
+В 1969 году был проведен эксперимент. В ходе эксперимента две одинаковые машины были оставлены в двух местах – в благополучном университетском городке и неблагополучном районе крупного города. Не удивительно что в неблагополучном месте машина простояла всего пару дней и была выпотрошена, а в благополучном машина простояла нетронутой неделю. Но как только в уцелевшей машине разбили стекло, жители этого самого благополучного городка за несколько часов разобрали её на детали и перевернули вверх дном.</p>
+<p>В последствии ученые назвали это явление “Теорией разбитых окон”. Согласно теории, любое проявление беспорядка или нарушение норм провоцирует людей также забыть о правилах. Теория получила несколько экспериментальных подтверждений и её можно считать вполне достоверной.</p>
+<p>Есть также и обратный эффект. Поддержание порядка приводит к тому, что окружающие также поддерживают порядок.</p>
+<p>Как это влияет на код
+В enterprise разработке прессинг сроков и неопределенности требований бывает настолько высок, что кажется сделать “быстро и грязно” – гораздо лучший вариант, чем сделать правильно. Моментально подход “быстро и грязно” начинает распространяться по всему приложению, как путем clipboard inheritance (aka copy-paste), так и за счет эффекта разбитых окон.</p>
+<p>Еще один фактор влияющий на качество кода – сложность и несовершенство платформ и фреймворков, используемых в разработке. Из-за этого в коде часто появляются хаки и нелепые workaround-ы. Со временем начинает казаться что эти хаки и есть хороший код. Даже когда проблемы фреймворков исправляют, люди продолжают использовать хаки. Кстати эти хаки со временем могут попадать в интернет через форумы, блоги или pastebin и распространяться далеко за пределы одного приложения.</p>
+<p>Вы можете сказать, что качество кода не влияет на качество приложения. Увы, еще как влияет. Программисты допускают ошибки. Чем более плохой код, тем сложнее эти ошибки найти и исправить так, чтобы не создать новых. Прессинг сроков и сложности, скорее всего, не даст написать хороший код и появится еще один хак.</p>
+<p>В open source и продуктовой разработке такое встречается реже. Там больше следят за качеством и меньше прессинг сроков.</p>
+<p>Код пишется для людей
+Часто программисты забывают что код программ пишется в первую очередь для людей. Даже если вы пишите программу в одиночку, то посмотрев на нее через месяц, вы не вспомните почему написали тот или иной кусок кода и за что он отвечает.</p>
+<p>Хороший код должен, в первую очередь, очень ясно выражать намерения. К сожалению “быстрые и грязные” способы разработки бьют в первую очередь по понимаемости кода. Улучшение кода осознанно откладывается до лучших времен, когда будет пауза чтобы провести рефакторинг. Те самые лучшие времена никогда не наступают, а код начинают читать и дорабатывать сразу же после попадания в source control.</p>
+<p>Даже если вы полностью довольны свои кодом (в большинстве случаев программисты свои кодом довольны), то подумайте о том как будет ваш код читать другой человек (в большинстве случаев программисты недовольны чужим кодом).</p>
+<p>Приверженность качеству
+Единственный способ добиться высокой продуктивности и эффективности – писать хороший код сразу. Единственный инструмент повышения качества кода – вы сами. Если вы не стремитесь всегда делать хороший код, то вам не помогут ни тесты, ни инструменты статического анализа. Даже ревью других программистов не поможет. Код всегда можно сделать настолько запутанным, что в нем невозможно будет найти ошибку при чтении, при этом сделать вид, что код очень важен и никто не возьмется его переписать.</p>
+<p>В первую очередь необходимо думать о структуре и именовании. Код с зашифрованными идентификаторами и малопонятным потоком исполнения скорее всего будет содержать ошибки. Не допускайте такого кода, это гораздо дешевле, чем исправлять ошибки.</p>
+<p>Ясно выражайте намерения в своем коде, сводите к минимуму неочевидные неявные аспекты. Не надо стремиться сделать код максимально лаконичным, стремитесь сделать его максимально понятным.</p>
+<p>Если вам приходится править код, то не создавайте хаков. Потратьте немного времени, напишите нормально. Сэкономите на поддержке. Если же код совсем плохой, был сделан “быстро и грязно” и оброс хаками, то просто выкиньте его и перепишите. Только не надо пытаться переписать все. Учитывайте продуктивность: программист пишет 40-60 отлаженных строк кода в день в нормальном темпе и 120-200 в ускоренном (высокая концентрация, четкая цель, понятно что делать).</p>
+<p>Если вы сами пишете “быстро и грязно”, например прототип для уточнения требований, то выкиньте код и перепишите нормально сразу после того, как ваш код сделает свое дело.</p>
+<p>Если вы скопировали часть кода из другого места или, не дай бог, из интернета, то разберитесь как он работает, прежде чем заливать изменения в source control. Вообще не используйте непонятные для вас фрагменты кода.</p>
+<p>Всегда поддерживайте чистоту и порядок в вашем коде, пользуйтесь инструментами, которые помогают вам это делать. Не будете этого делать – код очень быстро превратится в помойку. Собирайте статистику по плотности проблем в коде, это поможет вам лучше понять, как писать хороший код.</p>
+<p>Перечитывайте свой код. Проводите рефакторинг постоянно в процессе написания. Помните, что рефакторинг “потом” никогда не наступает.</p>
+<p>Думайте о том, какой код вы хотите написать, до того как начать его писать. Само написание кода – настолько поглощающий процесс, что думать о качестве некогда. Состояние потока – это состояние свободы самовыражения. Необходимо заранее ограничить самовыражение, чтобы код получился хорошим.</p>
+<p>Экономика качества кода
+Ошибка найденная и устраненная на этапе кодирования в 10 раз дешевле, чем ошибка найденная при тестировании и в 100 раз дешевле ошибки, найденной в production. В истории есть реальные примеры ошибок, исправление которых обошлось в десятки тысяч долларов.</p>
+<p>Поэтому очень важно устранять ошибки на этапе разработки, причем усилиями самих разработчиков.</p>
+<p>Напоследок
+Не путайте хороший и идеальный код. Идеального кода не существует, нет смысла заниматься бесконечным улучшением в стремлении к идеалу. Хороший код – это код который читаем, понятен, решает задачу, правильно структурирован и не содержит ошибок. Писать хороший код не просто ваша цель, это ваша обязанность.</p>
+<p>©habrahabr</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
+                            systemd
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Petr Kalmykov
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43336913-2']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>
