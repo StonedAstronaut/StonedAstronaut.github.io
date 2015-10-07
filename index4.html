@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>systemd timer - замена cron - Astro blog</title>
+    <title>Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,19 +10,15 @@
 
 
 
-<link rel="canonical" href="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html">
-
+<link rel="canonical" href="https://stonedastronaut.github.io">
         <meta name="author" content="Petr Kalmykov" />
-        <meta name="description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для" />
 
+    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="systemd timer - замена cron"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html"/>
-        <meta property="og:description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для"/>
-        <meta property="article:published_time" content="2015-07-20" />
-            <meta property="article:section" content="misc" />
-            <meta property="article:author" content="Petr Kalmykov" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Astro blog"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io"/>
+        <meta property="og:description" content="Astro blog"/>
 
 
     <!-- Bootstrap -->
@@ -55,7 +51,7 @@ Astro blog            </a>
                          <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
                              О сайте
                           </a></li>
-                        <li class="active">
+                        <li >
                             <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
                         </li>
             </ul>
@@ -72,40 +68,79 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="https://stonedastronaut.github.io/drafts/systemd-timer-zamena-cron.html"
-                       rel="bookmark"
-                       title="Permalink to systemd timer - замена cron">
-                        systemd timer - замена cron
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-07-20T01:15:00+06:00"> Mon 20 July 2015</time>
-    </span>
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/diagnostika-hdd-sredstvami-unix.html">Диагностика hdd средствами unix</a></h2>
+                <div class="summary"><p>Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп.</p>
+<p>Для теста <em>hdd</em> использую 3 утилиты:</p>
+<ol>
+<li>smartctl из пакета smartmontools</li>
+<li>hdparm</li>
+<li>badblocks из пакета e2fsprogs</li>
+</ol>
+<p>Все тесты проводить на <strong>НЕ</strong> смонтированном hdd.</p>
+<h3>smartctl:</h3>
+<div class="highlight"><pre><span class="c"># smartctl -a /dev/sdX</span>
+</pre></div>
 
 
-
-    
-</footer><!-- /.post-info -->                    </div>
+<p>отсюда интересует несколько ...</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/diagnostika-hdd-sredstvami-unix.html">more ...</a>
                 </div>
-                <hr />
-<p>Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.</p>
-<p>Так бгомерзкий systemd в моём обиходе заменил еще и cron...</p>
-<p>Итак, для </p>
-            </div>
-            <!-- /.entry-content -->
-        </article>
-    </section>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/backup-hdd-sredstvami-gnulinux.html">Backup hdd средствами GNU/Linux</a></h2>
+                <div class="summary"><p>После теста hdd можно определить, пора ли менять диск или нет.</p>
+<p>Если время пришло, то тогда необходимо перенести со старого жесткого всю инфу на новый.</p>
+<p>Из гуглежа, стало ясно, чо использование обычного dd не "кошегно". Ъ использовать <strong>GNU ddrescue</strong>. Команда для backup'а выглядит следующим образом:</p>
+<div class="highlight"><pre><span class="c"># ddrescue /dev/sdX /pth_to_backup ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/backup-hdd-sredstvami-gnulinux.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html">Сравнение каталогов в *unix. diff</a></h2>
+                <div class="summary"><p>Сравнение каталогов утилитой diff осуществляется следующим образом:</p>
+<div class="highlight"><pre><span class="nv">$ </span>diff -urN dir1 dir2  &gt; out.diff
 
+
+<span class="nv">$ </span>mc -e out.diff
+</pre></div>
+
+
+<p>где
+ключи diff</p>
+<p>-u унифицированный метод</p>
+<p>-r рекурсивно </p>
+<p>-N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. "Сравнение каталогов". </p>
+<p>Возможно ...</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/kak-sozdat-wiki-stranitsu-v-vkcom.html">Как создать wiki-страницу в vk.com</a></h2>
+                <div class="summary"><p>Чтобы создать wiki страницу в vk.com, необходимо перейти по ссылке следующего вида:</p>
+<p><a href="">http://vk.com/pages?oid=-{Community_id}&amp;p={Name_of_page}</a></p>
+<p>где {Community_id} - id паблика или группы, а {Name_of_page} - название страницы, которую необходио создать.</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/kak-sozdat-wiki-stranitsu-v-vkcom.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
+        <ul class="pagination">
+                <li class="prev"><a href="https://stonedastronaut.github.io/index3.html">&laquo;</a>
+                </li>
+                    <li class=""><a
+                            href="https://stonedastronaut.github.io/index.html">1</a></li>
+                    <li class=""><a
+                            href="https://stonedastronaut.github.io/index2.html">2</a></li>
+                    <li class=""><a
+                            href="https://stonedastronaut.github.io/index3.html">3</a></li>
+                    <li class="active"><a
+                            href="https://stonedastronaut.github.io/index4.html">4</a></li>
+                <li class="next disabled"><a href="#">&raquo;</a></li>
+        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

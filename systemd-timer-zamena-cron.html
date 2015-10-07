@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>crypt - Astro blog</title>
+    <title>systemd timer - замена cron - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,16 +10,22 @@
 
 
 
+<link rel="canonical" href="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html">
 
-    <meta name="author" content="Petr Kalmykov" />
-    <meta name="keywords" content="crypt" />
+        <meta name="author" content="Petr Kalmykov" />
+        <meta name="keywords" content="linux,systemd" />
+        <meta name="description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для" />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Astro blog"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io"/>
-        <meta property="og:description" content="Astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="systemd timer - замена cron"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html"/>
+        <meta property="og:description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для"/>
+        <meta property="article:published_time" content="2015-07-20" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="systemd" />
+            <meta property="article:author" content="Petr Kalmykov" />
 
 
     <!-- Bootstrap -->
@@ -52,7 +58,7 @@ Astro blog            </a>
                          <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
                              О сайте
                           </a></li>
-                        <li >
+                        <li class="active">
                             <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
                         </li>
             </ul>
@@ -69,47 +75,42 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-            <article>
-                <h2><a href="https://stonedastronaut.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">Извлечение ключей RSA методом акустического криптоанализа</a></h2>
-                <div class="summary"><p>Известный криптограф Ади Шамир с коллегами опубликовал научную работу под названием «Извлечение ключа RSA путем криптоанализа с низкой частотой дискретизации» (http://www.tau.ac.il/~tromer/papers/acoustic-20131218..).</p>
-<p>Многие компьютеры издают высокочастотный звук во время работы, из-за вибрации в некоторых электронных компонентах (конденсаторах) из-за микроскопического изменения напряжения в CPU при ...</p>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">more ...</a>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html"
+                       rel="bookmark"
+                       title="Permalink to systemd timer - замена cron">
+                        systemd timer - замена cron
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-20T01:15:00+06:00"> Mon 20 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/systemd.html">systemd</a>
+    
+</footer><!-- /.post-info -->                    </div>
                 </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">LVM on LUKS на примере arch</a></h2>
-                <div class="summary"><h2>Создаём разделы физические</h2>
-<p>Вот такая структура диска.</p>
-<ul>
-<li>
-<p><code>/dev/sda1 -&gt; /boot</code></p>
-</li>
-<li>
-<p><code>/dev/sda2 -&gt; LVM</code></p>
-</li>
-</ul>
-<h3>Шифруем раздел LVM</h3>
-<div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
-</pre></div>
-
-
-<p>больше о параметрах шифрования см. <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_LUKS_mode">здесь</a></p>
-<div class="highlight"><pre>cryptsetup open --type luks /dev/sda2 lvm
-</pre></div>
-
-
-<h3>Создаём разделы на LVM</h3>
-<p>создаём физический раздел LVM:</p>
-<div class="highlight"><pre>pvcreate /dev/mapper/lvm
-</pre></div>
-
-
-<p>создаём ...</p>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
+                <p>Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.</p>
+<p>Так бгомерзкий systemd в моём обиходе заменил еще и cron...</p>
+<p>Итак, для </p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3" id="sidebar">

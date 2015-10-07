@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>In this emacs article, let us review the following 7 Emacs navigation options. - Astro blog</title>
+    <title>Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,18 +10,20 @@
 
 
 
-<link rel="canonical" href="https://stonedastronaut.github.io/drafts/in-this-emacs-article-let-us-review-the-following-7-emacs-navigation-options.html">
+<link rel="canonical" href="https://stonedastronaut.github.io/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html">
 
         <meta name="author" content="Petr Kalmykov" />
-        <meta name="description" content="Line navigation Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ..." />
+        <meta name="keywords" content="linux" />
+        <meta name="description" content="/bin/bash -c &#34;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&#34;" />
 
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="In this emacs article, let us review the following 7 Emacs navigation options."/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/in-this-emacs-article-let-us-review-the-following-7-emacs-navigation-options.html"/>
-        <meta property="og:description" content="Line navigation Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ..."/>
-        <meta property="article:published_time" content="2015-08-03" />
+        <meta property="og:title" content="Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html"/>
+        <meta property="og:description" content="/bin/bash -c &#34;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&#34;"/>
+        <meta property="article:published_time" content="2015-08-19" />
             <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="linux" />
             <meta property="article:author" content="Petr Kalmykov" />
 
 
@@ -76,10 +78,10 @@ Astro blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://stonedastronaut.github.io/drafts/in-this-emacs-article-let-us-review-the-following-7-emacs-navigation-options.html"
+                    <a href="https://stonedastronaut.github.io/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html"
                        rel="bookmark"
-                       title="Permalink to In this emacs article, let us review the following 7 Emacs navigation options.">
-                        In this emacs article, let us review the following 7 Emacs navigation options.
+                       title="Permalink to Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde">
+                        Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde
                     </a>
                 </h1>
             </header>
@@ -89,76 +91,19 @@ Astro blog            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-08-03T19:14:00+06:00"> Mon 03 August 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-08-19T01:02:00+06:00"> Wed 19 August 2015</time>
     </span>
 
 
 
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <hr />
-<p>Line navigation
-Screen navigation
-Word navigation
-Special navigation
-Paragraph navigation
-Search navigation
-Navigation from command line</p>
-<p>If you don’t have an emacs editor, install emacs editor as we discussed earlier.</p>
-<p>Notation used in this article:</p>
-<p>C-a : Ctrl-a
-M-a : Meta-a ( If you don’t have Meta key, use Esc key )
-C-M-a : Ctrl-Meta-a</p>
-<ol>
-<li>Emacs Line Navigation</li>
-</ol>
-<p>Following four navigation can be done line by line.</p>
-<p>C-p : go to previous line
-C-n : go to next line
-C-f : go forward one character
-C-b : go backward one character</p>
-<p>Repeat factor</p>
-<p>By using the repeat factor in EMACS we can do this operation for N times. For example, when you want to go down by 10 lines, then type C-u 10 C-p</p>
-<p>Within a line if you want to navigate to different position, you have following two options.</p>
-<p>C-a : go to the starting of the current line.
-C-e : go to the end of the current line.</p>
-<p>At thegeekstuff, we love Vim editor. We’ve written lot of articles on Vim editor. If you are new to the Vim editor, refer to our Vim editor navigation fundamentals article.
-2. Emacs Screen Navigation</p>
-<p>Following three navigation can be done in relation to text shown in the screen.</p>
-<p>C-v : Jump forward one full screen.
-M-v : Jump backwards one full screen. ( If you dont have Meta key, use ESC key )
-C-l : Make the current line as center line of window.</p>
-<p>You can also use Page Up, Page Down for screen navigation.
-3. Emacs Special Navigation</p>
-<p>Following are couple of special navigation that are used to go to the start or end of buffer.</p>
-<p>M-&lt; : Go to the start of file
-M-&gt; : Go to the end of file</p>
-<ol>
-<li>Emacs Word Navigation</li>
-</ol>
-<p>Following are two word navigation keys.</p>
-<p>M-f : navigate a word forward.
-M-b : navigate a word backward.</p>
-<ol>
-<li>Emacs Paragraph Navigation</li>
-</ol>
-<p>M-a : Go to the beginning of the current paragraph. By pressing M-a again and again move to the previous paragraph beginnings.
-M-e : Go to the end of the current paragraph. By pressing M-e again and again move to the next paragraph end, and again.</p>
-<ol>
-<li>Emacs Search Navigation</li>
-</ol>
-<p>When you want to search by giving the plain text,</p>
-<p>C-s : Type Ctrl+s followed by the word to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
-C-r : Do a reverse search. All other explanation are like Ctrl+s</p>
-<p>When you want to search using regular expression,</p>
-<p>C-M-s : Type Ctrl+s followed by the regex to Search. Press Ctrl+s continuously to move to the next occurrences. Press enter to terminate search.
-C-M-r : Do a reverse search. All other explanation are like Ctrl+Meta+s</p>
-<ol>
-<li>Emacs Navigation from Command Line</li>
-</ol>
-<p>Emacs +N filename: Go to the Nth line of the file after opening it.</p>
-<p>$ emacs +10 /etc/passwd</p>
+<div class="highlight"><pre>/bin/bash -c <span class="s2">&quot;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&quot;</span>
+</pre></div>
             </div>
             <!-- /.entry-content -->
         </article>

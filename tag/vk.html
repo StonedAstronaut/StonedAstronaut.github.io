@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Новые команды в Linux для старых решений - Astro blog</title>
+    <title>vk - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,19 +10,16 @@
 
 
 
-<link rel="canonical" href="https://stonedastronaut.github.io/drafts/novye-komandy-v-linux-dlia-starykh-reshenii.html">
 
-        <meta name="author" content="Petr Kalmykov" />
-        <meta name="description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..." />
+    <meta name="author" content="Petr Kalmykov" />
+    <meta name="keywords" content="vk" />
 
+    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Новые команды в Linux для старых решений"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/novye-komandy-v-linux-dlia-starykh-reshenii.html"/>
-        <meta property="og:description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..."/>
-        <meta property="article:published_time" content="2015-05-20" />
-            <meta property="article:section" content="misc" />
-            <meta property="article:author" content="Petr Kalmykov" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Astro blog"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io"/>
+        <meta property="og:description" content="Astro blog"/>
 
 
     <!-- Bootstrap -->
@@ -55,7 +52,7 @@ Astro blog            </a>
                          <li><a href="https://stonedastronaut.github.io/pages/o-saite.html">
                              О сайте
                           </a></li>
-                        <li class="active">
+                        <li >
                             <a href="https://stonedastronaut.github.io/category/misc.html">Misc</a>
                         </li>
             </ul>
@@ -72,71 +69,15 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="https://stonedastronaut.github.io/drafts/novye-komandy-v-linux-dlia-starykh-reshenii.html"
-                       rel="bookmark"
-                       title="Permalink to Новые команды в Linux для старых решений">
-                        Новые команды в Linux для старых решений
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-05-20T18:17:00+06:00"> Wed 20 May 2015</time>
-    </span>
-
-
-
-    
-</footer><!-- /.post-info -->                    </div>
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/kak-sozdat-wiki-stranitsu-v-vkcom.html">Как создать wiki-страницу в vk.com</a></h2>
+                <div class="summary"><p>Чтобы создать wiki страницу в vk.com, необходимо перейти по ссылке следующего вида:</p>
+<p><a href="">http://vk.com/pages?oid=-{Community_id}&amp;p={Name_of_page}</a></p>
+<p>где {Community_id} - id паблика или группы, а {Name_of_page} - название страницы, которую необходио создать.</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/kak-sozdat-wiki-stranitsu-v-vkcom.html">more ...</a>
                 </div>
-                <p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
-<hr />
-<h3>вместо <em>netstat</em> используем <em>ss</em>:</h3>
-<div class="highlight"><pre>ss -lpn
-</pre></div>
-
-
-<h3>вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
-<p>Раньше для вкл/выкл определенного интерфейса использовали</p>
-<div class="highlight"><pre>ifconfig eth0 up
-</pre></div>
-
-
-<p>теперь так:</p>
-<div class="highlight"><pre>ip link <span class="nb">set </span>dev eth0 up
-</pre></div>
-
-
-<p>Для конфигурирования интерфейса:</p>
-<div class="highlight"><pre>ifconfig eth0 10.0.0.2/16
-</pre></div>
-
-
-<p>теперь:</p>
-<div class="highlight"><pre>ip addr dev eth0 add 10.0.0.2/16
-</pre></div>
-
-
-<h3>вместо <em>ps aux | grep ...</em> используем <em>pgrep -af</em></h3>
-<div class="highlight"><pre>ps aux <span class="p">|</span> grep rtorrent
-</pre></div>
-
-
-<p>теперь:</p>
-<div class="highlight"><pre>pgrep -af rtorrent
-</pre></div>
-            </div>
-            <!-- /.entry-content -->
-        </article>
-    </section>
+            </article>
+            <hr/>
 
         </div>
         <div class="col-sm-3" id="sidebar">

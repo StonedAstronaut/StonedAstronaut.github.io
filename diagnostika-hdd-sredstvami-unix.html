@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde - Astro blog</title>
+    <title>Диагностика hdd средствами unix - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,18 +10,20 @@
 
 
 
-<link rel="canonical" href="https://stonedastronaut.github.io/drafts/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html">
+<link rel="canonical" href="https://stonedastronaut.github.io/diagnostika-hdd-sredstvami-unix.html">
 
         <meta name="author" content="Petr Kalmykov" />
-        <meta name="description" content="/bin/bash -c &#34;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&#34;" />
+        <meta name="keywords" content="linux" />
+        <meta name="description" content="Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп. Для теста hdd использую 3 утилиты: smartctl из пакета smartmontools hdparm badblocks из пакета e2fsprogs Все тесты проводить на НЕ смонтированном hdd. smartctl: # smartctl -a /dev/sdX отсюда интересует несколько ..." />
 
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html"/>
-        <meta property="og:description" content="/bin/bash -c &#34;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&#34;"/>
-        <meta property="article:published_time" content="2015-08-19" />
+        <meta property="og:title" content="Диагностика hdd средствами unix"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/diagnostika-hdd-sredstvami-unix.html"/>
+        <meta property="og:description" content="Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп. Для теста hdd использую 3 утилиты: smartctl из пакета smartmontools hdparm badblocks из пакета e2fsprogs Все тесты проводить на НЕ смонтированном hdd. smartctl: # smartctl -a /dev/sdX отсюда интересует несколько ..."/>
+        <meta property="article:published_time" content="2015-02-09" />
             <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="linux" />
             <meta property="article:author" content="Petr Kalmykov" />
 
 
@@ -76,10 +78,10 @@ Astro blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://stonedastronaut.github.io/drafts/kak-ia-povesil-na-goriachuiu-klavishu-zapusk-brouzera-po-umolchaniiu-v-kde.html"
+                    <a href="https://stonedastronaut.github.io/diagnostika-hdd-sredstvami-unix.html"
                        rel="bookmark"
-                       title="Permalink to Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde">
-                        Как я повесил на горячую клавишу запуск броузера по-умолчанию в kde
+                       title="Permalink to Диагностика hdd средствами unix">
+                        Диагностика hdd средствами unix
                     </a>
                 </h1>
             </header>
@@ -89,17 +91,50 @@ Astro blog            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-08-19T01:02:00+06:00"> Wed 19 August 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-02-09T22:08:00+06:00"> Mon 09 February 2015</time>
     </span>
 
 
 
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <hr />
-<div class="highlight"><pre>/bin/bash -c <span class="s2">&quot;`xdg-settings get default-web-broswer | sed &#39;s/.desktop//g&#39;`&quot;</span>
+                <p>Здесь я опишу способы проверки hdd, стыренные из других источников, которые мне очень помогли понять, почему у меня тупит комп.</p>
+<p>Для теста <em>hdd</em> использую 3 утилиты:</p>
+<ol>
+<li>smartctl из пакета smartmontools</li>
+<li>hdparm</li>
+<li>badblocks из пакета e2fsprogs</li>
+</ol>
+<p>Все тесты проводить на <strong>НЕ</strong> смонтированном hdd.</p>
+<h3>smartctl:</h3>
+<div class="highlight"><pre><span class="c"># smartctl -a /dev/sdX</span>
 </pre></div>
+
+
+<p>отсюда интересует несколько параметров:</p>
+<ul>
+<li>5 Reallocated_Sector_Ct - указывает на количество использованных запасных блоков, заложенных "про запас" в случае когда hdd начинает сыпаться;</li>
+<li>9 Power_On_Hours - название говорит само за себя, сколько бедный hdd отмаслал часов;</li>
+</ul>
+<h3>hdparm:</h3>
+<div class="highlight"><pre><span class="c"># hdparm -t /dev/sdX</span>
+</pre></div>
+
+
+<p>Команда покажет, скорость записи на hdd. Данную команду необходимо выполнить несколько раз, для б/м достоверной картины.</p>
+<h3>badblocks:</h3>
+<div class="highlight"><pre><span class="c"># badblocks -vs /dev/sdX</span>
+</pre></div>
+
+
+<p>Команда с говорящим названием покажет, сколько битых блоком имеет поверхность hdd. Пояснение к ключам:</p>
+<p>-w — разрешает запись на жесткий диск, не заботясь о сохранности данных. <strong>Никогда не используйте для дисков, на которых есть нужная вам информация!</strong> Несколько ускоряет тестирование.</p>
+<p>-v — выводит информацию об ошибках на экран.</p>
+<p>-s — выводит статус выполнения проверки в %. Для жесткого диска большого объема проверка может длиться несколько часов, поэтому, возможно, вам захочется наблюдать за ходом выполнения в процентах. Эта опция несколько замедляет работу утилиты, поэтому, если вы запускаете проверку, например, на ночь, эту опцию можно опустить.</p>
+<p>стырено <a href="http://www.ubuntu.sumy.ua/2013/04/%D0%B4%D0%B8%D0%B0%D0%B3%D0%BD%D0%BE%D1%81%D1%82%D0%B8%D0%BA%D0%B0-%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BE%D1%81%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D0%B8-%D0%BF%D1%80%D0%BE.html">отсюда</a></p>
             </div>
             <!-- /.entry-content -->
         </article>

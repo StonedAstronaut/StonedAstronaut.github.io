@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>crypt - Astro blog</title>
+    <title>mysql - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
 
 
     <meta name="author" content="Petr Kalmykov" />
-    <meta name="keywords" content="crypt" />
+    <meta name="keywords" content="mysql" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
@@ -70,43 +70,14 @@ Astro blog            </a>
         <div class="col-sm-9">
 
             <article>
-                <h2><a href="https://stonedastronaut.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">Извлечение ключей RSA методом акустического криптоанализа</a></h2>
-                <div class="summary"><p>Известный криптограф Ади Шамир с коллегами опубликовал научную работу под названием «Извлечение ключа RSA путем криптоанализа с низкой частотой дискретизации» (http://www.tau.ac.il/~tromer/papers/acoustic-20131218..).</p>
-<p>Многие компьютеры издают высокочастотный звук во время работы, из-за вибрации в некоторых электронных компонентах (конденсаторах) из-за микроскопического изменения напряжения в CPU при ...</p>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">LVM on LUKS на примере arch</a></h2>
-                <div class="summary"><h2>Создаём разделы физические</h2>
-<p>Вот такая структура диска.</p>
-<ul>
-<li>
-<p><code>/dev/sda1 -&gt; /boot</code></p>
-</li>
-<li>
-<p><code>/dev/sda2 -&gt; LVM</code></p>
-</li>
-</ul>
-<h3>Шифруем раздел LVM</h3>
-<div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
-</pre></div>
-
-
-<p>больше о параметрах шифрования см. <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_LUKS_mode">здесь</a></p>
-<div class="highlight"><pre>cryptsetup open --type luks /dev/sda2 lvm
-</pre></div>
-
-
-<h3>Создаём разделы на LVM</h3>
-<p>создаём физический раздел LVM:</p>
-<div class="highlight"><pre>pvcreate /dev/mapper/lvm
-</pre></div>
-
-
-<p>создаём ...</p>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">more ...</a>
+                <h2><a href="https://stonedastronaut.github.io/mysql-shpargalki.html">MySQL шпаргалки</a></h2>
+                <div class="summary"><p>Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных.
+Сегодня я решил опубликовать свои шпаргалки, на самые часто встречающиеся ошибки при работе с MySQL.</p>
+<p>Работа с бекапами
+Делаем бекап
+mysqldump -u USER -pPASSWORD DATABASE &gt; /path/to/file/dump.sql</p>
+<p>Создаём структуру ...</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/mysql-shpargalki.html">more ...</a>
                 </div>
             </article>
             <hr/>

@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Как выкачать сайт. wget - Astro blog</title>
+    <title>Новые команды в Linux для старых решений - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,18 +10,20 @@
 
 
 
-<link rel="canonical" href="https://stonedastronaut.github.io/drafts/kak-vykachat-sait-wget.html">
+<link rel="canonical" href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">
 
         <meta name="author" content="Petr Kalmykov" />
-        <meta name="description" content="Для выкачки сайта при помощи wget над использовать сл ключи: wget -r -k -l 7 -p -E -nc http://site.com/ -r — указывает на то, что нужно рекурсивно переходить по ссылкам на сайте, чтобы скачивать страницы. -k — используется для того, чтобы wget преобразовал все ссылки в скаченных файлах таким образом ..." />
+        <meta name="keywords" content="linux" />
+        <meta name="description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..." />
 
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Как выкачать сайт. wget"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/drafts/kak-vykachat-sait-wget.html"/>
-        <meta property="og:description" content="Для выкачки сайта при помощи wget над использовать сл ключи: wget -r -k -l 7 -p -E -nc http://site.com/ -r — указывает на то, что нужно рекурсивно переходить по ссылкам на сайте, чтобы скачивать страницы. -k — используется для того, чтобы wget преобразовал все ссылки в скаченных файлах таким образом ..."/>
-        <meta property="article:published_time" content="2015-02-28" />
+        <meta property="og:title" content="Новые команды в Linux для старых решений"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"/>
+        <meta property="og:description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..."/>
+        <meta property="article:published_time" content="2015-05-20" />
             <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="linux" />
             <meta property="article:author" content="Petr Kalmykov" />
 
 
@@ -76,10 +78,10 @@ Astro blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://stonedastronaut.github.io/drafts/kak-vykachat-sait-wget.html"
+                    <a href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"
                        rel="bookmark"
-                       title="Permalink to Как выкачать сайт. wget">
-                        Как выкачать сайт. wget
+                       title="Permalink to Новые команды в Linux для старых решений">
+                        Новые команды в Linux для старых решений
                     </a>
                 </h1>
             </header>
@@ -89,35 +91,52 @@ Astro blog            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-02-28T23:45:00+06:00"> Sat 28 February 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-05-20T18:17:00+06:00"> Wed 20 May 2015</time>
     </span>
 
 
 
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <hr />
-<p>Для выкачки сайта при помощи wget над использовать сл ключи:</p>
-<div class="highlight"><pre>wget -r -k -l <span class="m">7</span> -p -E -nc http://site.com/
+                <p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
+<hr />
+<h3>вместо <em>netstat</em> используем <em>ss</em>:</h3>
+<div class="highlight"><pre>ss -lpn
 </pre></div>
 
 
-<p>-r  —    указывает на то, что нужно рекурсивно переходить по ссылкам на сайте, чтобы скачивать страницы.</p>
-<p>-k  —    используется для того, чтобы wget преобразовал все ссылки в скаченных файлах таким образом, чтобы по ним можно было переходить на локальном компьютере (в автономном режиме).</p>
-<p>-p  —    указывает на то, что нужно загрузить все файлы, которые требуются для отображения страниц (изображения, css и т.д.).</p>
-<p>-l  —    определяет максимальную глубину вложенности страниц, которые wget должен скачать (по умолчанию значение равно 5, в примере мы установили 7). В большинстве случаев сайты имеют страницы с большой степенью вложенности и wget может просто «закопаться», скачивая новые страницы. Чтобы этого не произошло можно использовать параметр -l.</p>
-<p>-E  —    добавлять к загруженным файлам расширение .html.</p>
-<p>-nc —    при использовании данного параметра существующие файлы не будут перезаписаны. Это удобно, когда нужно продолжить загрузку сайта, прерванную в предыдущий раз.</p>
-<p>--no-parent - не скачивать выше указанного каталога/ссылки.</p>
-<p>стырено <a href="http://ru.najomi.org/_nix/wget">отсюда</a></p>
-<p>Некоторые сайты, например мне попался один вики-сайт, который таким образом выкачиватся не желал. Для такого сработала такая комбинация ключей:</p>
-<div class="highlight"><pre>wget -k -p -r -l <span class="m">1</span> --restrict-file-names<span class="o">=</span>nocontrol,windows --html-extension <span class="se">\</span>
--e <span class="nv">robots</span><span class="o">=</span>off http://tralala.com
+<h3>вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
+<p>Раньше для вкл/выкл определенного интерфейса использовали</p>
+<div class="highlight"><pre>ifconfig eth0 up
 </pre></div>
 
 
-<p>Скорее всего это связано с шаблоном ссылок внутри сайта, http://.../index.php@some_page, но я не проверял.</p>
+<p>теперь так:</p>
+<div class="highlight"><pre>ip link <span class="nb">set </span>dev eth0 up
+</pre></div>
+
+
+<p>Для конфигурирования интерфейса:</p>
+<div class="highlight"><pre>ifconfig eth0 10.0.0.2/16
+</pre></div>
+
+
+<p>теперь:</p>
+<div class="highlight"><pre>ip addr dev eth0 add 10.0.0.2/16
+</pre></div>
+
+
+<h3>вместо <em>ps aux | grep ...</em> используем <em>pgrep -af</em></h3>
+<div class="highlight"><pre>ps aux <span class="p">|</span> grep rtorrent
+</pre></div>
+
+
+<p>теперь:</p>
+<div class="highlight"><pre>pgrep -af rtorrent
+</pre></div>
             </div>
             <!-- /.entry-content -->
         </article>
