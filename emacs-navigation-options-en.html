@@ -15,13 +15,13 @@
 
         <meta name="author" content="Petr Kalmykov" />
         <meta name="keywords" content="emacs,linux" />
-        <meta name="description" content="[TOC] Emacs Line Navigation Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use ..." />
+        <meta name="description" content="[TOC] Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a ..." />
 
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Emacs navigation options"/>
         <meta property="og:url" content="https://stonedastronaut.github.io/emacs-navigation-options-en.html"/>
-        <meta property="og:description" content="[TOC] Emacs Line Navigation Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use ..."/>
+        <meta property="og:description" content="[TOC] Screen navigation Word navigation Special navigation Paragraph navigation Search navigation Navigation from command line If you don’t have an emacs editor, install emacs editor as we discussed earlier. Notation used in this article: C-a : Ctrl-a M-a : Meta-a ( If you don’t have Meta key, use Esc key ) C-M-a ..."/>
         <meta property="article:published_time" content="2015-08-03" />
             <meta property="article:section" content="misc" />
             <meta property="article:tag" content="emacs" />
@@ -103,8 +103,7 @@ Astro blog            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <p>[TOC]</p>
-<p>Emacs Line Navigation
-Screen navigation
+<p>Screen navigation
 Word navigation
 Special navigation
 Paragraph navigation
@@ -115,21 +114,30 @@ Navigation from command line</p>
 <p>C-a : Ctrl-a
 M-a : Meta-a ( If you don’t have Meta key, use Esc key )
 C-M-a : Ctrl-Meta-a</p>
-<ol>
-<li>
-<p>Emacs Line Navigation</p>
-<p>Following four navigation can be done line by line.</p>
-<p>C-p : go to previous line
+<h1>1.  Emacs Line Navigation</h1>
+<div class="highlight"><pre>Following four navigation can be done line by line.
+
+C-p : go to previous line
 C-n : go to next line
 C-f : go forward one character
-C-b : go backward one character</p>
-<p>Repeat factor</p>
-<p>By using the repeat factor in EMACS we can do this operation for N times. For example, when you want to go down by 10 lines, then type C-u 10 C-p</p>
-<p>Within a line if you want to navigate to different position, you have following two options.</p>
-<p>C-a : go to the starting of the current line.
-C-e : go to the end of the current line.</p>
-<p>At thegeekstuff, we love Vim editor. We’ve written lot of articles on Vim editor. If you are new to the Vim editor, refer to our Vim editor navigation fundamentals article.
-2. Emacs Screen Navigation</p>
+C-b : go backward one character
+
+Repeat factor
+
+By using the repeat factor in EMACS we can do this operation for N times. For example, when you want to go down by 10 lines, then type C-u 10 C-p
+
+Within a line if you want to navigate to different position, you have following two options.
+
+C-a : go to the starting of the current line.
+C-e : go to the end of the current line.
+
+At thegeekstuff, we love Vim editor. We’ve written lot of articles on Vim editor. If you are new to the Vim editor, refer to our Vim editor navigation fundamentals article.
+</pre></div>
+
+
+<ol>
+<li>
+<p>Emacs Screen Navigation</p>
 <p>Following three navigation can be done in relation to text shown in the screen.</p>
 <p>C-v : Jump forward one full screen.
 M-v : Jump backwards one full screen. ( If you dont have Meta key, use ESC key )
