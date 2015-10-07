@@ -5,29 +5,36 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://stonedastronaut.github.io/</loc>
-<lastmod>2015-10-07T19:19:15-00:00</lastmod>
+<lastmod>2015-10-07T19:20:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://stonedastronaut.github.io/archives.html</loc>
-<lastmod>2015-10-07T19:19:15-00:00</lastmod>
+<lastmod>2015-10-07T19:20:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://stonedastronaut.github.io/tags.html</loc>
-<lastmod>2015-10-07T19:19:15-00:00</lastmod>
+<lastmod>2015-10-07T19:20:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://stonedastronaut.github.io/categories.html</loc>
-<lastmod>2015-10-07T19:19:15-00:00</lastmod>
+<lastmod>2015-10-07T19:20:23-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://stonedastronaut.github.io/pages/privetstvuiu-na-svoem-bloge.html</loc>
+<lastmod>2015-01-20T15:50:00+06:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -109,36 +116,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://stonedastronaut.github.io/tag/android.html</loc>
-<lastmod>2015-02-21T16:30:00+05:32</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://stonedastronaut.github.io/tag/habr.html</loc>
-<lastmod>2015-08-03T19:49:58+05:32</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://stonedastronaut.github.io/tag/freelance.html</loc>
-<lastmod>2015-08-03T17:55:00+05:32</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://stonedastronaut.github.io/tag/crypt.html</loc>
-<lastmod>2015-07-26T03:53:00+05:32</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://stonedastronaut.github.io/tag/backup.html</loc>
-<lastmod>2015-02-09T19:30:00+05:32</lastmod>
+<loc>https://stonedastronaut.github.io/tag/geekbrains.html</loc>
+<lastmod>2015-07-21T22:46:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -151,6 +130,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>https://stonedastronaut.github.io/tag/freelance.html</loc>
+<lastmod>2015-08-03T17:55:00+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>https://stonedastronaut.github.io/tag/programming.html</loc>
 <lastmod>2015-08-19T00:47:00+05:32</lastmod>
 <changefreq>daily</changefreq>
@@ -158,15 +144,22 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://stonedastronaut.github.io/tag/linux.html</loc>
+<loc>https://stonedastronaut.github.io/tag/links.html</loc>
+<lastmod>2015-08-03T17:48:02+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://stonedastronaut.github.io/tag/crypt.html</loc>
 <lastmod>2015-07-26T03:53:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://stonedastronaut.github.io/tag/geekbrains.html</loc>
-<lastmod>2015-07-21T22:46:00+05:32</lastmod>
+<loc>https://stonedastronaut.github.io/tag/habr.html</loc>
+<lastmod>2015-08-03T19:49:58+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -179,8 +172,22 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://stonedastronaut.github.io/tag/links.html</loc>
-<lastmod>2015-08-03T17:48:02+05:32</lastmod>
+<loc>https://stonedastronaut.github.io/tag/backup.html</loc>
+<lastmod>2015-02-09T19:30:00+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://stonedastronaut.github.io/tag/linux.html</loc>
+<lastmod>2015-07-26T03:53:00+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://stonedastronaut.github.io/tag/android.html</loc>
+<lastmod>2015-02-21T16:30:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
