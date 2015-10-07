@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Ремесло программиста. Золотые правила - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/remeslo-programmista-zolotye-pravila.html">
+
+        <meta name="author" content="Stoned Astronaut" />
+        <meta name="keywords" content="habr" />
+        <meta name="description" content="Данный пост представляет собой выдержку «золотых правил» из примечательной книги Питера Гудлифа «Ремесло программиста». Глава 1. Держим оборону Не делайте никаких допущений. Не зафиксированные формально допущения часто служат причиной отказов, особенно с ростом объема кода. Чем больше спешки, тем меньше скорость. Всегда думайте, что вы собираетесь ввести с клавиатуры. Не ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Ремесло программиста. Золотые правила"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/remeslo-programmista-zolotye-pravila.html"/>
+        <meta property="og:description" content="Данный пост представляет собой выдержку «золотых правил» из примечательной книги Питера Гудлифа «Ремесло программиста». Глава 1. Держим оборону Не делайте никаких допущений. Не зафиксированные формально допущения часто служат причиной отказов, особенно с ростом объема кода. Чем больше спешки, тем меньше скорость. Всегда думайте, что вы собираетесь ввести с клавиатуры. Не ..."/>
+        <meta property="article:published_time" content="2015-07-16" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="habr" />
+            <meta property="article:author" content="Stoned Astronaut" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/about.html">
+                             О сайте
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/remeslo-programmista-zolotye-pravila.html"
+                       rel="bookmark"
+                       title="Permalink to Ремесло программиста. Золотые правила">
+                        Ремесло программиста. Золотые правила
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-16T18:48:00+06:00"> Thu 16 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/habr.html">habr</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p><strong>Данный пост представляет собой выдержку «золотых правил» из примечательной книги Питера Гудлифа <em>«Ремесло программиста»</em>.</strong></p>
+<hr />
+<p><strong>Глава 1.</strong> <em>Держим оборону</em></p>
+<p>Не делайте никаких допущений. Не зафиксированные формально допущения часто служат причиной отказов, особенно с ростом объема кода.
+Чем больше спешки, тем меньше скорость. Всегда думайте, что вы собираетесь ввести с клавиатуры.
+Не верьте никому. Кто угодно, включая вас самих, может сделать ошибки в логике вашей программы. Ко всем входным и выходным данным относитесь с подозрением, пока не проверите, что они допустимы.
+Предупреждения компилятора помогают выявить массу глупых ошибок. Всегда включайте их вывод. Держитесь того, чтобы ваш код компилировался молча.
+Берегите все ограниченные ресурсы. Тщательно организуйте их захват и освобождение.</p>
+<p><strong>Глава 2.</strong> <em>Тонкий расчет</em></p>
+<p>Поймите, кто реально станет читать ваш исходный код: другие программисты. Пишите с расчетом на них.
+Выясните, какие стандарты кода есть для выбранного вами языка, и освойте каждый из них на практике. Оцените преимущества и недостатки каждого.
+Выберите какой-то один правильный стиль кодирования и придерживайтесь его постоянно.
+Если в вашей группе принят некий стандарт кодирования, придерживайтесь его. Свой собственный излюбленный стиль оставьте в стороне.
+Скажи «нет» религиозным войнам. Не вступай в них. Отойди в сторону.</p>
+<p><strong>Глава 3.</strong> <em>Что в имени тебе моем?</em></p>
+<p>Учитесь давать объектам прозрачные имена — они должны ясно описывать то, что за ними скрывается.
+Чтобы придумать хорошее имя, главное — четко понимать, для кого оно предназначено. Только в этом случае имя может стать осмысленным. Если не удается придумать хорошее имя объекту, спросите себя, понятно ли его назначение.
+Изучите правила образования имен в языке, с которым работаете. Еще важнее изучить идиомы этого языка. Есть стандартные способы формирования имен? Вот ими и пользуйтесь.
+Ясность имени предпочтительнее его краткости.
+Следует учитывать относительные достоинства коротких и длинных имен, особенно в зависимости от области действия переменной.
+Предпочтительней такое правило именования, которое различает имена переменных и имена типов.
+Давайте функциям имена с внешней точки зрения, в виде фраз, выражающих действия. Описывайте логическую операцию, а не способ реализации.
+Избегайте в именах лишних слов. В частности, в именах типов — таких слов, как class, data, object и type.
+Давайте пространствам имен и пакетам имена, логически связанные с содержимым.
+Макросы в С/С++ всегда выделяют прописными буквами, чтобы сделать хорошо заметными, и тщательно выбирают их имена, чтобы избежать конфликтов. Никогда не выделяйте прописными буквами другие объекты.
+Выберите единообразную системы именования и последовательно применяйте ее.
+Степень необходимой детализации имени зависит от контекста его применения. Создавая имена, учитывайте контекстную информацию.</p>
+<p><strong>Глава 4.</strong> <em>Литературоведение</em></p>
+<p>Не пишите код, который нуждается во внешней документации. Он ненадежен. Пишите такой код, который понятен без посторонней документации.
+Пишите код, который может прочесть нормальный человек, причем без напряжения. Компилятор как-нибудь справится.
+Избегайте волшебных чисел. Пользуйтесь именованными константами.
+Важный участки кода должны выделяться на общем фоне и быть легко читаемыми. Спрячьте все, что не должно интересовать клиентов.
+Старайтесь группировать родственную информацию. Делайте эту группировку наглядной с помощью средств языка.
+Не выводите бессмысленных сообщений об ошибках. В зависимости от контекста представьте наиболее уместную информацию.
+Помещайте в код комментарии только в том случае, если не удается облегчить его понимание иными способами.
+Пользуйтесь инструментариями грамотного документирования для автоматической генерации документации по вашему коду.</p>
+<p><strong>Глава 5.</strong> <em>Заметки на полях</em></p>
+<p>Учитесь писать ровно столько комментариев, сколько необходимо. Отдайте предпочтение качеству, а не количеству.
+Не пожалейте труда, чтобы ваш код не требовал поддержки в виде уймы комментариев.
+Хорошие комментарии объясняют «почему», а не «как».
+Один источник для каждого факта. Не копируйте код в комментариях.
+Обнаружив, что вы пишете многословные комментарии, описывающие ваш код, остановитесь и задумайтесь. Не признак ли это того, что существует некая проблема более высокого порядка?
+Думайте, что пишете в комментариях; не давите бездумно на клавиши. Прочтите комментарий снова в контексте кода. Ту ли информацию он содержит?
+Комментарии — часть повествования кода. Размещайте их так, чтобы порядок чтения был естественным.
+Снабжайте каждый файл исходного кода прологом в виде комментария.
+Комментарии должны касаться настоящего, а не прошлого. Не описывайте того, что претерпело изменения, и не рассказывайте о том, что было раньше.
+Если вы изменили код, проверьте правильность комментариев, находящихся рядом с ним.</p>
+<p><strong>Глава 6.</strong> <em>Людям свойственно ошибаться</em></p>
+<p>Обработка ошибок — дело серьезное. От нее зависит стабильность вашего кода.
+Не оставляйте сбойную ситуацию без внимания. Если вы не знаете, как справиться с проблемой, сигнализируйте об отказе вызвавшему коду. Не заметайте мусор под ковер в надежде, что все как-нибудь обойдется.
+Никогда не пренебрегайте поступающими вам сообщениями об ошибках. Если существует канал для сообщений об ошибках, значит, для этого есть причины.
+Обрабатывайте все ошибки в наиболее благоприятном контексте, когда становится ясно, как корректно с ней справиться.
+Игнорирование ошибок не экономит вашего времени. Вы потратите больше времени на выяснение причин некорректного поведения программы, чем вам понадобилось бы для написания обработчика ошибок.
+Если вы пишете код, который может отказать, одновременно с ним пишите код для обнаружения и обработки ошибок. Не откладывайте это на будущее. Если вы все же вынуждены отложить обработку, по крайней мере, напишите оснастку для обнаружения ошибок.</p>
+<p><strong>Глава 7.</strong> <em>Инструментарий программиста</em></p>
+<p>Изучите свои стандартные инструменты вдоль и поперек. Время, которое вы потратите на их изучение, незамедлительно окупится.
+Относитесь к инструментам программирования прагматически; пользуйтесь ими, только если они облегчают вашу жизнь.
+Узнайте, какие виды инструментов существуют. Выясните, где их можно взять, даже если в данный момент они вам не нужны.
+Для каждой задачи есть свой инструмент. Не стоит щелкать орехи кувалдой.
+Следите за выпуском новейших версий своего инструмента, но проявляйте осторожность при обновлении.
+Выбор редактора кода имеет решающее значение; он оказывает огромное влияние на то, как вы будете писать код.
+Выучите несколько языков. В каждом вы обнаружите особый способ решения задач. Рассматривайте их как набор инструментов и выбирайте тот, который наиболее эффективен в конкретной ситуации.</p>
+<p><strong>Глава 8.</strong> <em>Время испытаний</em></p>
+<p>Тестирование может вскрыть только наличие ошибок. Оно не может доказать отсутствие неисправностей. Не поддавайтесь ложному чувству спокойствия, если код прошел ряд неадекватных тестов.
+Тестируйте каждый написанный вами фрагмент кода. Не рассчитывайте, что кто-то другой сделает это за вас.
+Чтобы сделать тестирование эффективным, его нужно начинать заранее, когда выявляемые ошибки еще не могут принести большого вреда. Тестовый код можно писать раньше, чем рабочий!
+Пишите тесты для всех выявленных ошибок.
+Прогоняйте свои тесты как можно чаще.
+Читая код, очень легко обмануться и поверить, что он работает правильно. Если вы написали код, то при его чтении вы будете видеть то, чтособирались написать, а не то, что написали на самом деле. Учитесь читать код с циничным недоверием.
+Напишите полный набор тестов, каждый из которых будет проверять определенный аспект кода. Пятнадцать тестов, которые демонстрируют одну и ту же ошибку, менее полезны, чем 15 тестов, демонстрирующих 15 разных ошибок.
+Архитектура кода должна облегчать его тестирование.
+Насколько это возможно, автоматизируйте тестирование кода. Это быстрее и проще, чем выполнять тесты вручную, и гораздо надежнее: более вероятно, что тесты станут выполняться регулярно.
+Выполняйте тестирование автоматически в ходе процедуры сборки.</p>
+<p><strong>Глава 9.</strong> <em>Поиск ошибок</em></p>
+<p>Компилируйте код при включенном выводе компилятором всех предупредительных сообщений. Тем самым вы обнаружите потенциальные проблемы раньше, чем столкнетесь с ними реально.
+Следуйте золотому правилу отладки: думать головой.
+Установите разумное временное ограничение на «бессистемную» отладку, и если она окажется безуспешной, переходите на более методичный способ.
+Изучите отлаживаемый код — трудно найти ошибки в коде, который вам непонятен.
+Когда вы ищете ошибку, неверьте никому. Проверьте самые невероятные причины, вместо того чтобы сходу отвергнуть их. Не принимайте ничего на веру.
+Если сборка продукта не прошла, смотрите на первую ошибку компилятора. Последующие сообщения заслуживают гораздо меньше доверия.
+Отладка — это методичная работа, медленно сужающая кольцо вокруг места нахождения ошибки. Не следует относиться к ней как к игре в укадайку.
+Первый шаг на пути установления места ошибки — это определение способа ее уверенного воспроизведения.
+Начните с известного места, например, с точки аварийного завершения программы. Затем двигайтесь в обратном направлении в сторону причины, вызвавшей сбой.
+Если вам показалось, что вы нашли причину ошибки, досконально исследуйте ее и убедитесь, что не ошиблись. Не принимайте безрассудно первую же гипотезу.
+Отладка заканчивается лишь тогда, когда вы докажете, что ошибка устранена и проблема решена навсегда.
+Проявляйте крайнюю осторожность при исправлении ошибок. Следите, чтобы ваша модификация не покалечила ничего остального.
+Исправляя ошибку, проверьте, не повторяется ли она в близких разделах кода. Уничтожьте ошибку раз и навсегда: исправьте все ее дубликаты немедленно.
+Из каждой исправленной ошибки делайте выводы. Можно ли было ее избежать? Можно ли было обнаружить ее быстрее?
+Столкнувшись с поведением, которое вы не можете объяснить, умеренно пользуйтесь отладчиками. Не привыкайте к тому, чтобы сразу бросаться на них, не попытавшись сначала понять, как работает ваш код.</p>
+<p><strong>Глава 10.</strong> <em>Код, который построил Джек</em></p>
+<p>Считайте систему сборки частью дерева исходного кода и ведите их совместно. Они тесно связаны между собой.
+Все программисты, участвующие в проекте, должны пользоваться единой системой сборки. Иначе все они будут собираться разные программные пакеты.
+Правильная система сборки позволяет многократно создавать физически идентичные бинарные файлы.
+Вы должны быть в состоянии достать дерево исходные кодов трехлетней давности и правильно собрать его заново.
+Правильная система выглядит как одна операция. Достаточно нажать кнопку или выполнить одну команду.
+Для каждого правила сборки напишите соответствующее правило чистки, которое отменяет всю операцию.
+Организуйте автоматическую процедуру сборки своего программного продукта. Проверяйте с ее помощью работоспособность вашего кода.
+Финальные сборки всегда выполняются из чистого исходного кода. Позаботьтесь, чтобы потом всегда можно было получить этот чистый исходный код из архива или системы управления версиями.
+Проводите тестирование финальной конфигурации своего приложения, а не только рабочих сборок.Небольшие различия между ними могут отрицательно сказаться на поведении кода.</p>
+<p><em>© habrahabr</em></p>
+<p>Продолжения: <a href="http://habrahabr.ru/post/142262/">здесь</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+                <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
+                            systemd
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Stoned Astronaut
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43336913-2']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>

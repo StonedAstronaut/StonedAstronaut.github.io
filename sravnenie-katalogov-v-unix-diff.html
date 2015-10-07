@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Сравнение каталогов в *unix. diff - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html">
+
+        <meta name="author" content="Stoned Astronaut" />
+        <meta name="keywords" content="linux,diff" />
+        <meta name="description" content="Сравнение каталогов утилитой diff осуществляется следующим образом: $ diff -urN dir1 dir2 &gt; out.diff $ mc -e out.diff где ключи diff -u унифицированный метод -r рекурсивно -N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. &#34;Сравнение каталогов&#34;. Возможно ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Сравнение каталогов в *unix. diff"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html"/>
+        <meta property="og:description" content="Сравнение каталогов утилитой diff осуществляется следующим образом: $ diff -urN dir1 dir2 &gt; out.diff $ mc -e out.diff где ключи diff -u унифицированный метод -r рекурсивно -N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. &#34;Сравнение каталогов&#34;. Возможно ..."/>
+        <meta property="article:published_time" content="2015-02-04" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="diff" />
+            <meta property="article:author" content="Stoned Astronaut" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/about.html">
+                             О сайте
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/sravnenie-katalogov-v-unix-diff.html"
+                       rel="bookmark"
+                       title="Permalink to Сравнение каталогов в *unix. diff">
+                        Сравнение каталогов в *unix. diff
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-02-04T21:00:00+06:00"> Wed 04 February 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/diff.html">diff</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Сравнение каталогов утилитой diff осуществляется следующим образом:</p>
+<div class="highlight"><pre><span class="nv">$ </span>diff -urN dir1 dir2  &gt; out.diff
+
+
+<span class="nv">$ </span>mc -e out.diff
+</pre></div>
+
+
+<p>где
+ключи diff</p>
+<p>-u унифицированный метод</p>
+<p>-r рекурсивно </p>
+<p>-N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. "Сравнение каталогов". </p>
+<p>Возможно использование 'diff' для сравнения некоторых или всех файлов в двух каталогах. Когда оба аргумента-имена файлов для 'diff' ­ каталоги, он сравнивает каждый файл, содержащийся в обоих каталогах, в алфавитном порядке имен файлов. Обычно 'diff' не упоминает о парах неотличающихся файлов, но с опцией '-s' или '--report-identical-files', он будет сообщать и о таких парах. Обычно 'diff' сообщает о подкаталогах, общих для обоих каталогов, не сравнивая файлы в них, но с помощью опции '-r' или '--recursive', он бужет сравнивать соответствующие файлы в дереве каталогов, опускаясь до самых глубоких каталогов.</p>
+<p>Для имен файлов, содержащихся только в одном каталоге, 'diff' обычно не показывает текста этих файлов, сообщая только, что файлы находятся в одном каталоге и отсутствуют в другом. Можно заставить 'diff' поступать так, как если бы соответствующие файлы существовали и в другом каталоге, но являлись пустыми, тогда в результатах будет присутствовать полный текст таких файлов. (Такие отличия будут рассматриваться как вставки или удаления, в зависимости от того существует файл в первой или второй директории.) Чтобы добиться этого используйте опцию '-N' или '--new-file'.</p>
+<p>Если в более старом каталоге содержится один или более больших файлов, не содержащихся в более новом, можно уменьшить patch с помощью опции '-P' или '--unidirectional-new-file' вместо '-N'. Эта опция подобна '-N', за исключением того, что она вставляет только содержимое файлов, появившихся во втором каталоге, а не в первом (т.е. добавленных файлов). В начале patch пишется инструкция для пользователей, применяющих patch, - стереть удаленные файлы, перед применением (см. подробнее о составлении patch-ей: "Составление patch-ей").</p>
+<p>Для игнорирования некоторых файлов при сравнении каталогов, используйте опцию '-x PATTERN' или '--exclude=PATTERN'. Эта опция игнорирует все файлы или поддиректории, чьи базовые имена соответствуют шаблону оболочки PATTERN. В отличие от оболочки, точка в начале имени файла рассматривается так же, как символ <em>. Следует заключать PATTERN в апострофы, чтобы оболочка не истоловала их неправильно. Например, опция '-x '</em>.[ao]'' игнорирует все файлы, имена которых заканчиваются на '.a' или '.o'.</p>
+<p>Информация, указанная в этой опции, сохраняется, если ее использовать несколько раз. Например, использование опций '-x 'RCS' -x '*,v'' задает игнорирование всех файлов и подкаталогов, имеющих имя 'RCS' или заканчивающихся на ',v'.</p>
+<p>Если необходимо использовать эту опцию по несколько раз, можно вместо этого поместить шаблоны в файл, по одному на строку и использовать опцию '-X FILE' или '--exclude-from=FILE'.</p>
+<p>Если два каталога находились в процессе сравнения и этот процесс был прерван, позже возможно вернуться к сравнению и продолжить его с того же места с помощью опции '-S FILE' или '--starting-file=FILE'. После этого сравниваться будут только файл и FILE и следующеи за ним в алфавитном порядке, в верхнем уровне директории.</p>
+<p>Стырено с <a href="http://rus-linux.net">rus-linux.net</a> и <a href="http://genaev.com">genaev.com</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+                <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
+                            systemd
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Stoned Astronaut
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43336913-2']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>
