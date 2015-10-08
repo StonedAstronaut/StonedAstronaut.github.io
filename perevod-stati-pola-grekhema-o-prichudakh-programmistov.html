@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Перевод статьи Пола Грэхема о «причудах» программистов - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/perevod-stati-pola-grekhema-o-prichudakh-programmistov.html">
+
+        <meta name="author" content="Stoned Astronaut" />
+        <meta name="keywords" content="habr" />
+        <meta name="description" content="По просьбам трудящихся — перевод статьи Пола Грехема (Paul Graham) ‘Holding a Programm in One&#39;s Head’. Хороший программист, работающий над собственным проектом, может удерживать его целиком в голове так, как удерживает математик уравнение, которое решает. Математики не решают задачи на листке бумаги, так, как этому учат детей в школе. Вместо ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Перевод статьи Пола Грэхема о «причудах» программистов"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/perevod-stati-pola-grekhema-o-prichudakh-programmistov.html"/>
+        <meta property="og:description" content="По просьбам трудящихся — перевод статьи Пола Грехема (Paul Graham) ‘Holding a Programm in One&#39;s Head’. Хороший программист, работающий над собственным проектом, может удерживать его целиком в голове так, как удерживает математик уравнение, которое решает. Математики не решают задачи на листке бумаги, так, как этому учат детей в школе. Вместо ..."/>
+        <meta property="article:published_time" content="2015-08-10" />
+            <meta property="article:section" content="copy\paste" />
+            <meta property="article:tag" content="habr" />
+            <meta property="article:author" content="Stoned Astronaut" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/about.html">
+                             О сайте
+                          </a></li>
+                        <li class="active">
+                            <a href="https://stonedastronaut.github.io/category/copypaste.html">Copy\paste</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/crypt.html">Crypt</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/java.html">Java</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/unsort.html">Unsort</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/perevod-stati-pola-grekhema-o-prichudakh-programmistov.html"
+                       rel="bookmark"
+                       title="Permalink to Перевод статьи Пола Грэхема о «причудах» программистов">
+                        Перевод статьи Пола Грэхема о «причудах» программистов
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-10T19:10:00+06:00"> Mon 10 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/habr.html">habr</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>По просьбам трудящихся — перевод статьи Пола Грехема (Paul Graham) ‘Holding a Programm in One's Head’.</p>
+<p>Хороший программист, работающий над собственным проектом, может удерживать его целиком в голове так, как удерживает математик уравнение, которое решает. Математики не решают задачи на листке бумаги, так, как этому учат детей в школе. Вместо этого большинство операций они производят в уме, создавая некий образ в голове, примерно как мы можем мысленно представить образ дома, в котором провели детство. С программированием все точно так же. Вы можете создать некий образ всего текущего проекта в голове и рассмотреть его тщательно со всех сторон.</p>
+<p>Это чаще всего бывает востребовано на начальном этапе, когда одной из важнейших вещей является возможность поменять то, что ты делаешь. Не просто решить задачу другим способом, а поменять саму ее суть.</p>
+<p>Но уместить целую программу в голове не так то просто. Если по какой-либо причине вы не обращались к коду несколько месяцев, может потребоваться до нескольких дней, чтобы опять в него вникнуть. Даже когда вы активно работаете над программой, для настройки собственного сознания на работу над текущей задачей может потребоваться до получаса каждое утро. И это лишь в лучшем случае. Типичные программисты, работающие в офисных условиях, не могут справиться с этим и до самого окончания рабочего дня. Говоря другим языком, типичный офисный программист никогда не понимает целиком задачи, которую ему приходится решать.</p>
+<p>Даже лучшие программисты порою не имеют цельного представления программы в своей голове. Если вам кажется, что последнее относится и к вам, то ниже предлагаются способы решения этой проблемы:</p>
+<ol>
+<li>
+<p>Как можно меньше отвлекайтесь. Отвлечение внимания может сыграть плохую роль в работе людей множества профессий, но особенно это явно для программистов, которые часто работают с количеством деталей, которые приходится помнить, превышающим все мыслимые и немыслимые пределы.
+Последствия от переключения внимания на постороннюю задачу зависят не столько от его продолжительности, сколько от степени отвлечения внимания этой задачей. Так, например, программист может выйти из офиса, перекусить бутербродом сидя на лавочке, ни на минуту не отвлекаясь в это время от программы, над которой работает.
+Особенно вредными могут быть незапланнированные ситуации, которые отнимают гораздо больше внимания, чем запланированные, перед которыми программист обычно и не начинает никаких серьезных задач.</p>
+</li>
+<li>
+<p>Работайте запоем. Т.к. каждый раз перед началом работы необходимо втянуться в текущую задачу, очевидным решением по минимизации ненужных затрат является долгая работа без значительных перерывов. Разумеется, бесконечно работать невозможно, и в один момент вы поймете, что окнчательно «отупели» от работы. Быстрота наступления такого состояния зависит исключительно от особенностей конкретного человека. Я слышал о людях, которые работали по 36 часов подряд, дни напролет. Мой максимум это 18 часов, но наиболее комфортно я себя чувствую при работе не более 12 часов подряд.
+Оптимальный вариант это не тот, который максимально допускают ваши физические и, пожалуй, психические способности. Иногда, когда вы делаете перерыв в работе, а затем возвращаетесь, к вам приходят неожиданные решения, выработанные вашим мозгом пока ваши мысли, казалось бы, были далеки от программного кода.</p>
+</li>
+<li>
+<p>Пишите на лаконичных языках. Мощные языки программирования делают ваши программы короче. Программисты думают о программах, по крайней мере частично, на том языке, на котором их пишут. Чем лаконичней язык, тем короче программа, и тем легче восстановить в своей памяти ее образ.
+Вы можете достигнуть еще большего эффекта используя восходящий стиль программирования, когда вы пишете программы состоящие из абстрактных слоев, нижние из которых создают базу и программную оболочку для верхних. Если вы будете делать это правильно, вам достаточно будет хранить в своей памяти лишь самый верхний слой.</p>
+</li>
+<li>
+<p>Постоянно переписывайте программы. Переписывая код, вы зачастую улучшаете архитектуру приложения. Даже если и нет, в этом есть преимущество: чтобы переписать программу заново, необходимо полностью понимать ее суть. Так вы сможете воссоздать более точную картину программы у себя в голове.</p>
+</li>
+<li>
+<p>Пишите код, который удобно читать вам. Все программисты знают как хорошо писать код, который будет легко читать. Но вы сами являетесь наиболее важным читателем своего кода. Особенно в начале проекта; создание прототипа будущего приложения это ваш диалог с самим собой. Когда вы пишете сами для себя, перед вами стоят совершенно иные приоритеты. Когда вы пишете для других, ваш код может размазываться на множество строк для лучшей читабельности. Когда же вы пишете код для того, чтобы его можно было легко восстановить в памяти, вы скорее предпочтете краткость.</p>
+</li>
+<li>
+<p>Работайте маленькими группами. Когда вы представляете программу в своем воображении, вы уделяете основное внимание собственноручно написанному коду, части же, написанные другими людьми, вы понимаете не настолько хорошо и не можете так живо представить их. Таким образом, чем меньше программистов работают над проектом, тем целостнее вы способны представить его образ. Если вы работаете над ним в одиночку, вы способны на все.</p>
+</li>
+<li>
+<p>Не допускайте редактирование одного и того же кода несколькими людьми. Как я уже сказал, вы никогда не сможете понять чужой код так же хорошо как собственный. Не имеет значения как тщательно вы его прочитали, вы всего лишь прочитали его — не написали. Таким обазом, если участок кода написан несколькими людьми, то ни один из них не имеет полного и цельного его представления.
+И безусловно, вы не сможете что-то кардинально поменять в нем. Не потому что вам нужно для этого разрешение, а потому что вы просто не можете представить себе этого. Реорганизация кода, написанного несколькими людьми это как реорганизация законов мироздания. Реорганизация собственного кода, это просто другая интерпретация неоднозначного образа программы, находящегося в вашей голове.
+Если вам необходимо несколько людей для разработки одного проекта, разделите его на части и выделите по одной каждому программисту.</p>
+</li>
+<li>
+<p>Начинайте с малого. Чем более досконально вы изучаете программу, тем легче вам создать ее мысленный образ. Вы можете представлять отдельные части готовой программы как черные коробки выполняющие свои функции не вдаваясь в детали реализации до тех пор, пока не будете к этому готовы. Когда же вы начинаете новый проект, вам просто необходимо удерживать его в голове полностью. Если вы начнете со слишком сложной и объемной задачи, вы, вероятно, никогда не сможете охватить ее целиком. Если перед вами стоит подобная задача, начните не с ее формального описания, а с написания прототипа, который решает одну из ее подзадач. Каковы бы ни были преимущества планирования, они зачастую не так значительны по сравнению с преимуществами, которые вы получаете от возможности держать весь проект у себя в голове.</p>
+</li>
+</ol>
+<p>Удивительно как часто программисты придерживаются всех восьми пунктов даже не подозревая об их существовании. Когда у кого-то появляется идея, ему приходится заниматься ею вне рабочего времени, так как она не имеет официальной поддержки руководства. Это приводит к более продуктивной работе в виду отсутствия отвлекающих факторов. Ведомый вперед чистым энтузиазмом программист работает ночи напролет. Т.к. его проект носит исключительно экпериментальный характер, он пишет код не на языках, являющихя корпоративным стандартом, а на лаконичных скриптовых языках. Он полностью переписывает программу заново, что не получило бы одобрения вышестоящих людей, будь это официальной разработкой. Но в данном случае это личный проект, и он хочет сделать его идеально. Учитывая, что никто кроме него не увидит код, он пишет его как можно более сжато и кратко, так, чтобы было легче взяться за него после перерыва. Проектом занято лишь небольшое кол-во людей, даже если он пишет его и не один, т.к. изменения кода происходят так быстро, что нет возможности подключать к проекту кого-то еще.
+И наконец, он начинает с малого, потому что его задумка изначально действительно была небольшой и скромной.</p>
+<p>Еще более удивительным является число официальных проектов, которые каким-то образом умудряются нарушать все восемь «правил». И в самом деле, если вы взглянете на методы разработки программного обеспечения в большинстве организаций, то увидите что они как будто бы нарочно делают все неправильно. В некотором роде так и есть. Одной из отличительных черт организаций является восприятие людей как взаимозаменяемых частей общего механизма. Это работает хорошо для задач, допускающих распараллеливание задач между участниками, таких, например, как война. Во всей истории нет ни одного упоминания случая, когда хорошо организованная армия натренированных наемников уступала бы армии, состоящей из самостоятельных воинов, насколько бы доблесными они ни были. Но мыслительный процесс не очень то можно распределить между людьми. А что такое программирование, если не мыслительный процесс.</p>
+<p>Не совсем верно утверждение, что организации отрицают возможность быть зависимыми от одного гениального сотрудника. Просто в нашем сегодняшнем понимании, организации по определению должны не допускать этого.</p>
+<p>Возможно, нам стоит дать определение новому типу организаций, которые бы использовали совместную деятельность отдельных сотрудников без необходимости для них быть взаимозаменяемыми. В некоторой степени рынок можно назвать подобного рода организацией, хотя более удачным описанием было бы описание рынка как вырожденного случая, того, что получается само собой, когда организация неуместна.</p>
+<p>Может быть нам стоит выбрать некий обходной путь и сделать так, чтобы программисты работали отлично от других сотрудников. Вероятно для больших компаний оптимальным решением будет не производить идеи самостоятельно, а закупать их у других. Несмотря на то, какое из решений будет уместно в каждом конкретном случае, необходимо сначала осознать существование проблемы. В самой фразе «компания разработки ПО» заключено противоречие. Слова как будто отталкиваются друг от друга в противоположных направлениях. Любой хороший программист будет чувствовать себя в чужой тарелке, находясь в большой организации, т.к. организации придуманы такими, чтобы недопускать того, чего программист больше всего жаждет.</p>
+<p>Хороший программист так или иначе справляется со множеством задач. Однако во многих случаях для этого ему приходится чуть ли не организовывать восстание против собственной компании. Такое поведение обусловлено самими требованиями к его работе. Программисты с головой уходят в программирование, забывая о других своих обязанностях, бросаются писать код, не описав его спецфикаций, переписывают уже работающий код не потому что безответственны. Они предпочитают работать в одиночку и гневаются на здоровающиеся головы коллег, периодически показывающиеся из дверного проема, не потому что не дружелюбны или замкнуты. Этот кажущийся совершенно случайным набор привычек в их поведении имеет единственную причину: необходимость держать в своей голове весь проект целиком.</p>
+<p>Поможет или нет понимание этого большим компаниям, оно безусловно может помочь их конкурентам. Наиболее слабое место таких компаний в том, что они не позволяют программистам выполнять значимую работу. Если вы маленькая начинающая компания, то воспользовавшись этим вы можете составить им значительную конкуренцию. Просто учитывайте особенности задачи, которую мозг программиста должен брать на себя целиком.</p>
+<p><em>©megamozg</em></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+                <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
+                            systemd
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Stoned Astronaut
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43336913-2']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+</body>
+</html>

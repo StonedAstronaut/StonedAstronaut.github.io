@@ -91,6 +91,54 @@ Astro blog            </a>
         <div class="col-sm-9">
 
             <article>
+                <h2><a href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">LVM on LUKS на примере arch</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-26T03:53:00+06:00"> Sun 26 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/crypt.html">crypt</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><h2 id="_1">Создаём разделы физические</h2>
+<p>Вот такая структура диска.</p>
+<ul>
+<li>
+<p><code>/dev/sda1 -&gt; /boot</code></p>
+</li>
+<li>
+<p><code>/dev/sda2 -&gt; LVM</code></p>
+</li>
+</ul>
+<h3 id="lvm">Шифруем раздел LVM</h3>
+<div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
+</pre></div>
+
+
+<p>больше о параметрах шифрования см. <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_LUKS_mode">здесь</a></p>
+<div class="highlight"><pre>cryptsetup open --type luks /dev/sda2 lvm
+</pre></div>
+
+
+<h3 id="lvm_1">Создаём разделы на LVM</h3>
+<p>создаём физический раздел LVM:</p>
+<div class="highlight"><pre>pvcreate /dev/mapper/lvm
+</pre></div>
+
+
+<p>создаём ...</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="https://stonedastronaut.github.io/7-sovetov-dlia-professionalnogo-rosta-programmista.html">7 советов для профессионального роста программиста</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
@@ -311,37 +359,6 @@ Astro blog            </a>
 <p>теперь:</p>
 <div class="highlight"><pre>ip addr dev eth0 add 10.0 ...</pre></div>
                     <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html">Построение связей в SQLAlchemy</a></h2>
-                    <div class="well well-sm">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-03-04T09:30:00+06:00"> Wed 04 March 2015</time>
-    </span>
-
-
-
-<span class="label label-default">Tags</span>
-	<a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">sqlalchemy</a>
-        /
-	<a href="https://stonedastronaut.github.io/tag/orm.html">orm</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>Связи в sqlachemy бывают 4-х видов:</p>
-<ul>
-<li>OTM (one-to-many) - один к многим</li>
-<li>MTO (many-to-one) - многие к одному</li>
-<li>OTO (one-to-one) - один к одному</li>
-<li>MTM (many-to-many) - многие к многим</li>
-</ul>
-<p>Релизация этих связей:</p>
-<h3 id="otm">OTM :</h3>
-<p>Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для ...</p>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html">more ...</a>
                 </div>
             </article>
             <hr/>
