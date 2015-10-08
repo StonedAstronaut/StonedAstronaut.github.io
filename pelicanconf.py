@@ -67,8 +67,6 @@ DEFAULT_PAGINATION = 10
 # AVATAR = 'images/profile.png'
 # ABOUT_ME = '<b>I am Astro</b>'
 
-DISPLAY_CATEGORIES_ON_MENU = False
-
 DISPLAY_ARTICLE_INFO_ON_INDEX = True
 
 FAVICON = 'images/favicon.png'
@@ -89,6 +87,19 @@ DIRECT_TEMPLATES = (('index', 'categories', 'authors', 'archives', 'search'))
 # PYGMENTS_STYLE = 'emacs'
 
 MD_EXTENSIONS = (['toc', 'codehilite(css_class=highlight)', 'extra'])
+
+
+USE_FOLDER_AS_CATEGORY = True
+DISPLAY_CATEGORIES_ON_MENU = True
+DEFAULT_CATEGORY = 'unsort'
+
+
+# BANNER = 'images/profile.png'
+# BANNER_SUBTITLE = 'subtitle'
+
+# SITELOGO = 'images/profile.png'
+# SITELOGO_SIZE = 40
+# HIDE_SITENAME = True
 
 # NAVBAR_ELEMENTS = ['search']
 
