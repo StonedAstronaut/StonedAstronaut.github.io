@@ -322,7 +322,7 @@ Astro blog            </a>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-<p>Эта настоичный класс загружающий наш веб контекст. Он говорит нам какой статичный ресурс может быть обслужен (с <code>addResourceHandlers</code>. Он добавляет ~~нет кеш-перехватчик~~ (<code>webContentInterceptor()</code> и <code>addInterceptors()</code>) и также объяснит нам расположение нашиъ динамических ресурсов (JSP файлов) которые используются в <code>getInternalResourceViewResolver()</code> бином.</p>
+<p>Эта настроичный класс, загружающий наш веб-контекст. Он говорит нам какой статичный ресурс может быть обслужен (с <code>addResourceHandlers</code>. Он добавляет ~~нет кеш-перехватчик~~ (<code>webContentInterceptor()</code> и <code>addInterceptors()</code>) и также объяснит нам расположение наших динамических ресурсов (<strong>JSP</strong> файлов) которые используются в <code>getInternalResourceViewResolver()</code> бине.</p>
 <p>И наконец WebSocket конфиг:</p>
 <div class="highlight"><pre><span class="nd">@Configuration</span>
 <span class="nd">@EnableWebSocketMessageBroker</span>
@@ -341,13 +341,13 @@ Astro blog            </a>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-<p>Также как и <code>WebSocket</code> он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать сообщения брокер сообщений (где связь входит и выходит) используя <code>configMessegeBroker</code> и мы также должны сконфигурировать наши конечные точки <code>registerStompEndPoints</code>.</p>
+<p>Также как и <code>WebSocket</code> он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать брокер сообщений (где связь входит и выходит) используя <code>configMessegeBroker</code> и мы также должны сконфигурировать наши конечные точки <code>registerStompEndPoints</code>.</p>
 <blockquote>
 <p>WebSocket'ы не работают во всех броузерах. Много WebSocket библиотек (например SockJS и Socket.io) предоставляют запасной вариант использования <em>long-polling</em> и <em>polling</em>. Spring также предоставляет эти запасные варианты совместимые с SockJS. Именно поэтому выбрать SockJS как клиент - это хорошая идея.</p>
 </blockquote>
 <h2 id="_2">Объект обмена данными</h2>
-<p>Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенный полезную нагрузку и ответ, на специфический <em>Stomp.js</em> заголовок. Нам необходимо два класса для этого, <code>Message</code> и <code>OutputMessage</code>.</p>
-<p>Предле всего, <code>Message</code> будет содержать сообщение чата и генерирует ID, например: </p>
+<p>Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенную "полезную нагрузку" и ответ, на специфический <em>Stomp.js</em> заголовок. Нам необходимо два класса для этого, <code>Message</code> и <code>OutputMessage</code>.</p>
+<p>Во-первых, <code>Message</code> будет содержать сообщение чата и сгенерированное ID, например: </p>
 <div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Message</span> <span class="o">{</span>
 
   <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
@@ -379,7 +379,7 @@ Astro blog            </a>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-<p><code>OutputMessage</code> наследуется от  <code>Message</code>, но также добавляется метку (текущее время):</p>
+<p><code>OutputMessage</code> наследуется от  <code>Message</code>, но также добавит временную метку (текущее время):</p>
 <div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OutputMessage</span> <span class="kd">extends</span> <span class="n">Message</span> <span class="o">{</span>
 
     <span class="kd">private</span> <span class="n">Date</span> <span class="n">time</span><span class="o">;</span>
@@ -399,7 +399,7 @@ Astro blog            </a>
 <span class="o">}</span>
 </pre></div>
 <h2 id="spring-controller">Spring Controller</h2>
-<p>Заключительной java частью приложения является контроллер который описывает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:</p>
+<p>Заключительной java частью приложения является контроллер который отображает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:</p>
 <div class="highlight"><pre><span class="nd">@Controller</span>
 <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ChatController</span> <span class="o">{</span>
@@ -416,9 +416,9 @@ Astro blog            </a>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-<p>Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот <code>viewApplication()</code> отображается сюда же, поэтому этот <strong>index.jsp</strong> страница и использует эту <strong>view</strong>. Другой метод, <code>sendMessage()</code> предоставляет нам вещание сообщения в <code>/topic/message</code> когда сообщение введено в брокер сообщений <code>/app/chat</code> (не забудьте определить префикс <code>/app</code> в <code>WebSocketConfig</code>).</p>
+<p>Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот <code>viewApplication()</code> отображается сюда же, поэтому эта <strong>index.jsp</strong> страница и использует эту <strong>view</strong>. Другой метод, <code>sendMessage()</code> предоставляет нам вещание сообщения в <code>/topic/message</code> когда сообщение введено в брокер сообщений <code>/app/chat</code> (не забудьте определить префикс <code>/app</code> в <code>WebSocketConfig</code>).</p>
 <h2 id="view">View</h2>
-<p>Теперь наш внутренний java код написан, теперь оппишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для добавления нового сообщения и список сообщений.</p>
+<p>Теперь наш внутренний java код написан, далее опишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для отправки нового сообщения и список введенных сообщений.</p>
 <div class="highlight"><pre><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
 <span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
   <span class="nt">&lt;head&gt;</span>
@@ -451,9 +451,9 @@ Astro blog            </a>
   <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
 </pre></div>
-<p>Прежде всего мы добавим Open Sans шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения которое мы назвали <code>appChat</code>. В этом приложении мы добавим один AngularJS контроллер, <code>ChatCtrl</code>. Не путайте этот с нашим Spring котроллером!</p>
+<p>Прежде всего мы добавим <strong>Open Sans</strong> шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения, которое мы назвали <code>appChat</code>. В этом приложении мы добавим один AngularJS контроллер - <code>ChatCtrl</code>. Не путайте этот с нашим Spring котроллером!</p>
 <p>В первую очередь что мы должны сделать, это создать форму содержащую текстовое поле. Мы соединим это поле с моделью названной <code>message</code>. Когда форма будет отправлена, <code>addMessage()</code> функция в нашем контроллере будет вызвана, которую мы будем использовать для отправки сообщения при помощи WebSocket'ов.</p>
-<p>Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени сколько Вы ввели символов (<strong>max</strong>), и загораеться красным когда вы больше не можете отправить форму благодаря директиве <code>ng-disabled</code>. Сообщения отсортированы по их дате, последнее из низ показывается сверху списка.</p>
+<p>Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени будет отображаться сколько Вы ввели символов (<strong>max</strong>), при превышении лимита счетчик загораеться красным и тогда Вы больше не можете отправить форму благодаря директиве <code>ng-disabled</code>. Сообщения отсортированы по их дате, последнее из них показывается сверху списка.</p>
 <p>В конце страницы мы подгружаем все библиотеки которые нам нужны, и JavaScript файлы нашео приложения.</p>
 <h2 id="angularjs">Загрузка AngularJS приложения</h2>
 <p>Наш первый JavaScript файл - app.js. Этот файл определяет все модули пакетов,в этом случае:</p>

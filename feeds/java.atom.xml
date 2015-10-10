@@ -167,7 +167,7 @@
   &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Эта настоичный класс загружающий наш веб контекст. Он говорит нам какой статичный ресурс может быть обслужен (с &lt;code&gt;addResourceHandlers&lt;/code&gt;. Он добавляет ~~нет кеш-перехватчик~~ (&lt;code&gt;webContentInterceptor()&lt;/code&gt; и &lt;code&gt;addInterceptors()&lt;/code&gt;) и также объяснит нам расположение нашиъ динамических ресурсов (JSP файлов) которые используются в &lt;code&gt;getInternalResourceViewResolver()&lt;/code&gt; бином.&lt;/p&gt;
+&lt;p&gt;Эта настроичный класс, загружающий наш веб-контекст. Он говорит нам какой статичный ресурс может быть обслужен (с &lt;code&gt;addResourceHandlers&lt;/code&gt;. Он добавляет ~~нет кеш-перехватчик~~ (&lt;code&gt;webContentInterceptor()&lt;/code&gt; и &lt;code&gt;addInterceptors()&lt;/code&gt;) и также объяснит нам расположение наших динамических ресурсов (&lt;strong&gt;JSP&lt;/strong&gt; файлов) которые используются в &lt;code&gt;getInternalResourceViewResolver()&lt;/code&gt; бине.&lt;/p&gt;
 &lt;p&gt;И наконец WebSocket конфиг:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Configuration&lt;/span&gt;
 &lt;span class="nd"&gt;@EnableWebSocketMessageBroker&lt;/span&gt;
@@ -186,13 +186,13 @@
   &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Также как и &lt;code&gt;WebSocket&lt;/code&gt; он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать сообщения брокер сообщений (где связь входит и выходит) используя &lt;code&gt;configMessegeBroker&lt;/code&gt; и мы также должны сконфигурировать наши конечные точки &lt;code&gt;registerStompEndPoints&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Также как и &lt;code&gt;WebSocket&lt;/code&gt; он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать брокер сообщений (где связь входит и выходит) используя &lt;code&gt;configMessegeBroker&lt;/code&gt; и мы также должны сконфигурировать наши конечные точки &lt;code&gt;registerStompEndPoints&lt;/code&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;WebSocket'ы не работают во всех броузерах. Много WebSocket библиотек (например SockJS и Socket.io) предоставляют запасной вариант использования &lt;em&gt;long-polling&lt;/em&gt; и &lt;em&gt;polling&lt;/em&gt;. Spring также предоставляет эти запасные варианты совместимые с SockJS. Именно поэтому выбрать SockJS как клиент - это хорошая идея.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id="_2"&gt;Объект обмена данными&lt;/h2&gt;
-&lt;p&gt;Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенный полезную нагрузку и ответ, на специфический &lt;em&gt;Stomp.js&lt;/em&gt; заголовок. Нам необходимо два класса для этого, &lt;code&gt;Message&lt;/code&gt; и &lt;code&gt;OutputMessage&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Предле всего, &lt;code&gt;Message&lt;/code&gt; будет содержать сообщение чата и генерирует ID, например: &lt;/p&gt;
+&lt;p&gt;Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенную "полезную нагрузку" и ответ, на специфический &lt;em&gt;Stomp.js&lt;/em&gt; заголовок. Нам необходимо два класса для этого, &lt;code&gt;Message&lt;/code&gt; и &lt;code&gt;OutputMessage&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Во-первых, &lt;code&gt;Message&lt;/code&gt; будет содержать сообщение чата и сгенерированное ID, например: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 
   &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
@@ -224,7 +224,7 @@
   &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;OutputMessage&lt;/code&gt; наследуется от  &lt;code&gt;Message&lt;/code&gt;, но также добавляется метку (текущее время):&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;OutputMessage&lt;/code&gt; наследуется от  &lt;code&gt;Message&lt;/code&gt;, но также добавит временную метку (текущее время):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;OutputMessage&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;Message&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 
     &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
@@ -244,7 +244,7 @@
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id="spring-controller"&gt;Spring Controller&lt;/h2&gt;
-&lt;p&gt;Заключительной java частью приложения является контроллер который описывает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:&lt;/p&gt;
+&lt;p&gt;Заключительной java частью приложения является контроллер который отображает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Controller&lt;/span&gt;
 &lt;span class="nd"&gt;@RequestMapping&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;ChatController&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
@@ -261,9 +261,9 @@
   &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот &lt;code&gt;viewApplication()&lt;/code&gt; отображается сюда же, поэтому этот &lt;strong&gt;index.jsp&lt;/strong&gt; страница и использует эту &lt;strong&gt;view&lt;/strong&gt;. Другой метод, &lt;code&gt;sendMessage()&lt;/code&gt; предоставляет нам вещание сообщения в &lt;code&gt;/topic/message&lt;/code&gt; когда сообщение введено в брокер сообщений &lt;code&gt;/app/chat&lt;/code&gt; (не забудьте определить префикс &lt;code&gt;/app&lt;/code&gt; в &lt;code&gt;WebSocketConfig&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот &lt;code&gt;viewApplication()&lt;/code&gt; отображается сюда же, поэтому эта &lt;strong&gt;index.jsp&lt;/strong&gt; страница и использует эту &lt;strong&gt;view&lt;/strong&gt;. Другой метод, &lt;code&gt;sendMessage()&lt;/code&gt; предоставляет нам вещание сообщения в &lt;code&gt;/topic/message&lt;/code&gt; когда сообщение введено в брокер сообщений &lt;code&gt;/app/chat&lt;/code&gt; (не забудьте определить префикс &lt;code&gt;/app&lt;/code&gt; в &lt;code&gt;WebSocketConfig&lt;/code&gt;).&lt;/p&gt;
 &lt;h2 id="view"&gt;View&lt;/h2&gt;
-&lt;p&gt;Теперь наш внутренний java код написан, теперь оппишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для добавления нового сообщения и список сообщений.&lt;/p&gt;
+&lt;p&gt;Теперь наш внутренний java код написан, далее опишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для отправки нового сообщения и список введенных сообщений.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE HTML&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;html&lt;/span&gt; &lt;span class="na"&gt;lang=&lt;/span&gt;&lt;span class="s"&gt;"en"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
   &lt;span class="nt"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
@@ -296,9 +296,9 @@
   &lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Прежде всего мы добавим Open Sans шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения которое мы назвали &lt;code&gt;appChat&lt;/code&gt;. В этом приложении мы добавим один AngularJS контроллер, &lt;code&gt;ChatCtrl&lt;/code&gt;. Не путайте этот с нашим Spring котроллером!&lt;/p&gt;
+&lt;p&gt;Прежде всего мы добавим &lt;strong&gt;Open Sans&lt;/strong&gt; шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения, которое мы назвали &lt;code&gt;appChat&lt;/code&gt;. В этом приложении мы добавим один AngularJS контроллер - &lt;code&gt;ChatCtrl&lt;/code&gt;. Не путайте этот с нашим Spring котроллером!&lt;/p&gt;
 &lt;p&gt;В первую очередь что мы должны сделать, это создать форму содержащую текстовое поле. Мы соединим это поле с моделью названной &lt;code&gt;message&lt;/code&gt;. Когда форма будет отправлена, &lt;code&gt;addMessage()&lt;/code&gt; функция в нашем контроллере будет вызвана, которую мы будем использовать для отправки сообщения при помощи WebSocket'ов.&lt;/p&gt;
-&lt;p&gt;Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени сколько Вы ввели символов (&lt;strong&gt;max&lt;/strong&gt;), и загораеться красным когда вы больше не можете отправить форму благодаря директиве &lt;code&gt;ng-disabled&lt;/code&gt;. Сообщения отсортированы по их дате, последнее из низ показывается сверху списка.&lt;/p&gt;
+&lt;p&gt;Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени будет отображаться сколько Вы ввели символов (&lt;strong&gt;max&lt;/strong&gt;), при превышении лимита счетчик загораеться красным и тогда Вы больше не можете отправить форму благодаря директиве &lt;code&gt;ng-disabled&lt;/code&gt;. Сообщения отсортированы по их дате, последнее из них показывается сверху списка.&lt;/p&gt;
 &lt;p&gt;В конце страницы мы подгружаем все библиотеки которые нам нужны, и JavaScript файлы нашео приложения.&lt;/p&gt;
 &lt;h2 id="angularjs"&gt;Загрузка AngularJS приложения&lt;/h2&gt;
 &lt;p&gt;Наш первый JavaScript файл - app.js. Этот файл определяет все модули пакетов,в этом случае:&lt;/p&gt;
