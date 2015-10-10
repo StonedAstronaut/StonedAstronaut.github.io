@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Astro blog</title><link href="https://stonedastronaut.github.io/" rel="alternate"></link><link href="https://stonedastronaut.github.io/feeds/linux.atom.xml" rel="self"></link><id>https://stonedastronaut.github.io/</id><updated>2015-08-19T01:02:00+06:00</updated><entry><title>Hotkey для броузера в Kde</title><link href="https://stonedastronaut.github.io/hotkey-dlia-brouzera-v-kde.html" rel="alternate"></link><updated>2015-08-19T01:02:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-08-19:hotkey-dlia-brouzera-v-kde.html</id><summary type="html">&lt;hr /&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;/bin/bash -c &lt;span class="s2"&gt;&amp;quot;`xdg-settings get default-web-broswer | sed &amp;#39;s/.desktop//g&amp;#39;`&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="linux"></category></entry><entry><title>awk, sed, bzip2, grep, wc на всех ядрах</title><link href="https://stonedastronaut.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html" rel="alternate"></link><updated>2015-08-03T17:32:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-08-03:awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html</id><summary type="html">&lt;p&gt;Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (grep) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты grep, bzip2, wc, awk, sed и т.д. однопоточные и будут использовать всего одно ядро. Как сказал бы Картман, «Как мне добраться до этих ядер?» Давайте использовать все четыре ядра нашей Linux-машины с помощью GNU Parallel, небольшой map-reduce магии и малоизвестного параметра --pipes (также известного как --spreadstdin). Поверьте, удовольствие от работы прямо пропорционально количеству задействованных ядер!&lt;/p&gt;
-&lt;p&gt;BZIP2
-bzip2 сжимает лучше, чем gzip, но он такой медленый! К счатью, эта проблема решаема. Просто вместо этого:&lt;/p&gt;
-&lt;p&gt;cat bigfile.bin | bzip2 --best &amp;gt; compressedfile.bz2&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="linux"></category></entry><entry><title>awk, sed, bzip2, grep, wc на всех ядрах</title><link href="https://stonedastronaut.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html" rel="alternate"></link><updated>2015-08-03T17:32:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-08-03:awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html</id><summary type="html">&lt;p&gt;Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (&lt;strong&gt;grep&lt;/strong&gt;) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты &lt;strong&gt;grep&lt;/strong&gt;, &lt;strong&gt;bzip2&lt;/strong&gt;, &lt;strong&gt;wc&lt;/strong&gt;, &lt;strong&gt;awk&lt;/strong&gt;, &lt;strong&gt;sed&lt;/strong&gt; и т.д. однопоточные и будут использовать всего одно ядро. Как сказал бы Картман, «Как мне добраться до этих ядер?» Давайте использовать все четыре ядра нашей Linux-машины с помощью &lt;strong&gt;GNU Parallel&lt;/strong&gt;, небольшой map-reduce магии и малоизвестного параметра &lt;code&gt;--pipes&lt;/code&gt; (также известного как &lt;code&gt;--spreadstdin&lt;/code&gt;). Поверьте, удовольствие от работы прямо пропорционально количеству задействованных ядер!&lt;/p&gt;
+
+&lt;h3 id="bzip2"&gt;BZIP2&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;bzip2&lt;/strong&gt; сжимает лучше, чем &lt;strong&gt;gzip&lt;/strong&gt;, но он такой медленый! К счатью, эта проблема решаема. Просто вместо этого:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.bin &lt;span class="p"&gt;|&lt;/span&gt; bzip2 --best &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;gt&lt;span class="p"&gt;;&lt;/span&gt; compressedfile.bz2
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;можно написать вот это:&lt;/p&gt;
-&lt;p&gt;cat bigfile.bin | parallel --pipe --recend '' -k bzip2 --best &amp;gt; compressedfile.bz2&lt;/p&gt;
-&lt;p&gt;GNU Parallel особенно ускоряет bzip2 за счет работы на нескольких ядрах. Дайте ему свободу и вы будете вознаграждены.&lt;/p&gt;
-&lt;p&gt;GREP
-Если у вас имеется огромный текстовый файл для прогона grep'ом, то лучше используйте вместо этого:&lt;/p&gt;
-&lt;p&gt;grep pattern bigfile.txt&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.bin &lt;span class="p"&gt;|&lt;/span&gt; parallel --pipe --recend &lt;span class="s1"&gt;''&lt;/span&gt; -k bzip2 --best &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;gt&lt;span class="p"&gt;;&lt;/span&gt; compressedfile.bz2
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;GNU Parallel&lt;/strong&gt; особенно ускоряет &lt;strong&gt;bzip2&lt;/strong&gt; за счет работы на нескольких ядрах. Дайте ему свободу и вы будете вознаграждены.&lt;/p&gt;
+&lt;h3 id="grep"&gt;GREP&lt;/h3&gt;
+&lt;p&gt;Если у вас имеется огромный текстовый файл для прогона &lt;strong&gt;grep&lt;/strong&gt;'ом, то лучше используйте вместо этого:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;grep pattern bigfile.txt
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;вот это:&lt;/p&gt;
-&lt;p&gt;cat bigfile.txt | parallel --pipe grep 'pattern'&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --pipe grep &lt;span class="s1"&gt;'pattern'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;или это:&lt;/p&gt;
-&lt;p&gt;cat bigfile.txt | parallel --block 10M --pipe grep 'pattern'&lt;/p&gt;
-&lt;p&gt;Вторая рекомендуемая команда показывает, как использовать команду --block с 10MB данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.&lt;/p&gt;
-&lt;p&gt;AWK
-А вот это пример того, как с помощью awk добавить числа в очень большой файл. Вместо этого:&lt;/p&gt;
-&lt;p&gt;cat rands20M.txt | awk '{s+=$1} END {print s}'&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --block 10M --pipe grep &lt;span class="s1"&gt;'pattern'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Вторая рекомендуемая команда показывает, как использовать команду &lt;code&gt;--block&lt;/code&gt; с 10&lt;strong&gt;MB&lt;/strong&gt; данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.&lt;/p&gt;
+&lt;h3 id="awk"&gt;AWK&lt;/h3&gt;
+&lt;p&gt;А вот это пример того, как с помощью &lt;strong&gt;awk&lt;/strong&gt; добавить числа в очень большой файл. Вместо этого:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat rands20M.txt &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;'{s+=$1} END {print s}'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;попробуйте это:&lt;/p&gt;
-&lt;p&gt;cat rands20M.txt | parallel --pipe awk \'{s+=\$1} END {print s}\' | awk '{s+=$1} END {print s}'&lt;/p&gt;
-&lt;p&gt;Здесь --pipe позволяет использовать несколько чанков для вызова awk, записывая промежуточные результаты, а которые затем сливаются в конечный.&lt;/p&gt;
-&lt;p&gt;WC
-Хотите запустить супер-распараллеленный подсчет строк в файле? Тогда вместо этого:&lt;/p&gt;
-&lt;p&gt;wc -l bigfile.txt&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat rands20M.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --pipe awk &lt;span class="se"&gt;\'&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;s+&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="se"&gt;\$&lt;/span&gt;1&lt;span class="o"&gt;}&lt;/span&gt; END &lt;span class="o"&gt;{&lt;/span&gt;print s&lt;span class="o"&gt;}&lt;/span&gt;&lt;span class="se"&gt;\'&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;'{s+=$1} END {print s}'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Здесь &lt;code&gt;--pipe&lt;/code&gt; позволяет использовать несколько чанков для вызова &lt;strong&gt;awk&lt;/strong&gt;, записывая промежуточные результаты, а которые затем сливаются в конечный.&lt;/p&gt;
+&lt;h3 id="wc"&gt;WC&lt;/h3&gt;
+&lt;p&gt;Хотите запустить супер-распараллеленный подсчет строк в файле? Тогда вместо этого:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;wc -l bigfile.txt
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;запустите вот это:&lt;/p&gt;
-&lt;p&gt;cat bigfile.txt | parallel --pipe wc -l | awk '{s+=$1} END {print s}'&lt;/p&gt;
-&lt;p&gt;Вот это уже здорово. Что происходит? При распараллеленном вызове мы направляем несколько вызовов wc -l, формируя промежуточные результаты, а затем вызываем awk.&lt;/p&gt;
-&lt;p&gt;SED
-Захотелось сделать огромное количество перемещений в большом файле? Тогда забудьте об этом:&lt;/p&gt;
-&lt;p&gt;sed s^old^new^g bigfile.txt&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --pipe wc -l &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;'{s+=$1} END {print s}'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Вот это уже здорово. Что происходит? При распараллеленном вызове мы направляем несколько вызовов &lt;code&gt;wc -l&lt;/code&gt;, формируя промежуточные результаты, а затем вызываем awk.&lt;/p&gt;
+&lt;h3 id="sed"&gt;SED&lt;/h3&gt;
+&lt;p&gt;Захотелось сделать огромное количество перемещений в большом файле? Тогда забудьте об этом:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sed s^old^new^g bigfile.txt
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;и используйте вот это:&lt;/p&gt;
-&lt;p&gt;cat bigfile.txt | parallel --pipe sed s^old^new^g&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --pipe sed s^old^new^g
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;... и затем направьте вывод в ваш любимый файл.&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/"&gt;source&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>LVM on LUKS на примере arch</title><link href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html" rel="alternate"></link><updated>2015-07-26T03:53:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-07-26:lvm-on-luks-na-primere-arch.html</id><summary type="html">&lt;h2 id="_1"&gt;Создаём разделы физические&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/"&gt;source&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="grep"></category><category term="awk"></category><category term="sed"></category><category term="bzip2"></category><category term="parallel"></category></entry><entry><title>LVM on LUKS на примере arch</title><link href="https://stonedastronaut.github.io/lvm-on-luks-na-primere-arch.html" rel="alternate"></link><updated>2015-07-26T03:53:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-07-26:lvm-on-luks-na-primere-arch.html</id><summary type="html">&lt;h2 id="_1"&gt;Создаём разделы физические&lt;/h2&gt;
 &lt;p&gt;Вот такая структура диска.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -113,9 +125,7 @@ mount /dev/sda1 /mnt/boot
 
 
 &lt;p&gt;Собственно всё.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_LVM"&gt;ссылка на оригинал&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="crypt"></category></entry><entry><title>systemd timer - замена cron</title><link href="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html" rel="alternate"></link><updated>2015-07-20T01:15:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-07-20:systemd-timer-zamena-cron.html</id><summary type="html">&lt;p&gt;Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.&lt;/p&gt;
-&lt;p&gt;Так бгомерзкий systemd в моём обиходе заменил еще и cron...&lt;/p&gt;
-&lt;p&gt;Итак, для &lt;/p&gt;</summary><category term="linux"></category><category term="systemd"></category></entry><entry><title>Новые команды в Linux для старых решений</title><link href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html" rel="alternate"></link><updated>2015-05-20T18:17:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-05-20:novye-komandy-v-linux-dlia-starykh-reshenii.html</id><summary type="html">&lt;p&gt;Собственно копипаста &lt;a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/"&gt;отсюда&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_LVM"&gt;ссылка на оригинал&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="crypt"></category></entry><entry><title>Новые команды в Linux для старых решений</title><link href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html" rel="alternate"></link><updated>2015-05-20T18:17:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-05-20:novye-komandy-v-linux-dlia-starykh-reshenii.html</id><summary type="html">&lt;p&gt;Собственно копипаста &lt;a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/"&gt;отсюда&lt;/a&gt;&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h3 id="netstat-ss"&gt;вместо &lt;em&gt;netstat&lt;/em&gt; используем &lt;em&gt;ss&lt;/em&gt;:&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;ss -lpn

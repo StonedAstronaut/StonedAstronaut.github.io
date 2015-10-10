@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>systemd timer - замена cron - Astro blog</title>
+    <title>sed - Astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,22 +11,16 @@
 
     <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
 
-<link rel="canonical" href="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html">
 
-        <meta name="author" content="Stoned Astronaut" />
-        <meta name="keywords" content="linux,systemd" />
-        <meta name="description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для" />
+    <meta name="author" content="Stoned Astronaut" />
+    <meta name="keywords" content="sed" />
 
+    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Astro blog" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="systemd timer - замена cron"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html"/>
-        <meta property="og:description" content="Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть. Так бгомерзкий systemd в моём обиходе заменил еще и cron... Итак, для"/>
-        <meta property="article:published_time" content="2015-07-20" />
-            <meta property="article:section" content="linux" />
-            <meta property="article:tag" content="linux" />
-            <meta property="article:tag" content="systemd" />
-            <meta property="article:author" content="Stoned Astronaut" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Astro blog"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io"/>
+        <meta property="og:description" content="Astro blog"/>
 
 
     <!-- Bootstrap -->
@@ -69,7 +63,7 @@ Astro blog            </a>
                         <li >
                             <a href="https://stonedastronaut.github.io/category/java.html">Java</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="https://stonedastronaut.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -97,24 +91,13 @@ Astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="https://stonedastronaut.github.io/systemd-timer-zamena-cron.html"
-                       rel="bookmark"
-                       title="Permalink to systemd timer - замена cron">
-                        systemd timer - замена cron
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
+            <article>
+                <h2><a href="https://stonedastronaut.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html">awk, sed, bzip2, grep, wc на всех ядрах</a></h2>
+                    <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-07-20T01:15:00+06:00"> Mon 20 July 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2015-08-03T17:32:00+06:00"> Mon 03 August 2015</time>
     </span>
 
 
@@ -122,17 +105,22 @@ Astro blog            </a>
 <span class="label label-default">Tags</span>
 	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
         /
-	<a href="https://stonedastronaut.github.io/tag/systemd.html">systemd</a>
+	<a href="https://stonedastronaut.github.io/tag/grep.html">grep</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/awk.html">awk</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/sed.html">sed</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/bzip2.html">bzip2</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/parallel.html">parallel</a>
     
 </footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (<strong>grep</strong>) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты <strong>grep</strong>, <strong>bzip2</strong>, <strong>wc</strong>, <strong>awk</strong>, <strong>sed</strong> и т.д. однопоточные ...</p>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html">more ...</a>
                 </div>
-                <p>Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.</p>
-<p>Так бгомерзкий systemd в моём обиходе заменил еще и cron...</p>
-<p>Итак, для </p>
-            </div>
-            <!-- /.entry-content -->
-        </article>
-    </section>
+            </article>
+            <hr/>
 
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -143,7 +131,7 @@ Astro blog            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
               <ul class="list-group" id="social">
                 <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+                <li class="list-group-item"><a href="https://www.minds.com/stonedastronaut"><i class="fa fa-minds-square fa-lg"></i> minds</a></li>
                 <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
               </ul>
             </li>
@@ -158,8 +146,23 @@ Astro blog            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/angular.html">
+                            angular
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/awk.html">
+                            awk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/backup.html">
                             backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/bzip2.html">
+                            bzip2
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -192,6 +195,11 @@ Astro blog            </a>
                             geektimes
                         </a>
                     </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/grep.html">
+                            grep
+                        </a>
+                    </li>
                     <li class="list-group-item tag-1">
                         <a href="https://stonedastronaut.github.io/tag/habr.html">
                             habr
@@ -207,7 +215,7 @@ Astro blog            </a>
                             interview
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
+                    <li class="list-group-item tag-2">
                         <a href="https://stonedastronaut.github.io/tag/java.html">
                             java
                         </a>
@@ -232,6 +240,11 @@ Astro blog            </a>
                             orm
                         </a>
                     </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/parallel.html">
+                            parallel
+                        </a>
+                    </li>
                     <li class="list-group-item tag-2">
                         <a href="https://stonedastronaut.github.io/tag/programming.html">
                             programming
@@ -248,8 +261,23 @@ Astro blog            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sed.html">
+                            sed
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/socket.html">
+                            socket
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/sport.html">
                             sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/spring.html">
+                            spring
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -258,13 +286,13 @@ Astro blog            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
-                            systemd
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
-                            tproger
+                        <a href="https://stonedastronaut.github.io/tag/translate.html">
+                            translate
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -324,23 +352,6 @@ Astro blog            </a>
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Google Analytics -->
-    <script type="text/javascript">
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-43336913-2']);
-        _gaq.push(['_trackPageview']);
-
-        (function () {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
-    <!-- End Google Analytics Code -->
 
 </body>
 </html>

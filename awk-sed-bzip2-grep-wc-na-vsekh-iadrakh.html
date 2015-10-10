@@ -14,7 +14,7 @@
 <link rel="canonical" href="https://stonedastronaut.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html">
 
         <meta name="author" content="Stoned Astronaut" />
-        <meta name="keywords" content="linux" />
+        <meta name="keywords" content="linux,grep,awk,sed,bzip2,parallel" />
         <meta name="description" content="Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (grep) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты grep, bzip2, wc, awk, sed и т.д. однопоточные ..." />
 
         <meta property="og:site_name" content="Astro blog" />
@@ -25,6 +25,11 @@
         <meta property="article:published_time" content="2015-08-03" />
             <meta property="article:section" content="linux" />
             <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="grep" />
+            <meta property="article:tag" content="awk" />
+            <meta property="article:tag" content="sed" />
+            <meta property="article:tag" content="bzip2" />
+            <meta property="article:tag" content="parallel" />
             <meta property="article:author" content="Stoned Astronaut" />
 
 
@@ -120,41 +125,74 @@ Astro blog            </a>
 
 <span class="label label-default">Tags</span>
 	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/grep.html">grep</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/awk.html">awk</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/sed.html">sed</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/bzip2.html">bzip2</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/parallel.html">parallel</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (grep) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты grep, bzip2, wc, awk, sed и т.д. однопоточные и будут использовать всего одно ядро. Как сказал бы Картман, «Как мне добраться до этих ядер?» Давайте использовать все четыре ядра нашей Linux-машины с помощью GNU Parallel, небольшой map-reduce магии и малоизвестного параметра --pipes (также известного как --spreadstdin). Поверьте, удовольствие от работы прямо пропорционально количеству задействованных ядер!</p>
-<p>BZIP2
-bzip2 сжимает лучше, чем gzip, но он такой медленый! К счатью, эта проблема решаема. Просто вместо этого:</p>
-<p>cat bigfile.bin | bzip2 --best &gt; compressedfile.bz2</p>
+                    <div class="toc">
+                    <div class="toc">
+<ul>
+<li><a href="#bzip2">BZIP2</a></li>
+<li><a href="#grep">GREP</a></li>
+<li><a href="#awk">AWK</a></li>
+<li><a href="#wc">WC</a></li>
+<li><a href="#sed">SED</a></li>
+</ul>
+</div>
+                    </div>
+                <p>Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (<strong>grep</strong>) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты <strong>grep</strong>, <strong>bzip2</strong>, <strong>wc</strong>, <strong>awk</strong>, <strong>sed</strong> и т.д. однопоточные и будут использовать всего одно ядро. Как сказал бы Картман, «Как мне добраться до этих ядер?» Давайте использовать все четыре ядра нашей Linux-машины с помощью <strong>GNU Parallel</strong>, небольшой map-reduce магии и малоизвестного параметра <code>--pipes</code> (также известного как <code>--spreadstdin</code>). Поверьте, удовольствие от работы прямо пропорционально количеству задействованных ядер!</p>
+
+<h3 id="bzip2">BZIP2</h3>
+<p><strong>bzip2</strong> сжимает лучше, чем <strong>gzip</strong>, но он такой медленый! К счатью, эта проблема решаема. Просто вместо этого:</p>
+<div class="highlight"><pre>cat bigfile.bin <span class="p">|</span> bzip2 --best <span class="p">&amp;</span>gt<span class="p">;</span> compressedfile.bz2
+</pre></div>
 <p>можно написать вот это:</p>
-<p>cat bigfile.bin | parallel --pipe --recend '' -k bzip2 --best &gt; compressedfile.bz2</p>
-<p>GNU Parallel особенно ускоряет bzip2 за счет работы на нескольких ядрах. Дайте ему свободу и вы будете вознаграждены.</p>
-<p>GREP
-Если у вас имеется огромный текстовый файл для прогона grep'ом, то лучше используйте вместо этого:</p>
-<p>grep pattern bigfile.txt</p>
+<div class="highlight"><pre>cat bigfile.bin <span class="p">|</span> parallel --pipe --recend <span class="s1">''</span> -k bzip2 --best <span class="p">&amp;</span>gt<span class="p">;</span> compressedfile.bz2
+</pre></div>
+<p><strong>GNU Parallel</strong> особенно ускоряет <strong>bzip2</strong> за счет работы на нескольких ядрах. Дайте ему свободу и вы будете вознаграждены.</p>
+<h3 id="grep">GREP</h3>
+<p>Если у вас имеется огромный текстовый файл для прогона <strong>grep</strong>'ом, то лучше используйте вместо этого:</p>
+<div class="highlight"><pre>grep pattern bigfile.txt
+</pre></div>
 <p>вот это:</p>
-<p>cat bigfile.txt | parallel --pipe grep 'pattern'</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe grep <span class="s1">'pattern'</span>
+</pre></div>
 <p>или это:</p>
-<p>cat bigfile.txt | parallel --block 10M --pipe grep 'pattern'</p>
-<p>Вторая рекомендуемая команда показывает, как использовать команду --block с 10MB данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.</p>
-<p>AWK
-А вот это пример того, как с помощью awk добавить числа в очень большой файл. Вместо этого:</p>
-<p>cat rands20M.txt | awk '{s+=$1} END {print s}'</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --block 10M --pipe grep <span class="s1">'pattern'</span>
+</pre></div>
+<p>Вторая рекомендуемая команда показывает, как использовать команду <code>--block</code> с 10<strong>MB</strong> данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.</p>
+<h3 id="awk">AWK</h3>
+<p>А вот это пример того, как с помощью <strong>awk</strong> добавить числа в очень большой файл. Вместо этого:</p>
+<div class="highlight"><pre>cat rands20M.txt <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
 <p>попробуйте это:</p>
-<p>cat rands20M.txt | parallel --pipe awk \'{s+=\$1} END {print s}\' | awk '{s+=$1} END {print s}'</p>
-<p>Здесь --pipe позволяет использовать несколько чанков для вызова awk, записывая промежуточные результаты, а которые затем сливаются в конечный.</p>
-<p>WC
-Хотите запустить супер-распараллеленный подсчет строк в файле? Тогда вместо этого:</p>
-<p>wc -l bigfile.txt</p>
+<div class="highlight"><pre>cat rands20M.txt <span class="p">|</span> parallel --pipe awk <span class="se">\'</span><span class="o">{</span>s+<span class="o">=</span><span class="se">\$</span>1<span class="o">}</span> END <span class="o">{</span>print s<span class="o">}</span><span class="se">\'</span> <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
+<p>Здесь <code>--pipe</code> позволяет использовать несколько чанков для вызова <strong>awk</strong>, записывая промежуточные результаты, а которые затем сливаются в конечный.</p>
+<h3 id="wc">WC</h3>
+<p>Хотите запустить супер-распараллеленный подсчет строк в файле? Тогда вместо этого:</p>
+<div class="highlight"><pre>wc -l bigfile.txt
+</pre></div>
 <p>запустите вот это:</p>
-<p>cat bigfile.txt | parallel --pipe wc -l | awk '{s+=$1} END {print s}'</p>
-<p>Вот это уже здорово. Что происходит? При распараллеленном вызове мы направляем несколько вызовов wc -l, формируя промежуточные результаты, а затем вызываем awk.</p>
-<p>SED
-Захотелось сделать огромное количество перемещений в большом файле? Тогда забудьте об этом:</p>
-<p>sed s^old^new^g bigfile.txt</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe wc -l <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
+<p>Вот это уже здорово. Что происходит? При распараллеленном вызове мы направляем несколько вызовов <code>wc -l</code>, формируя промежуточные результаты, а затем вызываем awk.</p>
+<h3 id="sed">SED</h3>
+<p>Захотелось сделать огромное количество перемещений в большом файле? Тогда забудьте об этом:</p>
+<div class="highlight"><pre>sed s^old^new^g bigfile.txt
+</pre></div>
 <p>и используйте вот это:</p>
-<p>cat bigfile.txt | parallel --pipe sed s^old^new^g</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe sed s^old^new^g
+</pre></div>
 <p>... и затем направьте вывод в ваш любимый файл.</p>
 <p><a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">source</a></p>
             </div>
@@ -171,7 +209,7 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
               <ul class="list-group" id="social">
                 <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-                <li class="list-group-item"><a href="https://plus.google.com/u/0/113483139834962824849/posts"><i class="fa fa-google-plus-square fa-lg"></i> google-plus</a></li>
+                <li class="list-group-item"><a href="https://www.minds.com/stonedastronaut"><i class="fa fa-minds-square fa-lg"></i> minds</a></li>
                 <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
               </ul>
             </li>
@@ -186,8 +224,23 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/angular.html">
+                            angular
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/awk.html">
+                            awk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/backup.html">
                             backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/bzip2.html">
+                            bzip2
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -220,6 +273,11 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                             geektimes
                         </a>
                     </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/grep.html">
+                            grep
+                        </a>
+                    </li>
                     <li class="list-group-item tag-1">
                         <a href="https://stonedastronaut.github.io/tag/habr.html">
                             habr
@@ -235,7 +293,7 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                             interview
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
+                    <li class="list-group-item tag-2">
                         <a href="https://stonedastronaut.github.io/tag/java.html">
                             java
                         </a>
@@ -260,6 +318,11 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                             orm
                         </a>
                     </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/parallel.html">
+                            parallel
+                        </a>
+                    </li>
                     <li class="list-group-item tag-2">
                         <a href="https://stonedastronaut.github.io/tag/programming.html">
                             programming
@@ -276,8 +339,23 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sed.html">
+                            sed
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/socket.html">
+                            socket
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/sport.html">
                             sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/spring.html">
+                            spring
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -286,13 +364,13 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/systemd.html">
-                            systemd
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
-                            tproger
+                        <a href="https://stonedastronaut.github.io/tag/translate.html">
+                            translate
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -352,23 +430,6 @@ bzip2 сжимает лучше, чем gzip, но он такой медлен�
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
 <script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
 
-    <!-- Google Analytics -->
-    <script type="text/javascript">
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-43336913-2']);
-        _gaq.push(['_trackPageview']);
-
-        (function () {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
-    <!-- End Google Analytics Code -->
 
 </body>
 </html>

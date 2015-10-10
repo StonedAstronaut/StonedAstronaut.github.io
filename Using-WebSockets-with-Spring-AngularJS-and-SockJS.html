@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS - Astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://stonedastronaut.github.io/Using-WebSockets-with-Spring-AngularJS-and-SockJS.html">
+
+        <meta name="author" content="Stoned Astronaut" />
+        <meta name="keywords" content="translate,java,spring,angular,socket" />
+        <meta name="description" content="Некоторое время назад я написал стсатью о веб приложении использующем spring angularJS и WebSocket&#39;ы. Тем не менее, это руководство использует только часть того что могут вебсокеты, поэтому в этом руководстве я буду объяснять как вы можете написать небольшой чат используя фреймворки Spring, AngularJS, Stromp.js и SockJS. Внутри приложения ..." />
+
+        <meta property="og:site_name" content="Astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Использование WebSocket&#39;ов совместно со Spring, AgularJS и SocksJS"/>
+        <meta property="og:url" content="https://stonedastronaut.github.io/Using-WebSockets-with-Spring-AngularJS-and-SockJS.html"/>
+        <meta property="og:description" content="Некоторое время назад я написал стсатью о веб приложении использующем spring angularJS и WebSocket&#39;ы. Тем не менее, это руководство использует только часть того что могут вебсокеты, поэтому в этом руководстве я буду объяснять как вы можете написать небольшой чат используя фреймворки Spring, AngularJS, Stromp.js и SockJS. Внутри приложения ..."/>
+        <meta property="article:published_time" content="2015-10-10" />
+            <meta property="article:section" content="java" />
+            <meta property="article:tag" content="translate" />
+            <meta property="article:tag" content="java" />
+            <meta property="article:tag" content="spring" />
+            <meta property="article:tag" content="angular" />
+            <meta property="article:tag" content="socket" />
+            <meta property="article:author" content="Stoned Astronaut" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+Astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://stonedastronaut.github.io/pages/about.html">
+                             О сайте
+                          </a></li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/copypaste.html">Copy\paste</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/crypt.html">Crypt</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://stonedastronaut.github.io/category/java.html">Java</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="https://stonedastronaut.github.io/category/unsort.html">Unsort</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://stonedastronaut.github.io/Using-WebSockets-with-Spring-AngularJS-and-SockJS.html"
+                       rel="bookmark"
+                       title="Permalink to Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS">
+                        Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-10-10T14:11:00+06:00"> Sat 10 October 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/translate.html">translate</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/java.html">java</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/spring.html">spring</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/angular.html">angular</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/socket.html">socket</a>
+    <span class="label label-default">Lang</span>
+	<a href="https://stonedastronaut.github.io/Using-WebSockets-with-Spring-AngularJS-and-SockJS-en.html">en</a>
+
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                    <div class="toc">
+                    <div class="toc">
+<ul>
+<li><a href="#websocket">Почему WebSocket'ы?</a></li>
+<li><a href="#_1">Установка проекта</a></li>
+<li><a href="#java">Java конфигурация</a></li>
+<li><a href="#_2">Объект обмена данными</a></li>
+<li><a href="#spring-controller">Spring Controller</a></li>
+<li><a href="#view">View</a></li>
+<li><a href="#angularjs">Загрузка AngularJS приложения</a></li>
+<li><a href="#angularjs_1">AngularJS контроллер</a></li>
+<li><a href="#angularjs_2">AngularJS служба</a></li>
+<li><a href="#_3">Стилизация</a></li>
+<li><a href="#_4">Демонстрация</a></li>
+</ul>
+</div>
+                    </div>
+                <p>Некоторое время назад я написал стсатью о веб приложении использующем spring angularJS и WebSocket'ы. Тем не менее, это руководство использует только часть того что могут вебсокеты, поэтому в этом руководстве я буду объяснять как вы можете написать небольшой чат используя фреймворки Spring, AngularJS, Stromp.js и SockJS.</p>
+<p>Внутри приложения будет описан использованный JavaConfig, даже web.xml (который я до сих пор храню с прежнего руководства) будет заменён на WebAppInitializer</p>
+<p>Приложение которое будем писать, будет выглядить вот так:</p>
+<p><img alt="Внешний вид приложения" src="https://stonedastronaut.github.io/images/app-chat-example.png" title="внешний вид приложения"/></p>
+
+<h2 id="websocket">Почему WebSocket'ы?</h2>
+<p>Однажды, кто-то решил написать приложение почтовой рассылки. Для начала он сделал клиент который проверял, наличие новых писем каждую минуту. Тем не менее, часто не было новых писем, а клиент всегда отправлял запрос, делая большую нагрузку на сервер. Эта техника была довольно популярна, и была названа <em>polling</em> (пер. с англ. "опросник"). Затем, через некоторое время, они использовали новую технику, когда клиент бы проверял если есть новые письма, и сервер бы отвечал как только новая почта стала доступна. Эта техника была немного лучше чем поллинг, но вы всё равно отправляли запрос, в результате чего использовался лишний трафик, мы назвали эту технику <em>long-polling</em>.</p>
+<p>Когда вы начинаете думать, можете сделать только один вывод, это сервер должен отправить сообщение клиенту, когда новая почта станет доступна. Клиент не должен инициировать запрос, но сервер должен это делать. Это было невозможно долгое время, но как только были придуманы WebSocket'ы, это наконец стало возможным.</p>
+<p>WebSocket'ы это протокол и JavaScript API, протокол очень низкоуровневый, двухуровневый (<em>full-duplex</em>), это означает, что сообщения могут быть отправлены в обе стороны соединения одновременно. Это даёт возможность для того что бы сервер отправлял данные клиенту, но не наоборот. <em>Polling</em> и <em>long-polling</em> стали больше не нужны, и жили они долго и счастливо...</p>
+<p>Потому как WebSocket'ы предоставляют связь в друх направлениях, они часто используються для приложений реального времени. Если для примера, кто-то откроет ваше приложение и изменит в нём какие-либо данные, вы можете непосредственно обновить эти данные для всех пользователей, которые используют WebSocket'ы.</p>
+<h2 id="_1">Установка проекта</h2>
+<p>Вам будут необходимы несколько библиотек, основная это Spring Web MVC фреймворк для настройки нашего веб приложения и Spring messaging + WebSockets для WebSocket'ной части  приложения. Нам также необходима JSON сериализатор, например Jackson, потому что Stomp нуждается в JSON сериализации/десериализации, поэтому я также собираюсь добавить его в наше приложение.</p>
+<p><strong>pom.xml</strong></p>
+<div class="highlight"><pre>...
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-webmvc<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>4.1.1.RELEASE<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-websocket<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>4.1.1.RELEASE<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>spring-messaging<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>4.1.1.RELEASE<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>javax.websocket<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>javax.websocket-api<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>javax.servlet<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>javax.servlet-api<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>3.1.0<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>javax.servlet<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jstl<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.2<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.fasterxml.jackson.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jackson-core<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>2.3.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.fasterxml.jackson.core<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jackson-databind<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>2.3.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.fasterxml.jackson.jaxrs<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>jackson-jaxrs-json-provider<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>2.3.3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+...
+</pre></div>
+<p>На front-end я добавлю нужные билиотеки, которые настрою при помощи Bower. Если вы им не пользуетесь, Вы всегда можете скачать эти библиотеки вручную.</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"spring-ng-chat"</span><span class="p">,</span>
+  <span class="nt">"version"</span><span class="p">:</span> <span class="s2">"0.0.1-SNAPSHOT"</span><span class="p">,</span>
+  <span class="nt">"dependencies"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">"sockjs"</span><span class="p">:</span> <span class="s2">"0.3.4"</span><span class="p">,</span>
+    <span class="nt">"stomp-websocket"</span><span class="p">:</span> <span class="s2">"2.3.4"</span><span class="p">,</span>
+    <span class="nt">"angular"</span><span class="p">:</span> <span class="s2">"1.3.8"</span><span class="p">,</span>
+    <span class="nt">"lodash"</span><span class="p">:</span> <span class="s2">"2.4.1"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>Библиотеки которые я собираюсь использовать SockJS + Stomp.js для связи меджу WebSocket'ами, AngularJS буду использовать для настройки клиентской части приложения и Lo-Dash библиотека утилит (форк Underscore.js).</p>
+<blockquote>
+<p>Что такое <em>STOMP</em>? Как я говорил раньше, WebSocket протокол довольно низкоуровневый, однако есть неколько высоко-(выше-) уровневые протоколы, которые могут быть использованы поверх WebSocket'ов, например <em>MQTT</em> и <em>STOMP</em>. <em>STOMP</em> например добавляет дополнительные возможности к WebSocket'ам, такие как публикация и подписка на темы.</p>
+</blockquote>
+<h2 id="java">Java конфигурация</h2>
+<p>Вместо конфигурации нашего протокола используя XML, я покажу вам как вы можете написать аналогичнее приложения без использования XML файлов. Первый класс который нам понадобиться который заменяет наш web.xml, для загрузки нашего веб приложения. В данном случае мы может определить application context, web application context и некоторые другие сервлет подобные конфигурации.</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebAppInitializer</span> <span class="kd">extends</span> <span class="n">AbstractAnnotationConfigDispatcherServletInitializer</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">customizeRegistration</span><span class="o">(</span><span class="n">ServletRegistration</span><span class="o">.</span><span class="na">Dynamic</span> <span class="n">registration</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">registration</span><span class="o">.</span><span class="na">setInitParameter</span><span class="o">(</span><span class="s">"dispatchOptionsRequest"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">);</span>
+    <span class="n">registration</span><span class="o">.</span><span class="na">setAsyncSupported</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">Class</span><span class="o">&lt;</span> <span class="o">?&gt;[]</span> <span class="n">getRootConfigClasses</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Class</span><span class="o">&lt;</span> <span class="o">?&gt;[]</span> <span class="o">{</span> <span class="n">AppConfig</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">WebSocketConfig</span><span class="o">.</span><span class="na">class</span> <span class="o">};</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">Class</span><span class="o">&lt;</span> <span class="o">?&gt;[]</span> <span class="n">getServletConfigClasses</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Class</span><span class="o">&lt;</span> <span class="o">?&gt;[]</span> <span class="o">{</span> <span class="n">WebConfig</span><span class="o">.</span><span class="na">class</span> <span class="o">};</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getServletMappings</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"/"</span> <span class="o">};</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">Filter</span><span class="o">[]</span> <span class="nf">getServletFilters</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">CharacterEncodingFilter</span> <span class="n">characterEncodingFilter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CharacterEncodingFilter</span><span class="o">();</span>
+    <span class="n">characterEncodingFilter</span><span class="o">.</span><span class="na">setEncoding</span><span class="o">(</span><span class="n">StandardCharsets</span><span class="o">.</span><span class="na">UTF_8</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Filter</span><span class="o">[]</span> <span class="o">{</span> <span class="n">characterEncodingFilter</span> <span class="o">};</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p>Большая часть данного класса вполне понятно. Прежде всего мы должны <code>getRootConfigClasses()</code> и <code>getServletConfigClasses()</code> которые мы использовали для определения наших бинов. <code>getServletMappings()</code> и <code>getServletFilters()</code> связаны с конфигурацией сервлета. В данном случае я определяю приложение в context root и я добавляю фильтр для прогонки всего контента в кодировку UTF-8.</p>
+<p>После последний метод здесь это <code>customizeRegistrion()</code>. Это может быть очень важно если вы запускаете приложение на Tomcat контейнере. Это объясняет что ассинхронная связь возможно, поэтому эти соединения не должны закрываться непосредственно.</p>
+<p>Как вы могли заметить , вы будете получать три ошибки компиляции о классах которые на найдены. Я определю их сейчас, и начнём с <code>AppConfig</code>:</p>
+<div class="highlight"><pre><span class="nd">@Configuration</span>
+<span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="s">"be.g00glen00b"</span><span class="o">,</span> <span class="n">excludeFilters</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="nd">@ComponentScan.Filter</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">type</span> <span class="o">=</span> <span class="n">FilterType</span><span class="o">.</span><span class="na">ANNOTATION</span><span class="o">),</span>
+    <span class="nd">@ComponentScan.Filter</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">Configuration</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">type</span> <span class="o">=</span> <span class="n">FilterType</span><span class="o">.</span><span class="na">ANNOTATION</span><span class="o">)</span>
+<span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppConfig</span> <span class="o">{</span>
+
+<span class="o">}</span>
+</pre></div>
+<p>Довольно пустой и бесполезный, кторый говорит какой пакет сканировать, но исключает все конфигурационный и контроллер классы (конфигурационные каллсы которые загружаются нашим <code>WebAppInitializer</code> когда <code>Controller</code> классы связанные с нашим <code>WebConfig</code>). Так нам нужен будет лишь контроллер, этот класс не будет делать ничего особенного, но если вы используете специальные сервисы, тогда они станут Spring бинами, если их правильно аннотировать.</p>
+<p>Следующий класс это <code>WebConfig</code>:</p>
+<div class="highlight"><pre><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebMvc</span>
+<span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="s">"be.g00glen00b.controller"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebConfig</span> <span class="kd">extends</span> <span class="n">WebMvcConfigurerAdapter</span> <span class="o">{</span>
+
+  <span class="nd">@Bean</span>
+  <span class="kd">public</span> <span class="n">InternalResourceViewResolver</span> <span class="nf">getInternalResourceViewResolver</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">InternalResourceViewResolver</span> <span class="n">resolver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InternalResourceViewResolver</span><span class="o">();</span>
+    <span class="n">resolver</span><span class="o">.</span><span class="na">setPrefix</span><span class="o">(</span><span class="s">"/WEB-INF/views/"</span><span class="o">);</span>
+    <span class="n">resolver</span><span class="o">.</span><span class="na">setSuffix</span><span class="o">(</span><span class="s">".jsp"</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">resolver</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureDefaultServletHandling</span><span class="o">(</span><span class="n">DefaultServletHandlerConfigurer</span> <span class="n">configurer</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">configurer</span><span class="o">.</span><span class="na">enable</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Bean</span>
+  <span class="kd">public</span> <span class="n">WebContentInterceptor</span> <span class="nf">webContentInterceptor</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">WebContentInterceptor</span> <span class="n">interceptor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WebContentInterceptor</span><span class="o">();</span>
+    <span class="n">interceptor</span><span class="o">.</span><span class="na">setCacheSeconds</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+    <span class="n">interceptor</span><span class="o">.</span><span class="na">setUseExpiresHeader</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">interceptor</span><span class="o">.</span><span class="na">setUseCacheControlHeader</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">interceptor</span><span class="o">.</span><span class="na">setUseCacheControlNoStore</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="n">interceptor</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addResourceHandlers</span><span class="o">(</span><span class="n">ResourceHandlerRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">registry</span><span class="o">.</span><span class="na">addResourceHandler</span><span class="o">(</span><span class="s">"/libs/**"</span><span class="o">).</span><span class="na">addResourceLocations</span><span class="o">(</span><span class="s">"/libs/"</span><span class="o">);</span>
+    <span class="n">registry</span><span class="o">.</span><span class="na">addResourceHandler</span><span class="o">(</span><span class="s">"/app/**"</span><span class="o">).</span><span class="na">addResourceLocations</span><span class="o">(</span><span class="s">"/app/"</span><span class="o">);</span>
+    <span class="n">registry</span><span class="o">.</span><span class="na">addResourceHandler</span><span class="o">(</span><span class="s">"/assets/**"</span><span class="o">).</span><span class="na">addResourceLocations</span><span class="o">(</span><span class="s">"/assets/"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addInterceptors</span><span class="o">(</span><span class="n">InterceptorRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">registry</span><span class="o">.</span><span class="na">addInterceptor</span><span class="o">(</span><span class="n">webContentInterceptor</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p>Эта настоичный класс загружающий наш веб контекст. Он говорит нам какой статичный ресурс может быть обслужен (с <code>addResourceHandlers</code>. Он добавляет ~~нет кеш-перехватчик~~ (<code>webContentInterceptor()</code> и <code>addInterceptors()</code>) и также объяснит нам расположение нашиъ динамических ресурсов (JSP файлов) которые используются в <code>getInternalResourceViewResolver()</code> бином.</p>
+<p>И наконец WebSocket конфиг:</p>
+<div class="highlight"><pre><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocketMessageBroker</span>
+<span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="s">"be.g00glen00b.controller"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">extends</span> <span class="n">AbstractWebSocketMessageBrokerConfigurer</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMessageBroker</span><span class="o">(</span><span class="n">MessageBrokerRegistry</span> <span class="n">config</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">enableSimpleBroker</span><span class="o">(</span><span class="s">"/topic"</span><span class="o">);</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">setApplicationDestinationPrefixes</span><span class="o">(</span><span class="s">"/app"</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerStompEndpoints</span><span class="o">(</span><span class="n">StompEndpointRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">registry</span><span class="o">.</span><span class="na">addEndpoint</span><span class="o">(</span><span class="s">"/chat"</span><span class="o">).</span><span class="na">withSockJS</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p>Также как и <code>WebSocket</code> он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать сообщения брокер сообщений (где связь входит и выходит) используя <code>configMessegeBroker</code> и мы также должны сконфигурировать наши конечные точки <code>registerStompEndPoints</code>.</p>
+<blockquote>
+<p>WebSocket'ы не работают во всех броузерах. Много WebSocket библиотек (например SockJS и Socket.io) предоставляют запасной вариант использования <em>long-polling</em> и <em>polling</em>. Spring также предоставляет эти запасные варианты совместимые с SockJS. Именно поэтому выбрать SockJS как клиент - это хорошая идея.</p>
+</blockquote>
+<h2 id="_2">Объект обмена данными</h2>
+<p>Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенный полезную нагрузку и ответ, на специфический <em>Stomp.js</em> заголовок. Нам необходимо два класса для этого, <code>Message</code> и <code>OutputMessage</code>.</p>
+<p>Предле всего, <code>Message</code> будет содержать сообщение чата и генерирует ID, например: </p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Message</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kt">int</span> <span class="n">id</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">Message</span><span class="o">()</span> <span class="o">{</span>
+
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nf">Message</span><span class="o">(</span><span class="kt">int</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getMessage</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">message</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="kt">int</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p><code>OutputMessage</code> наследуется от  <code>Message</code>, но также добавляется метку (текущее время):</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OutputMessage</span> <span class="kd">extends</span> <span class="n">Message</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">time</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">OutputMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">original</span><span class="o">,</span> <span class="n">Date</span> <span class="n">time</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">original</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">original</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Date</span> <span class="nf">getTime</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTime</span><span class="o">(</span><span class="n">Date</span> <span class="n">time</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<h2 id="spring-controller">Spring Controller</h2>
+<p>Заключительной java частью приложения является контроллер который описывает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:</p>
+<div class="highlight"><pre><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ChatController</span> <span class="o">{</span>
+
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">viewApplication</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="s">"index"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@MessageMapping</span><span class="o">(</span><span class="s">"/chat"</span><span class="o">)</span>
+  <span class="nd">@SendTo</span><span class="o">(</span><span class="s">"/topic/message"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">OutputMessage</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">OutputMessage</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p>Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот <code>viewApplication()</code> отображается сюда же, поэтому этот <strong>index.jsp</strong> страница и использует эту <strong>view</strong>. Другой метод, <code>sendMessage()</code> предоставляет нам вещание сообщения в <code>/topic/message</code> когда сообщение введено в брокер сообщений <code>/app/chat</code> (не забудьте определить префикс <code>/app</code> в <code>WebSocketConfig</code>).</p>
+<h2 id="view">View</h2>
+<p>Теперь наш внутренний java код написан, теперь оппишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для добавления нового сообщения и список сообщений.</p>
+<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"assets/style.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">"chatApp"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">"ChatCtrl"</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;form</span> <span class="na">ng-submit=</span><span class="s">"addMessage()"</span> <span class="na">name=</span><span class="s">"messageForm"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">placeholder=</span><span class="s">"Compose a new message..."</span> <span class="na">ng-model=</span><span class="s">"message"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"info"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"count"</span> <span class="na">ng-bind=</span><span class="s">"max - message.length"</span> <span class="na">ng-class=</span><span class="s">"{danger: message.length &gt; max}"</span><span class="nt">&gt;</span>140<span class="nt">&lt;/span&gt;</span>
+          <span class="nt">&lt;button</span> <span class="na">ng-disabled=</span><span class="s">"message.length &gt; max || message.length === 0"</span><span class="nt">&gt;</span>Send<span class="nt">&lt;/button&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/form&gt;</span>
+      <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;p</span> <span class="na">ng-repeat=</span><span class="s">"message in messages | orderBy:'time':true"</span> <span class="na">class=</span><span class="s">"message"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;time&gt;</span><span class="cp">{{</span><span class="nv">message.time</span> <span class="o">|</span> <span class="nf">date</span><span class="s1">:'HH:mm'</span><span class="cp">}}</span><span class="nt">&lt;/time&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">ng-class=</span><span class="s">"{self: message.self}"</span><span class="nt">&gt;</span><span class="cp">{{</span><span class="nv">message.message</span><span class="cp">}}</span><span class="nt">&lt;/span&gt;</span>
+      <span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"libs/sockjs/sockjs.min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"libs/stomp-websocket/lib/stomp.min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"libs/angular/angular.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"libs/lodash/dist/lodash.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"app/app.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"app/controllers.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"app/services.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+<p>Прежде всего мы добавим Open Sans шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения которое мы назвали <code>appChat</code>. В этом приложении мы добавим один AngularJS контроллер, <code>ChatCtrl</code>. Не путайте этот с нашим Spring котроллером!</p>
+<p>В первую очередь что мы должны сделать, это создать форму содержащую текстовое поле. Мы соединим это поле с моделью названной <code>message</code>. Когда форма будет отправлена, <code>addMessage()</code> функция в нашем контроллере будет вызвана, которую мы будем использовать для отправки сообщения при помощи WebSocket'ов.</p>
+<p>Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени сколько Вы ввели символов (<strong>max</strong>), и загораеться красным когда вы больше не можете отправить форму благодаря директиве <code>ng-disabled</code>. Сообщения отсортированы по их дате, последнее из низ показывается сверху списка.</p>
+<p>В конце страницы мы подгружаем все библиотеки которые нам нужны, и JavaScript файлы нашео приложения.</p>
+<h2 id="angularjs">Загрузка AngularJS приложения</h2>
+<p>Наш первый JavaScript файл - app.js. Этот файл определяет все модули пакетов,в этом случае:</p>
+<div class="highlight"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"chatApp"</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s2">"chatApp.controllers"</span><span class="p">,</span>
+  <span class="s2">"chatApp.services"</span>
+<span class="p">]);</span>
+
+<span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"chatApp.controllers"</span><span class="p">,</span> <span class="p">[]);</span>
+<span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"chatApp.services"</span><span class="p">,</span> <span class="p">[]);</span>
+</pre></div>
+<h2 id="angularjs_1">AngularJS контроллер</h2>
+<p>AngularJS контроллер достаточно простой, как он будет пересывать всё в отдельный сервис, мы опишем далее в этом руководстве. Контроллер содержит три модели свяанные с полями, это <code>message</code> которое будет содержать только что введенное сообщение в textbox, <code>messages</code> массив который содержит все отправленные сообщения и также <code>max</code> - максмум допустимых символов в сообщении, используемое как Twitter счётчик символов для твита.</p>
+<div class="highlight"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"chatApp.controllers"</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s2">"ChatCtrl"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">ChatService</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">addMessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">ChatService</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">ChatService</span><span class="p">.</span><span class="nx">receive</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+<p>Мы уже объяснили кто когда форма отправляется, <code>addMessage</code> ф-я вызывается, которая будет передаст сообщение дальше сервису, и которая очистит поле сбросив модель сообщения как пустую строку. Мы также вызываем сервис для получения сообщений. Эта часть сервиса будет возвращать отложенно, кадлый ра когда сообщения получены, обновит прогресс части директивы. Контроллер будет рагировать на это сообщение добавляя его в массив <code>messages</code>.</p>
+<h2 id="angularjs_2">AngularJS служба</h2>
+<p>Последняя часть нашего AngularJS клиентского приложения - это сервис. Сервис немного сложенее поскольку он будет содержать весь код обработки WebSocket трафика. Код этого сервиса: </p>
+<div class="highlight"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"chatApp.services"</span><span class="p">).</span><span class="nx">service</span><span class="p">(</span><span class="s2">"ChatService"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">listener</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">(),</span> <span class="nx">socket</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">client</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">stomp</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span> <span class="nx">messageIds</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="nx">service</span><span class="p">.</span><span class="nx">RECONNECT_TIMEOUT</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">;</span>
+    <span class="nx">service</span><span class="p">.</span><span class="nx">SOCKET_URL</span> <span class="o">=</span> <span class="s2">"/spring-ng-chat/chat"</span><span class="p">;</span>
+    <span class="nx">service</span><span class="p">.</span><span class="nx">CHAT_TOPIC</span> <span class="o">=</span> <span class="s2">"/topic/message"</span><span class="p">;</span>
+    <span class="nx">service</span><span class="p">.</span><span class="nx">CHAT_BROKER</span> <span class="o">=</span> <span class="s2">"/app/chat"</span><span class="p">;</span>
+
+    <span class="nx">service</span><span class="p">.</span><span class="nx">receive</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">listener</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="nx">service</span><span class="p">.</span><span class="nx">send</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">);</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">CHAT_BROKER</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">priority</span><span class="o">:</span> <span class="mi">9</span>
+      <span class="p">},</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="nx">message</span><span class="o">:</span> <span class="nx">message</span><span class="p">,</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="nx">id</span>
+      <span class="p">}));</span>
+      <span class="nx">messageIds</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">reconnect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">$timeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">initialize</span><span class="p">();</span>
+      <span class="p">},</span> <span class="k">this</span><span class="p">.</span><span class="nx">RECONNECT_TIMEOUT</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">getMessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span> <span class="nx">out</span> <span class="o">=</span> <span class="p">{};</span>
+      <span class="nx">out</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">message</span><span class="p">;</span>
+      <span class="nx">out</span><span class="p">.</span><span class="nx">time</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">time</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">messageIds</span><span class="p">,</span> <span class="nx">message</span><span class="p">.</span><span class="nx">id</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">out</span><span class="p">.</span><span class="nx">self</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="nx">messageIds</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">messageIds</span><span class="p">,</span> <span class="nx">message</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">out</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">startListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">CHAT_TOPIC</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">listener</span><span class="p">.</span><span class="nx">notify</span><span class="p">(</span><span class="nx">getMessage</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">body</span><span class="p">));</span>
+      <span class="p">});</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">initialize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SockJS</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">SOCKET_URL</span><span class="p">);</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">stomp</span> <span class="o">=</span> <span class="nx">Stomp</span><span class="p">.</span><span class="nx">over</span><span class="p">(</span><span class="nx">socket</span><span class="p">.</span><span class="nx">client</span><span class="p">);</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">connect</span><span class="p">({},</span> <span class="nx">startListener</span><span class="p">);</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">stomp</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="nx">reconnect</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="nx">initialize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">service</span><span class="p">;</span>
+  <span class="p">});</span>
+</pre></div>
+<p>Итак начнём снизу. В самом низу кода вы можете увидеть, что мы выполняем <code>initialize()</code> ф-ю для настройки сервиса. Это произойдет один раз, поскольку AngularJS сервисы синглтоны, это означает что кадждый раз один и тот же экземпляр будет возвращен.</p>
+<p>Функция <code>initialize()</code> настроит SockJS WebSocket клиент и использует его для Stomp.js WebSocket клиента. Stomp.js является дополнением к WebSocket протоколу которое позволяет подписываться и публиковать темы и также позволяет JSON полезную нагрузку.</p>
+<p>Когда клиент присоединился к WebSocket серверу, затем вызываеться <code>startListener()</code> ф-я, которая будет слушать <code>/topic/message</code> заголовок по которому будут получены все сообщения. Он затем отправит отложенные данные, которые будут использоваться контроллерами.</p>
+<p><code>startListener()</code> ф-я вызывает <code>getMessage()</code> функцию, которая переводит WebSocket данные (полезная нагрузка) в модель необходимую контроллеру. В этом случае парсинг JSON строки в объект, и он будет устанавливать время как <code>Date</code> объект.</p>
+<p>Если поядковый номер (ID) сообщения был найден в <code>messageIds</code> массиву, то это означает что сообщение создано в этом клиенте, поэтому свойство <strong>self</strong> будет обозначено как <strong>true</strong>.</p>
+<p>Затем она удалит этот ID сообщения из списка, потому что они доступны снова в пуле ID сообщений.</p>
+<p>Когда соединение с WebSocket'ом сервера потеряно, это вызовет ф-ю <code>recconect()</code> будет пытаться возобновить совединение после 30 секунд.</p>
+<p>В конце мы имеем две публичные функции нашего сервиса, <code>receive()</code> и <code>send()</code>. Начнём с <code>receive()</code> функции, так как она простейщая среди них. Единственное что эта функция делает, это возвращает отложено к отправке сообщения.</p>
+<p><code>send()</code> функция с другой стороны  отправляет сообщения как JSON объект (поле строка) и генерирует новый ID. Этот ID добавляеться к <code>messageIds</code> массиву, так что он может быть использован функцией <code>getMessage()</code> для проверки было ли добавлено сообщение данным клиентом, или другим.</p>
+<h2 id="_3">Стилизация</h2>
+<p>Это весь Java и JavaScript код который необходим, теперь закончим наше приложение добавив в него крутых стилей. Я использую следующий CSS код:</p>
+<div class="highlight"><pre><span class="nt">body</span><span class="o">,</span> <span class="o">*</span> <span class="p">{</span>
+  <span class="k">font-family</span><span class="o">:</span> <span class="s1">'Open Sans'</span><span class="o">,</span> <span class="k">sans-serif</span><span class="p">;</span>
+  <span class="n">box</span><span class="o">-</span><span class="n">sizing</span><span class="o">:</span> <span class="k">border</span><span class="o">-</span><span class="n">box</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.container</span> <span class="p">{</span>
+  <span class="k">max-width</span><span class="o">:</span> <span class="m">1000px</span><span class="p">;</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">0</span> <span class="k">auto</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">80%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">input</span><span class="o">[</span><span class="nt">type</span><span class="o">=</span><span class="nt">text</span><span class="o">]</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="k">border</span><span class="o">:</span> <span class="k">solid</span> <span class="m">1px</span> <span class="m">#D4D4D1</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">:</span> <span class="m">.7s</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">1.1em</span><span class="p">;</span>
+  <span class="k">padding</span><span class="o">:</span> <span class="m">0.3em</span><span class="p">;</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">0.2em</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">input</span><span class="o">[</span><span class="nt">type</span><span class="o">=</span><span class="nt">text</span><span class="o">]</span><span class="nd">:focus</span> <span class="p">{</span>
+  <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">0</span> <span class="m">5px</span> <span class="m">0</span> <span class="n">rgba</span><span class="p">(</span><span class="m">69</span><span class="o">,</span> <span class="m">155</span><span class="o">,</span> <span class="m">231</span><span class="o">,</span> <span class="o">.</span><span class="m">75</span><span class="p">);</span>
+  <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">0</span> <span class="m">5px</span> <span class="m">0</span> <span class="n">rgba</span><span class="p">(</span><span class="m">69</span><span class="o">,</span> <span class="m">155</span><span class="o">,</span> <span class="m">231</span><span class="o">,</span> <span class="o">.</span><span class="m">75</span><span class="p">);</span>
+  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">0</span> <span class="m">5px</span> <span class="m">0</span> <span class="n">rgba</span><span class="p">(</span><span class="m">69</span><span class="o">,</span> <span class="m">155</span><span class="o">,</span> <span class="m">231</span><span class="o">,</span> <span class="o">.</span><span class="m">75</span><span class="p">);</span>
+  <span class="k">border-color</span><span class="o">:</span> <span class="m">#459be7</span><span class="p">;</span>
+  <span class="k">outline</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.info</span> <span class="p">{</span>
+  <span class="k">float</span><span class="o">:</span> <span class="k">right</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">form</span><span class="nd">:after</span> <span class="p">{</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>
+  <span class="k">content</span><span class="o">:</span> <span class="s1">''</span><span class="p">;</span>
+  <span class="k">clear</span><span class="o">:</span> <span class="k">both</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">button</span> <span class="p">{</span>
+  <span class="k">background</span><span class="o">:</span> <span class="m">#459be7</span><span class="p">;</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#FFF</span><span class="p">;</span>
+  <span class="k">font-weight</span><span class="o">:</span> <span class="m">600</span><span class="p">;</span>
+  <span class="k">padding</span><span class="o">:</span> <span class="m">.3em</span> <span class="m">1.9em</span><span class="p">;</span>
+  <span class="k">border</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">1.2em</span><span class="p">;</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="k">text-shadow</span><span class="o">:</span> <span class="m">0</span> <span class="m">0</span> <span class="m">5px</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="o">.</span><span class="m">3</span><span class="p">);</span>
+  <span class="k">cursor</span><span class="o">:</span> <span class="k">pointer</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">:</span> <span class="m">.7s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">button</span><span class="nd">:focus</span> <span class="p">{</span>
+  <span class="k">outline</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">button</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="k">background</span><span class="o">:</span> <span class="m">#1c82dd</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">button</span><span class="nd">:disabled</span> <span class="p">{</span>
+  <span class="k">background-color</span><span class="o">:</span> <span class="m">#90BFE8</span><span class="p">;</span>
+  <span class="k">cursor</span><span class="o">:</span> <span class="n">not</span><span class="o">-</span><span class="n">allowed</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.count</span> <span class="p">{</span>
+  <span class="k">font-weight</span><span class="o">:</span> <span class="m">300</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">1.35em</span><span class="p">;</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#CCC</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">:</span> <span class="m">.7s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.count.danger</span> <span class="p">{</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#a94442</span><span class="p">;</span>
+  <span class="k">font-weight</span><span class="o">:</span> <span class="m">600</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.message</span> <span class="nt">time</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">80px</span><span class="p">;</span>
+  <span class="k">color</span><span class="o">:</span> <span class="m">#999</span><span class="p">;</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>
+  <span class="k">float</span><span class="o">:</span> <span class="k">left</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.message</span> <span class="p">{</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.message</span> <span class="nc">.self</span> <span class="p">{</span>
+  <span class="k">font-weight</span><span class="o">:</span> <span class="m">600</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.message</span> <span class="nt">span</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="n">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">-</span> <span class="m">80px</span><span class="p">);</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>
+  <span class="k">float</span><span class="o">:</span> <span class="k">left</span><span class="p">;</span>
+  <span class="k">padding-left</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
+  <span class="k">border-left</span><span class="o">:</span> <span class="k">solid</span> <span class="m">1px</span> <span class="m">#F1F1F1</span><span class="p">;</span>
+  <span class="k">padding-bottom</span><span class="o">:</span> <span class="m">.5em</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">hr</span> <span class="p">{</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>
+  <span class="k">height</span><span class="o">:</span> <span class="m">1px</span><span class="p">;</span>
+  <span class="k">border</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="k">border-top</span><span class="o">:</span> <span class="k">solid</span> <span class="m">1px</span> <span class="m">#F1F1F1</span><span class="p">;</span>
+  <span class="k">margin</span><span class="o">:</span> <span class="m">1em</span> <span class="m">0</span><span class="p">;</span>
+  <span class="k">padding</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<h2 id="_4">Демонстрация</h2>
+<p>Перед тем как запустить наше приложение на веб сервере, сперва проверим некоторые вещи. Во-первых, убедимся, что вы настроили ваш context root на <code>/spring-ng-chat/</code>. Если вы этого не сделаеле, Ваш AngularJS сервис будет иметь проблемы с соединением к WebSocket серверу, так как он связан с <code>/spring-ng-chat/chat</code>. Если вы не хотите это, вы можете всегда изменить свойство <code>SOCKET_URL</code> в AngularJS сервисе.</p>
+<p>Во-вторых, если вы запустите это приложение из встроенного в Eclipse Tomcat'а, вам прйдеться добавить ваши Maven зависимости в ваш deployment сборку. Вы можете сделать это в настройках проекта, выбрав <em>Deployment assembly</em> и добавив эти библиотеки.</p>
+<p><img alt="Окно Deployment assembly" src="https://stonedastronaut.github.io/images/deployment-assembly.png" title="Окно Deployment assembly"/></p>
+<p>В конце концов убедитесь что контейнер который вы используете, поддерживает WebSocket Java API. Если это не так, то вам скорее всегда необходимо обновить ваш веб контейнер.</p>
+<p>Если всё это готово, то можете начать запуск вашего приложения, которое выглядит вот так:</p>
+<p><img alt="Стартовый вид приложения" src="https://stonedastronaut.github.io/images/initial-app.png" title="стартовый вид приложения"/></p>
+<p>Если вы начнёте набирать ваше сообщение, вы увидете что кнопка теперь активировалась, и счётчик запустился.</p>
+<p><img alt='Набранное сообщение, кнопка активировалась, и заработал счётчик")' src="https://stonedastronaut.github.io/images/app-message.png" title="набранное сообщение, кнопка активировалась, и заработал счётчик"/></p>
+<p>Если вы будете набирать дальше, то увидите, что кнопка деактивировалась снова, и счётчик теперь показывается отрицательное значение в красном цвете:</p>
+<p><img alt="Слишком длинное сообщение, кнопка неактивна, счетчик отрицательный" src="https://stonedastronaut.github.io/images/message-limit.png" title="слишком длинное сообщение, кнопка неактивна, счетчик отрицательный"/></p>
+<p>Как только Вы введёте сообщение и отправите его, Вы увидите что оно появится в списке сообщений, жирным шрифтом (потому как оно Вы его отправили). Вы также увидите, что поле ввода сообщения было очищено:</p>
+<p><img alt="Отправленное сообщение выделено жирным, строка ввода очищена" src="https://stonedastronaut.github.io/images/message-sent.png" title="отправленное сообщение выделено жирным, строка ввода очищена"/></p>
+<p>Если вы откроете приложение в новом окне, вы сможете увидеть что оно пустое. Так как WebSocket'ы работают в режиме реального времени, поэтому только сообщения которые были доставлены в положенное время будут видны в списке сообщений, здесь нет истории сообщений.</p>
+<p>Если Вы отправили сообщение в другом окне, вы должны будете увидеть это сообщение на обоих окнах. Но только на одном будет выделено жирным текстом, а на другом обычным.</p>
+<p><img alt="Вид чата в разных окнах приложения" src="https://stonedastronaut.github.io/images/multiple-messages.png" title="вид чата в разных окнах приложения"/></p>
+<p>Как Вы можете видеть, WebSocket'ы работают должным образом и вы увидете сообщения появляются в режиме реального времени, потому что клиент отправляет сообщение на сервер, который отправляет это сообщение всем клиентам.</p>
+<p>Такая сервер-клиентная модель возможно только благодаря WebSocket'ам.</p>
+<p><a href="http://g00glen00b.be/spring-angular-sockjs/"><em>source</em></a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/StonedAstronaut"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://www.minds.com/stonedastronaut"><i class="fa fa-minds-square fa-lg"></i> minds</a></li>
+                <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/angular.html">
+                            angular
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/awk.html">
+                            awk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/bzip2.html">
+                            bzip2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/grep.html">
+                            grep
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/parallel.html">
+                            parallel
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sed.html">
+                            sed
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/socket.html">
+                            socket
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/spring.html">
+                            spring
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/translate.html">
+                            translate
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Stoned Astronaut
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>
