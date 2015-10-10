@@ -165,7 +165,7 @@ Astro blog            </a>
 <p>WebSocket'ы это протокол и JavaScript API, протокол низкоуровневый, двунаправленный (<em>full-duplex</em>), это означает, что сообщения могут быть отправлены в обе стороны соединения одновременно. Это даёт возможность для того что бы сервер отправлял данные клиенту, но не наоборот. <em>Polling</em> и <em>long-polling</em> стали больше не нужны, и жили они долго и счастливо...</p>
 <p>Потому как WebSocket'ы предоставляют связь в друх направлениях, они часто используются для приложений реального времени. Если например, кто-то откроет Ваше приложение и изменит в нём какие-либо данные, Вы можете непосредственно обновить эти данные для всех пользователей, которые используют WebSocket'ы.</p>
 <h2 id="_1">Установка проекта</h2>
-<p>Вам будут необходимы несколько библиотек, основная это Spring Web MVC фреймворк для настройки нашего веб приложения и Spring messaging + WebSockets для WebSocket'ной части  приложения. Нам также необходима JSON сериализатор, например Jackson, потому что Stomp нуждается в JSON сериализации/десериализации, поэтому я также собираюсь добавить его в наше приложение.</p>
+<p>Вам будут необходимы несколько библиотек, основная это Spring Web MVC фреймворк для настройки нашего веб-приложения и Spring messaging + WebSockets для WebSocket'ной части  приложения. Нам также необходим JSON сериализатор, например Jackson, потому что Stomp нуждается в JSON сериализации/десериализации, поэтому я также собираюсь добавить его в наше приложение.</p>
 <p><strong>pom.xml</strong></p>
 <div class="highlight"><pre>...
 <span class="nt">&lt;dependency&gt;</span>
@@ -217,7 +217,7 @@ Astro blog            </a>
 <span class="nt">&lt;/dependency&gt;</span>
 ...
 </pre></div>
-<p>На front-end я добавлю нужные билиотеки, которые настрою при помощи Bower. Если вы им не пользуетесь, Вы всегда можете скачать эти библиотеки вручную.</p>
+<p>На front-end я добавлю нужные билиотеки, которые настрою при помощи Bower. Если Вы им не пользуетесь, Вы всегда можете скачать эти библиотеки вручную.</p>
 <div class="highlight"><pre><span class="p">{</span>
   <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"spring-ng-chat"</span><span class="p">,</span>
   <span class="nt">"version"</span><span class="p">:</span> <span class="s2">"0.0.1-SNAPSHOT"</span><span class="p">,</span>
@@ -231,10 +231,10 @@ Astro blog            </a>
 </pre></div>
 <p>Библиотеки которые я собираюсь использовать SockJS + Stomp.js для связи меджу WebSocket'ами, AngularJS буду использовать для настройки клиентской части приложения и Lo-Dash библиотека утилит (форк Underscore.js).</p>
 <blockquote>
-<p>Что такое <em>STOMP</em>? Как я говорил раньше, WebSocket протокол довольно низкоуровневый, однако есть неколько высоко-(выше-) уровневые протоколы, которые могут быть использованы поверх WebSocket'ов, например <em>MQTT</em> и <em>STOMP</em>. <em>STOMP</em> например добавляет дополнительные возможности к WebSocket'ам, такие как публикация и подписка на темы.</p>
+<p>Что такое <em>STOMP</em>? Как я говорил раньше, WebSocket протокол довольно низкоуровневый, однако есть неколько высоко-(выше-) уровневых протоколов, которые могут быть использованы поверх WebSocket'ов, например <em>MQTT</em> и <em>STOMP</em>. <em>STOMP</em> например добавляет дополнительные возможности к WebSocket'ам, такие как публикация и подписка на темы.</p>
 </blockquote>
 <h2 id="java">Java конфигурация</h2>
-<p>Вместо конфигурации нашего протокола используя XML, я покажу вам как вы можете написать аналогичнее приложения без использования XML файлов. Первый класс который нам понадобиться который заменяет наш web.xml, для загрузки нашего веб приложения. В данном случае мы может определить application context, web application context и некоторые другие сервлет подобные конфигурации.</p>
+<p>Вместо конфигурации нашего протокола используя XML, я покажу вам как вы можете написать аналогичное приложения без использования XML файлов. Первый класс который нам понадобиться который заменяет наш web.xml, для загрузки нашего веб-приложения. В данном случае мы может определить application context, web application context и некоторые другие относящиеся к сервлетам конфигурации.</p>
 <div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebAppInitializer</span> <span class="kd">extends</span> <span class="n">AbstractAnnotationConfigDispatcherServletInitializer</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
@@ -266,9 +266,9 @@ Astro blog            </a>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-<p>Большая часть данного класса вполне понятно. Прежде всего мы должны <code>getRootConfigClasses()</code> и <code>getServletConfigClasses()</code> которые мы использовали для определения наших бинов. <code>getServletMappings()</code> и <code>getServletFilters()</code> связаны с конфигурацией сервлета. В данном случае я определяю приложение в context root и я добавляю фильтр для прогонки всего контента в кодировку UTF-8.</p>
-<p>После последний метод здесь это <code>customizeRegistrion()</code>. Это может быть очень важно если вы запускаете приложение на Tomcat контейнере. Это объясняет что ассинхронная связь возможно, поэтому эти соединения не должны закрываться непосредственно.</p>
-<p>Как вы могли заметить , вы будете получать три ошибки компиляции о классах которые на найдены. Я определю их сейчас, и начнём с <code>AppConfig</code>:</p>
+<p>Большая часть данного класса вполне понятна. Прежде всего у нас есть <code>getRootConfigClasses()</code> и <code>getServletConfigClasses()</code> которые мы использовали для определения наших бинов. <code>getServletMappings()</code> и <code>getServletFilters()</code> связаны с конфигурацией сервлета. В данном случае я определяю приложение в context root и я добавляю фильтр для прогонки всего контента в кодировку <strong>UTF-8</strong>.</p>
+<p>После последний метод здесь это <code>customizeRegistrion()</code>. Это может быть очень важно если Вы запускаете приложение на Tomcat контейнере. Здесь объясняется, что возможна ассинхронная связь, поэтому эти соединения не должны закрываться сразу.</p>
+<p>Как Вы могли заметить, Вы будете получать три ошибки при компиляции, о классах которые на найдены. Я определю их сейчас, и начнём с <code>AppConfig</code>:</p>
 <div class="highlight"><pre><span class="nd">@Configuration</span>
 <span class="nd">@ComponentScan</span><span class="o">(</span><span class="n">basePackages</span> <span class="o">=</span> <span class="s">"be.g00glen00b"</span><span class="o">,</span> <span class="n">excludeFilters</span> <span class="o">=</span> <span class="o">{</span>
     <span class="nd">@ComponentScan.Filter</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">type</span> <span class="o">=</span> <span class="n">FilterType</span><span class="o">.</span><span class="na">ANNOTATION</span><span class="o">),</span>
@@ -278,7 +278,7 @@ Astro blog            </a>
 
 <span class="o">}</span>
 </pre></div>
-<p>Довольно пустой и бесполезный, кторый говорит какой пакет сканировать, но исключает все конфигурационный и контроллер классы (конфигурационные каллсы которые загружаются нашим <code>WebAppInitializer</code> когда <code>Controller</code> классы связанные с нашим <code>WebConfig</code>). Так нам нужен будет лишь контроллер, этот класс не будет делать ничего особенного, но если вы используете специальные сервисы, тогда они станут Spring бинами, если их правильно аннотировать.</p>
+<p>Пустой и бесполезный класс, кторый говорит какой пакет сканировать, но исключает все конфигурационные и контроллер классы (конфигурационные классы которые загружаются нашим <code>WebAppInitializer</code> когда <code>Controller</code> классы связанные с нашим <code>WebConfig</code>). Так нам нужен будет лишь контроллер, этот класс не будет делать ничего особенного, но если вы используете специальные сервисы, тогда они станут Spring бинами, если их правильно аннотировать.</p>
 <p>Следующий класс это <code>WebConfig</code>:</p>
 <div class="highlight"><pre><span class="nd">@Configuration</span>
 <span class="nd">@EnableWebMvc</span>
