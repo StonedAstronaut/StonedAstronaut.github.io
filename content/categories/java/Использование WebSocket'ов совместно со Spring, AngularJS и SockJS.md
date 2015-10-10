@@ -2,7 +2,9 @@ Title: Использование WebSocket'ов совместно со Spring,
 Tags: translate, java, spring, angular, socket
 Date: 10-10-2015 14:11
 Status: published
-Slug: Using-WebSockets-with-Spring-AngularJS-and-SockJS
+Slug: using-websockets-with-spring-angularjs-and-sockjs
+
+*сырой перевод, неоконченная версия*
 
 Некоторое время назад я написал стсатью о веб приложении использующем spring angularJS и WebSocket'ы. Тем не менее, это руководство использует только часть того что могут вебсокеты, поэтому в этом руководстве я буду объяснять как вы можете написать небольшой чат используя фреймворки Spring, AngularJS, Stromp.js и SockJS.
 

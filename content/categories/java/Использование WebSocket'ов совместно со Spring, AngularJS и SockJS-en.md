@@ -4,7 +4,7 @@ Date: 10-10-2015 14:11
 Status: published
 Translation: true
 Lang: en
-Slug: Using-WebSockets-with-Spring-AngularJS-and-SockJS
+Slug: using-websockets-with-spring-angularjs-and-sockjs
 
 A while ago I wrote a tutorial about writing a web application using Spring, AngularJS and WebSockets. However, that tutorial only used a fraction of what WebSockets could do, so in this tutorial I will explain how you can write a small chat app using the same frameworks; Spring, AngularJS, Stomp.js and SockJS. The entire application will be written using JavaConfig, even the web.xml (what I still kept in my previous tutorial) will be replaced by a WebAppInitializer.
 
