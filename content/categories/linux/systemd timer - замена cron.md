@@ -1,6 +1,5 @@
 title: systemd timer - замена cron
 date: 2015-07-20 01:15:00
-status: published
 tags: linux, systemd
 
 Если в Вашей системе используется systemd, то логичнее не порождать сущности, а использовать те инструменты которые уже есть.

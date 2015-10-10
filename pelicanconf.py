@@ -55,7 +55,7 @@ LINKS = (('Pelican', 'http://getpelican.com/'),
 
 # Social widget
 SOCIAL = (('github','https://github.com/StonedAstronaut'),
-          ('google-plus', 'https://plus.google.com/u/0/113483139834962824849/posts'),
+          ('minds', 'https://www.minds.com/stonedastronaut'),
           ('rss','/feeds/all.atom.xml'),
           )
 
@@ -71,7 +71,7 @@ DISPLAY_ARTICLE_INFO_ON_INDEX = True
 
 FAVICON = 'images/favicon.png'
 
-GOOGLE_ANALYTICS = 'UA-43336913-2'
+#GOOGLE_ANALYTICS = 'UA-43336913-2'
 
 # GITHUB_URL = 'https://github.com/StonedAstronaut'
 # GITHUB_USER = 'StonedAstronaut'
