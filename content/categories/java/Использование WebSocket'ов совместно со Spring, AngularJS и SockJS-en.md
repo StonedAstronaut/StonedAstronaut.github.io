@@ -1,4 +1,4 @@
-Title: Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS
+Title: Using WebSockets with Spring, AngularJS and SockJS
 Tags: translate, java, spring, angular, socket
 Date: 10-10-2015 14:11
 Status: published
