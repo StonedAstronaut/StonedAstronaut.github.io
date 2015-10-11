@@ -91,6 +91,50 @@ Astro blog            </a>
         <div class="col-sm-9">
 
             <article>
+                <h2><a href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">Новые команды в Linux для старых решений</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-05-20T18:17:00+06:00"> Wed 20 May 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
+<hr />
+<h3 id="netstat-ss">вместо <em>netstat</em> используем <em>ss</em>:</h3>
+<div class="highlight"><pre>ss -lpn
+</pre></div>
+
+
+<h3 id="ifconfig-ip-addr">вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
+<p>Раньше для вкл/выкл определенного интерфейса использовали</p>
+<div class="highlight"><pre>ifconfig eth0 up
+</pre></div>
+
+
+<p>теперь так:</p>
+<div class="highlight"><pre>ip link <span class="nb">set </span>dev eth0 up
+</pre></div>
+
+
+<p>Для конфигурирования интерфейса:</p>
+<div class="highlight"><pre>ifconfig eth0 10.0.0.2/16
+</pre></div>
+
+
+<p>теперь:</p>
+<div class="highlight"><pre>ip addr dev eth0 add 10.0 ...</pre></div>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="https://stonedastronaut.github.io/postroenie-sviazei-v-sqlalchemy.html">Построение связей в SQLAlchemy</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
@@ -323,6 +367,11 @@ Astro blog            </a>
 
             <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/advice.html">
+                            advice
+                        </a>
+                    </li>
                     <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/android.html">
                             android
