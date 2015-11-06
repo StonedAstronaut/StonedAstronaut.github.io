@@ -112,6 +112,38 @@ Astro blog            </a>
             </article>
             <hr/>
             <article>
+                <h2><a href="https://stonedastronaut.github.io/kostyl-dlia-pogody-na-conky.html">Костыль для погоды на conky</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-06T23:44:00+06:00"> Fri 06 November 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://stonedastronaut.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://stonedastronaut.github.io/tag/conky.html">conky</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Погоду берем из api <a href="http://openweathermap.org/api">openweathermap</a>. </p>
+<p>И парсим её bash скриптом. Обязательно передаем скрипту в качестве агрумента название города. Подробрнее об использовании самого api читай <a href="openweathermap.org/api">сайт</a>.</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-lt <span class="m">1</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="nv">$# </span>-gt <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;error. need 1 argument&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;&lt;SCRIPT_NAME&gt; [CITY_NAME,COUNTRY_CODE] or [CITY_CODE]&quot;</span>
+  <span class="nb">exit</span>
+<span class="k">fi</span>
+
+<span class="c"># делаем запрос на сервер ...</span></pre></div>
+                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/kostyl-dlia-pogody-na-conky.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
                 <h2><a href="https://stonedastronaut.github.io/using-websockets-with-spring-angularjs-and-sockjs.html">Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
@@ -301,30 +333,6 @@ Astro blog            </a>
                 </div>
             </article>
             <hr/>
-            <article>
-                <h2><a href="https://stonedastronaut.github.io/java-sobesedovanie-kollektsii.html">Java собеседование. Коллекции</a></h2>
-                    <div class="well well-sm">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-08-03T19:46:14+06:00"> Mon 03 August 2015</time>
-    </span>
-
-
-
-<span class="label label-default">Tags</span>
-	<a href="https://stonedastronaut.github.io/tag/habr.html">habr</a>
-        /
-	<a href="https://stonedastronaut.github.io/tag/interview.html">interview</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                <div class="summary"><ol>
-<li>Чем отличается ArrayList от LinkedList?
-В моем рейтинге это один из двух самых популярных вопросов о коллекции, задают в 90% случаев. Вызвал у меня проблему на моем первом собеседовании на Junior Developer`а. Вкратце ответ на этот вопрос сводится к следующему: ArrayList это список, реализованный на основе массива, а LinkedList ...</li></ol>
-                    <a class="btn btn-default btn-xs" href="https://stonedastronaut.github.io/java-sobesedovanie-kollektsii.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
 
         <ul class="pagination">
                 <li class="prev disabled"><a href="#">&laquo;</a></li>
@@ -385,6 +393,11 @@ Astro blog            </a>
                     <li class="list-group-item tag-4">
                         <a href="https://stonedastronaut.github.io/tag/bzip2.html">
                             bzip2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://stonedastronaut.github.io/tag/conky.html">
+                            conky
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
