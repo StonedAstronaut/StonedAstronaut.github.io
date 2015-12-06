@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Astro blog</title><link href="https://stonedastronaut.github.io/" rel="alternate"></link><link href="https://stonedastronaut.github.io/feeds/all.atom.xml" rel="self"></link><id>https://stonedastronaut.github.io/</id><updated>2015-11-06T23:44:00+06:00</updated><entry><title>Костыль для погоды на conky</title><link href="https://stonedastronaut.github.io/kostyl-dlia-pogody-na-conky.html" rel="alternate"></link><updated>2015-11-06T23:44:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-11-06:kostyl-dlia-pogody-na-conky.html</id><summary type="html">&lt;p&gt;Погоду берем из api &lt;a href="http://openweathermap.org/api"&gt;openweathermap&lt;/a&gt;. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Astro blog</title><link href="https://stonedastronaut.github.io/" rel="alternate"></link><link href="https://stonedastronaut.github.io/feeds/all.atom.xml" rel="self"></link><id>https://stonedastronaut.github.io/</id><updated>2015-12-07T04:05:00+06:00</updated><entry><title>Launch X app through ssh</title><link href="https://stonedastronaut.github.io/zapusk-x-prilozhenii-cherez-ssh-en.html" rel="alternate"></link><updated>2015-12-07T04:05:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-12-07:zapusk-x-prilozhenii-cherez-ssh-en.html</id><summary type="html">&lt;p&gt;A short command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# ssh -X &amp;lt;username&amp;gt;@&amp;lt;host&amp;gt; gedit
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;from &lt;code&gt;man ssh&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;-X&lt;/strong&gt;      Enables X11 forwarding.&lt;/p&gt;
+&lt;p&gt;This can also be specified on a per-host basis in a configuration file.
+X11 forwarding should be enabled with caution.  Users with the
+ability to bypass file permissions on the remote host (for the
+user's X authorization database) can access the local X11
+display through the forwarded connection. An attacker may then
+be able to perform activities such as keystroke monitoring.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Check /etc/ssh/sshd_config on the server side:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# vim /etc/ssh/sshd_config
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;for the lines below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;X11Forwarding yes
+X11UseLocalhost no
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Restart the ssh srever, if you have made changes:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# systemctl restart sshd.service
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Check /etc/ssh/ssh_config on the client side:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# vim /etc/ssh/ssh_config
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;for the lines below&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;ForwardX11 yes
+ForwardX11Trusted yes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;©&lt;a href="https://askubuntu.com/a/633809"&gt;paste&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="ssh"></category><category term="X"></category></entry><entry><title>Костыль для погоды на conky</title><link href="https://stonedastronaut.github.io/kostyl-dlia-pogody-na-conky.html" rel="alternate"></link><updated>2015-11-06T23:44:00+06:00</updated><author><name>Stoned Astronaut</name></author><id>tag:stonedastronaut.github.io,2015-11-06:kostyl-dlia-pogody-na-conky.html</id><summary type="html">&lt;p&gt;Погоду берем из api &lt;a href="http://openweathermap.org/api"&gt;openweathermap&lt;/a&gt;. &lt;/p&gt;
 &lt;p&gt;И парсим её bash скриптом. Обязательно передаем скрипту в качестве агрумента название города. Подробрнее об использовании самого api читай &lt;a href="openweathermap.org/api"&gt;сайт&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
 

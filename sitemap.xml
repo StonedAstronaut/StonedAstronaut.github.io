@@ -5,21 +5,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://stonedastronaut.github.io/</loc>
-<lastmod>2015-11-07T00:12:49-00:00</lastmod>
+<lastmod>2015-12-07T04:46:38-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://stonedastronaut.github.io/archives.html</loc>
-<lastmod>2015-11-07T00:12:49-00:00</lastmod>
+<lastmod>2015-12-07T04:46:38-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://stonedastronaut.github.io/categories.html</loc>
-<lastmod>2015-11-07T00:12:49-00:00</lastmod>
+<lastmod>2015-12-07T04:46:38-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -27,6 +27,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://stonedastronaut.github.io/pages/about.html</loc>
 <lastmod>2015-01-20T15:50:00+06:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://stonedastronaut.github.io/zapusk-x-prilozhenii-cherez-ssh-en.html</loc>
+<lastmod>2015-12-07T04:05:00+06:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -327,7 +334,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://stonedastronaut.github.io/category/linux.html</loc>
-<lastmod>2015-11-06T23:44:00+05:32</lastmod>
+<lastmod>2015-12-07T04:05:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -362,7 +369,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://stonedastronaut.github.io/tag/linux.html</loc>
-<lastmod>2015-11-06T23:44:00+05:32</lastmod>
+<lastmod>2015-12-07T04:05:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -536,6 +543,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>https://stonedastronaut.github.io/tag/ssh.html</loc>
+<lastmod>2015-12-07T04:05:00+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>https://stonedastronaut.github.io/tag/wget.html</loc>
 <lastmod>2015-02-28T23:45:00+05:32</lastmod>
 <changefreq>daily</changefreq>
@@ -585,6 +599,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>https://stonedastronaut.github.io/tag/x.html</loc>
+<lastmod>2015-12-07T04:05:00+05:32</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
 <loc>https://stonedastronaut.github.io/tag/backup.html</loc>
 <lastmod>2015-02-09T19:30:00+05:32</lastmod>
 <changefreq>daily</changefreq>
@@ -593,7 +614,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://stonedastronaut.github.io/author/stoned-astronaut.html</loc>
-<lastmod>2015-11-06T23:44:00+05:32</lastmod>
+<lastmod>2015-12-07T04:05:00+05:32</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
