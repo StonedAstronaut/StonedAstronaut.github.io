@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <link href="https://stonedastronaut.github.io/images/favicon.png" rel="icon">
+    <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
-<link rel="canonical" href="https://stonedastronaut.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html">
+<link rel="canonical" href="https://ipkalm.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html">
 
         <meta name="author" content="Stoned Astronaut" />
         <meta name="keywords" content="translate,java,spring,angular,socket" />
@@ -20,7 +20,7 @@
         <meta property="og:site_name" content="Astro blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Using WebSockets with Spring, AngularJS and SockJS"/>
-        <meta property="og:url" content="https://stonedastronaut.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html"/>
+        <meta property="og:url" content="https://ipkalm.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html"/>
         <meta property="og:description" content="A while ago I wrote a tutorial about writing a web application using Spring, AngularJS and WebSockets. However, that tutorial only used a fraction of what WebSockets could do, so in this tutorial I will explain how you can write a small chat app using the same frameworks; Spring, AngularJS ..."/>
         <meta property="article:published_time" content="2015-10-10" />
             <meta property="article:section" content="java" />
@@ -33,14 +33,14 @@
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="https://stonedastronaut.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://ipkalm.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://ipkalm.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="https://stonedastronaut.github.io/theme/css/pygments/native.css" rel="stylesheet">
-    <link href="https://stonedastronaut.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stonedastronaut.github.io/theme/css/style.css" type="text/css"/>
+    <link href="https://ipkalm.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://ipkalm.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://ipkalm.github.io/theme/css/style.css" type="text/css"/>
 
-        <link href="https://stonedastronaut.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+        <link href="https://ipkalm.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
               title="Astro blog ATOM Feed"/>
 
 </head>
@@ -55,31 +55,31 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="https://stonedastronaut.github.io/" class="navbar-brand">
+            <a href="https://ipkalm.github.io/" class="navbar-brand">
 Astro blog            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                         <li><a href="https://stonedastronaut.github.io/pages/about.html">
+                         <li><a href="https://ipkalm.github.io/pages/about.html">
                              О сайте
                           </a></li>
                         <li >
-                            <a href="https://stonedastronaut.github.io/category/copypaste.html">Copy\paste</a>
+                            <a href="https://ipkalm.github.io/category/copypaste.html">Copy\paste</a>
                         </li>
                         <li >
-                            <a href="https://stonedastronaut.github.io/category/crypt.html">Crypt</a>
+                            <a href="https://ipkalm.github.io/category/crypt.html">Crypt</a>
                         </li>
                         <li class="active">
-                            <a href="https://stonedastronaut.github.io/category/java.html">Java</a>
+                            <a href="https://ipkalm.github.io/category/java.html">Java</a>
                         </li>
                         <li >
-                            <a href="https://stonedastronaut.github.io/category/linux.html">Linux</a>
+                            <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
-                            <a href="https://stonedastronaut.github.io/category/python.html">Python</a>
+                            <a href="https://ipkalm.github.io/category/python.html">Python</a>
                         </li>
                         <li >
-                            <a href="https://stonedastronaut.github.io/category/unsort.html">Unsort</a>
+                            <a href="https://ipkalm.github.io/category/unsort.html">Unsort</a>
                         </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -88,7 +88,7 @@ Astro blog            </a>
                   <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
                 </form></span>
               </li>
-              <li><a href="https://stonedastronaut.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+              <li><a href="https://ipkalm.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -104,7 +104,7 @@ Astro blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://stonedastronaut.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html"
+                    <a href="https://ipkalm.github.io/using-websockets-with-spring-angularjs-and-sockjs-en.html"
                        rel="bookmark"
                        title="Permalink to Using WebSockets with Spring, AngularJS and SockJS">
                         Using WebSockets with Spring, AngularJS and SockJS
@@ -123,17 +123,17 @@ Astro blog            </a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="https://stonedastronaut.github.io/tag/translate.html">translate</a>
+	<a href="https://ipkalm.github.io/tag/translate.html">translate</a>
         /
-	<a href="https://stonedastronaut.github.io/tag/java.html">java</a>
+	<a href="https://ipkalm.github.io/tag/java.html">java</a>
         /
-	<a href="https://stonedastronaut.github.io/tag/spring.html">spring</a>
+	<a href="https://ipkalm.github.io/tag/spring.html">spring</a>
         /
-	<a href="https://stonedastronaut.github.io/tag/angular.html">angular</a>
+	<a href="https://ipkalm.github.io/tag/angular.html">angular</a>
         /
-	<a href="https://stonedastronaut.github.io/tag/socket.html">socket</a>
+	<a href="https://ipkalm.github.io/tag/socket.html">socket</a>
     <span class="label label-default">Lang</span>
-	<a href="https://stonedastronaut.github.io/using-websockets-with-spring-angularjs-and-sockjs.html">ru</a>
+	<a href="https://ipkalm.github.io/using-websockets-with-spring-angularjs-and-sockjs.html">ru</a>
 
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -156,7 +156,7 @@ Astro blog            </a>
                     </div>
                 <p>A while ago I wrote a tutorial about writing a web application using Spring, AngularJS and WebSockets. However, that tutorial only used a fraction of what WebSockets could do, so in this tutorial I will explain how you can write a small chat app using the same frameworks; Spring, AngularJS, Stomp.js and SockJS. The entire application will be written using JavaConfig, even the web.xml (what I still kept in my previous tutorial) will be replaced by a WebAppInitializer.</p>
 <p>The application we’re going to write will look like this:</p>
-<p><img alt="Application" src="https://stonedastronaut.github.io/images/app-chat-example.png" title="app"/></p>
+<p><img alt="Application" src="https://ipkalm.github.io/images/app-chat-example.png" title="app"/></p>
 
 <h2 id="why-websockets">Why WebSockets</h2>
 <p>Once upon a time, someone decided to write a mail list application. At first, he made a client that would check if there was a new mail every minute. However, most of the time there was no new mail, yet the client was always sending new request, causing a huge load on the server. This technique was quite popular, and was called polling.
@@ -670,19 +670,19 @@ If the message ID is listed in the <code>messageIds</code> array, then it means 
 <h2 id="demo">Demo</h2>
 <p>Before running our application on a webserver, check some things first. First of all, make sure you have set your context root to <code>/spring-ng-chat/</code>. If you don’t do that, your AngularJS service will have troubles connecting to the WebSocket server, as it connects to <code>/spring-ng-chat/chat</code>. If you don’t want this, you can always change the <code>SOCKET_URL</code> property in the AngularJS service.</p>
 <p>Second, if you’re running this application from an embedded Tomcat in Eclipse, you may have to add your Maven dependencies to your deployment assembly. You can do this by going to your project properties, clicking on Deployment assembly and by adding the library.</p>
-<p><img alt="Deployment assembly window" src="https://stonedastronaut.github.io/images/deployment-assembly.png" title="Deployment assembly window"/></p>
+<p><img alt="Deployment assembly window" src="https://ipkalm.github.io/images/deployment-assembly.png" title="Deployment assembly window"/></p>
 <p>Finally, make sure that the web container you’re using, supports the WebSockets Java API. If this isn’t the case, you will probably have to update your web container.</p>
 <p>If all of that is ready, then you can start running your application, which should look like this:</p>
-<p><img alt="init app" src="https://stonedastronaut.github.io/images/initial-app.png" title="init app"/></p>
+<p><img alt="init app" src="https://ipkalm.github.io/images/initial-app.png" title="init app"/></p>
 <p>If you start writing your message, you will see that the button is now enabled and that the counter is running:</p>
-<p><img alt='app-message")' src="https://stonedastronaut.github.io/images/app-message.png" title="app-message"/></p>
+<p><img alt='app-message")' src="https://ipkalm.github.io/images/app-message.png" title="app-message"/></p>
 <p>If you go too far, you will see that the button is now disabled again, and the counter is now showing a negative value in a red color:</p>
-<p><img alt="message-limit" src="https://stonedastronaut.github.io/images/message-limit.png" title="сmessage-limit"/></p>
+<p><img alt="message-limit" src="https://ipkalm.github.io/images/message-limit.png" title="сmessage-limit"/></p>
 <p>Once you enter a message and send it, you will see that it appears in the message list as a bold message (because you sent it). You will also see that your current message is reset to an empty string in the text box:</p>
-<p><img alt="message-sent" src="https://stonedastronaut.github.io/images/message-sent.png" title="message-sent"/></p>
+<p><img alt="message-sent" src="https://ipkalm.github.io/images/message-sent.png" title="message-sent"/></p>
 <p>If you open the application in a new window, you should see that it is empty now. WebSockets are real time, so only messages that are received at a given time, will be listed, there is no history.</p>
 <p>If you send a message in the other window, you will see that the message appears in both screens. One will have it in bold, while the other one will see it as regular text.</p>
-<p><img alt="multiple-messages" src="https://stonedastronaut.github.io/images/multiple-messages.png" title="multiple-messages"/></p>
+<p><img alt="multiple-messages" src="https://ipkalm.github.io/images/multiple-messages.png" title="multiple-messages"/></p>
 <p>As you can see, the WebSockets are working properly and you will see the messages appear real time because the client sends the message to the server, which will in turn send the message to all clients.</p>
 <p>This server-client message model is only possible thanks to WebSockets.</p>
 <blockquote>
@@ -710,190 +710,190 @@ Seeing this means you finished this tutorial about writing a simple chat applica
 
 
 
-            <li class="list-group-item"><a href="https://stonedastronaut.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+            <li class="list-group-item"><a href="https://ipkalm.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group list-inline tagcloud" id="tags">
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/advice.html">
+                        <a href="https://ipkalm.github.io/tag/advice.html">
                             advice
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/android.html">
+                        <a href="https://ipkalm.github.io/tag/android.html">
                             android
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/angular.html">
+                        <a href="https://ipkalm.github.io/tag/angular.html">
                             angular
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/awk.html">
+                        <a href="https://ipkalm.github.io/tag/awk.html">
                             awk
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/backup.html">
+                        <a href="https://ipkalm.github.io/tag/backup.html">
                             backup
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/bzip2.html">
+                        <a href="https://ipkalm.github.io/tag/bzip2.html">
                             bzip2
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/conky.html">
+                        <a href="https://ipkalm.github.io/tag/conky.html">
                             conky
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="https://stonedastronaut.github.io/tag/crypt.html">
+                        <a href="https://ipkalm.github.io/tag/crypt.html">
                             crypt
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/diff.html">
+                        <a href="https://ipkalm.github.io/tag/diff.html">
                             diff
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/emacs.html">
+                        <a href="https://ipkalm.github.io/tag/emacs.html">
                             emacs
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="https://stonedastronaut.github.io/tag/freelance.html">
+                        <a href="https://ipkalm.github.io/tag/freelance.html">
                             freelance
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="https://stonedastronaut.github.io/tag/geekbrains.html">
+                        <a href="https://ipkalm.github.io/tag/geekbrains.html">
                             geekbrains
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="https://stonedastronaut.github.io/tag/geektimes.html">
+                        <a href="https://ipkalm.github.io/tag/geektimes.html">
                             geektimes
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/grep.html">
+                        <a href="https://ipkalm.github.io/tag/grep.html">
                             grep
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="https://stonedastronaut.github.io/tag/habr.html">
+                        <a href="https://ipkalm.github.io/tag/habr.html">
                             habr
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/inline-skates.html">
+                        <a href="https://ipkalm.github.io/tag/inline-skates.html">
                             inline skates
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="https://stonedastronaut.github.io/tag/interview.html">
+                        <a href="https://ipkalm.github.io/tag/interview.html">
                             interview
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="https://stonedastronaut.github.io/tag/java.html">
+                        <a href="https://ipkalm.github.io/tag/java.html">
                             java
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/links.html">
+                        <a href="https://ipkalm.github.io/tag/links.html">
                             links
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="https://stonedastronaut.github.io/tag/linux.html">
+                        <a href="https://ipkalm.github.io/tag/linux.html">
                             linux
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/mysql.html">
+                        <a href="https://ipkalm.github.io/tag/mysql.html">
                             mysql
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/orm.html">
+                        <a href="https://ipkalm.github.io/tag/orm.html">
                             orm
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/parallel.html">
+                        <a href="https://ipkalm.github.io/tag/parallel.html">
                             parallel
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="https://stonedastronaut.github.io/tag/programming.html">
+                        <a href="https://ipkalm.github.io/tag/programming.html">
                             programming
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/python.html">
+                        <a href="https://ipkalm.github.io/tag/python.html">
                             python
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/relax.html">
+                        <a href="https://ipkalm.github.io/tag/relax.html">
                             relax
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/sed.html">
+                        <a href="https://ipkalm.github.io/tag/sed.html">
                             sed
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/socket.html">
+                        <a href="https://ipkalm.github.io/tag/socket.html">
                             socket
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/sport.html">
+                        <a href="https://ipkalm.github.io/tag/sport.html">
                             sport
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/spring.html">
+                        <a href="https://ipkalm.github.io/tag/spring.html">
                             spring
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/sqlalchemy.html">
+                        <a href="https://ipkalm.github.io/tag/sqlalchemy.html">
                             sqlalchemy
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/ssh.html">
+                        <a href="https://ipkalm.github.io/tag/ssh.html">
                             ssh
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/tproger.html">
+                        <a href="https://ipkalm.github.io/tag/tproger.html">
                             tproger
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/translate.html">
+                        <a href="https://ipkalm.github.io/tag/translate.html">
                             translate
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/vk.html">
+                        <a href="https://ipkalm.github.io/tag/vk.html">
                             vk
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/wget.html">
+                        <a href="https://ipkalm.github.io/tag/wget.html">
                             wget
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="https://stonedastronaut.github.io/tag/x.html">
+                        <a href="https://ipkalm.github.io/tag/x.html">
                             X
                         </a>
                     </li>
@@ -936,13 +936,13 @@ Seeing this means you finished this tutorial about writing a simple chat applica
       </div>
    </div>
 </footer>
-<script src="https://stonedastronaut.github.io/theme/js/jquery.min.js"></script>
+<script src="https://ipkalm.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="https://stonedastronaut.github.io/theme/js/bootstrap.min.js"></script>
+<script src="https://ipkalm.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="https://stonedastronaut.github.io/theme/js/respond.min.js"></script>
+<script src="https://ipkalm.github.io/theme/js/respond.min.js"></script>
 
 
 </body>
