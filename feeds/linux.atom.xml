@@ -21,6 +21,9 @@
 &lt;p&gt;или это:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;cat bigfile.txt &lt;span class="p"&gt;|&lt;/span&gt; parallel --block 10M --pipe grep &lt;span class="s1"&gt;'pattern'&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;или это:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;parallel --pipepart -a bigfile.txt --block 30m wc -l &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;'{s+=$1} END {print s}'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Вторая рекомендуемая команда показывает, как использовать команду &lt;code&gt;--block&lt;/code&gt; с 10&lt;strong&gt;MB&lt;/strong&gt; данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.&lt;/p&gt;
 &lt;h3 id="awk"&gt;AWK&lt;/h3&gt;
 &lt;p&gt;А вот это пример того, как с помощью &lt;strong&gt;awk&lt;/strong&gt; добавить числа в очень большой файл. Вместо этого:&lt;/p&gt;
