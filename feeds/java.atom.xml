@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>astro blog</title><link href="https://ipkalm.github.io/" rel="alternate"></link><link href="https://ipkalm.github.io/feeds/java.atom.xml" rel="self"></link><id>https://ipkalm.github.io/</id><updated>2015-10-10T14:11:00+06:00</updated><entry><title>Использование WebSocket'ов совместно со Spring, AgularJS и SocksJS</title><link href="https://ipkalm.github.io/using-websockets-with-spring-angularjs-and-sockjs.html" rel="alternate"></link><published>2015-10-10T14:11:00+06:00</published><updated>2015-10-10T14:11:00+06:00</updated><author><name>ipkalm</name></author><id>tag:ipkalm.github.io,2015-10-10:using-websockets-with-spring-angularjs-and-sockjs.html</id><summary type="html">&lt;p&gt;&lt;em&gt;сырой перевод, неоконченная версия&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Некоторое время назад я написал статью о веб-приложении использующем Spring AngularJS и WebSocket'ы. Тем не менее, это руководство использует только часть того что могут WebSocket'ы, поэтому в этом руководстве я буду объяснять как Вы можете написать небольшой чат используя фреймворки Spring, AngularJS, Stromp.js и SockJS. Всё приложения будет написан с использованием JavaConfig, даже web.xml (который я до сих пор храню с прежнего руководства) будет заменён на WebAppInitializer.&lt;/p&gt;
+&lt;p&gt;Приложение которое будем писать, будет выглядить вот так:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Внешний вид приложения" src="https://ipkalm.github.io/images/app-chat-example.png" title="внешний вид приложения"/&gt;&lt;/p&gt;
+
+&lt;h2 id="websocket"&gt;Почему WebSocket'ы?&lt;/h2&gt;
+&lt;p&gt;Однажды, кто-то решил написать приложение почтовой рассылки. Для начала он сделал клиент который проверял наличие новых писем каждую минуту. Тем не менее, часто не было новых писем, а клиент всегда отправлял запрос, делая большую нагрузку на сервер. Эта техника была довольно популярна, и была названа &lt;em&gt;polling&lt;/em&gt; (пер. с англ. "опросник"). Затем, через некоторое время, они использовали новую технику, когда клиент будет проверять, если есть новая почта, и сервер будет отвечать как только новая почта станет доступна. Эта техника была немного лучше чем поллинг, но Вы всё равно должны отправлять запрос, в результате чего использовался лишний (блоикрующий) трафик, мы назвали эту технику &lt;em&gt;long-polling&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Когда Вы начинаете думать, можете сделать только один вывод, это сервер должен отправить сообщение клиенту, когда новая почта станет доступна. Клиент не должен инициировать запрос, а сервер должен делать это. Это было невозможно долгое время, пока не были придуманы WebSocket'ы.&lt;/p&gt;
+&lt;p&gt;WebSocket'ы это протокол и JavaScript API, протокол низкоуровневый, двунаправленный (&lt;em&gt;full-duplex&lt;/em&gt;), это означает, что сообщения могут быть отправлены в обе стороны соединения одновременно. Это даёт возможность для того что бы сервер отправлял данные клиенту, но не наоборот. &lt;em&gt;Polling&lt;/em&gt; и &lt;em&gt;long-polling&lt;/em&gt; стали больше не нужны, и жили они долго и счастливо...&lt;/p&gt;
+&lt;p&gt;Потому как WebSocket'ы предоставляют связь в друх направлениях, они часто используются для приложений реального времени. Если например, кто-то откроет Ваше приложение и изменит в нём какие-либо данные, Вы можете непосредственно обновить эти данные для всех пользователей, которые используют WebSocket'ы.&lt;/p&gt;
+&lt;h2 id="_1"&gt;Установка проекта&lt;/h2&gt;
+&lt;p&gt;Вам будут необходимы несколько библиотек, основная это Spring Web MVC фреймворк для настройки нашего веб-приложения и Spring messaging + WebSockets для WebSocket'ной части  приложения. Нам также необходим JSON сериализатор, например Jackson, потому что Stomp нуждается в JSON сериализации/десериализации, поэтому я также собираюсь добавить его в наше приложение.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pom.xml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;...
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-webmvc&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;4.1.1.RELEASE&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-websocket&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;4.1.1.RELEASE&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-messaging&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;4.1.1.RELEASE&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;javax.websocket&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;javax.websocket-api&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.0&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;provided&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;javax.servlet&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;javax.servlet-api&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.1.0&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;provided&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;javax.servlet&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jstl&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.fasterxml.jackson.core&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jackson-core&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.3.3&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.fasterxml.jackson.core&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jackson-databind&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.3.3&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.fasterxml.jackson.jaxrs&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jackson-jaxrs-json-provider&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.3.3&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;На front-end я добавлю нужные билиотеки, которые настрою при помощи Bower. Если Вы им не пользуетесь, Вы всегда можете скачать эти библиотеки вручную.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"spring-ng-chat"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"version"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"0.0.1-SNAPSHOT"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;"dependencies"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;"sockjs"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"0.3.4"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"stomp-websocket"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"2.3.4"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"angular"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"1.3.8"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;"lodash"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"2.4.1"&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Библиотеки которые я собираюсь использовать SockJS + Stomp.js для связи меджу WebSocket'ами, AngularJS буду использовать для настройки клиентской части приложения и Lo-Dash библиотека утилит (форк Underscore.js).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Что такое &lt;em&gt;STOMP&lt;/em&gt;? Как я говорил раньше, WebSocket протокол довольно низкоуровневый, однако есть неколько высоко-(выше-) уровневых протоколов, которые могут быть использованы поверх WebSocket'ов, например &lt;em&gt;MQTT&lt;/em&gt; и &lt;em&gt;STOMP&lt;/em&gt;. &lt;em&gt;STOMP&lt;/em&gt; например добавляет дополнительные возможности к WebSocket'ам, такие как публикация и подписка на темы.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="java"&gt;Java конфигурация&lt;/h2&gt;
+&lt;p&gt;Вместо конфигурации нашего протокола используя XML, я покажу вам как вы можете написать аналогичное приложения без использования XML файлов. Первый класс который нам понадобиться который заменяет наш web.xml, для загрузки нашего веб-приложения. В данном случае мы может определить application context, web application context и некоторые другие относящиеся к сервлетам конфигурации.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WebAppInitializer&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractAnnotationConfigDispatcherServletInitializer&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;protected&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;customizeRegistration&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ServletRegistration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Dynamic&lt;/span&gt; &lt;span class="n"&gt;registration&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;registration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setInitParameter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"dispatchOptionsRequest"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"true"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;registration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setAsyncSupported&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;protected&lt;/span&gt; &lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="o"&gt;?&amp;gt;[]&lt;/span&gt; &lt;span class="n"&gt;getRootConfigClasses&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="o"&gt;?&amp;gt;[]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;AppConfig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;WebSocketConfig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt; &lt;span class="o"&gt;};&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;protected&lt;/span&gt; &lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="o"&gt;?&amp;gt;[]&lt;/span&gt; &lt;span class="n"&gt;getServletConfigClasses&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="o"&gt;?&amp;gt;[]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;WebConfig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt; &lt;span class="o"&gt;};&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;protected&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="nf"&gt;getServletMappings&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="s"&gt;"/"&lt;/span&gt; &lt;span class="o"&gt;};&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;protected&lt;/span&gt; &lt;span class="n"&gt;Filter&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="nf"&gt;getServletFilters&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;CharacterEncodingFilter&lt;/span&gt; &lt;span class="n"&gt;characterEncodingFilter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;CharacterEncodingFilter&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;characterEncodingFilter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setEncoding&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StandardCharsets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;UTF_8&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Filter&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;characterEncodingFilter&lt;/span&gt; &lt;span class="o"&gt;};&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Большая часть данного класса вполне понятна. Прежде всего у нас есть &lt;code&gt;getRootConfigClasses()&lt;/code&gt; и &lt;code&gt;getServletConfigClasses()&lt;/code&gt; которые мы использовали для определения наших бинов. &lt;code&gt;getServletMappings()&lt;/code&gt; и &lt;code&gt;getServletFilters()&lt;/code&gt; связаны с конфигурацией сервлета. В данном случае я определяю приложение в context root и я добавляю фильтр для прогонки всего контента в кодировку &lt;strong&gt;UTF-8&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;После последний метод здесь это &lt;code&gt;customizeRegistrion()&lt;/code&gt;. Это может быть очень важно если Вы запускаете приложение на Tomcat контейнере. Здесь объясняется, что возможна ассинхронная связь, поэтому эти соединения не должны закрываться сразу.&lt;/p&gt;
+&lt;p&gt;Как Вы могли заметить, Вы будете получать три ошибки при компиляции, о классах которые на найдены. Я определю их сейчас, и начнём с &lt;code&gt;AppConfig&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Configuration&lt;/span&gt;
+&lt;span class="nd"&gt;@ComponentScan&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;basePackages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"be.g00glen00b"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;excludeFilters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="nd"&gt;@ComponentScan.Filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Controller&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;FilterType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;ANNOTATION&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+    &lt;span class="nd"&gt;@ComponentScan.Filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Configuration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;FilterType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;ANNOTATION&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;})&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AppConfig&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Пустой и бесполезный класс, кторый говорит какой пакет сканировать, но исключает все конфигурационные и контроллер классы (конфигурационные классы которые загружаются нашим &lt;code&gt;WebAppInitializer&lt;/code&gt; когда &lt;code&gt;Controller&lt;/code&gt; классы связанные с нашим &lt;code&gt;WebConfig&lt;/code&gt;). Так нам нужен будет лишь контроллер, этот класс не будет делать ничего особенного, но если вы используете специальные сервисы, тогда они станут Spring бинами, если их правильно аннотировать.&lt;/p&gt;
+&lt;p&gt;Следующий класс это &lt;code&gt;WebConfig&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Configuration&lt;/span&gt;
+&lt;span class="nd"&gt;@EnableWebMvc&lt;/span&gt;
+&lt;span class="nd"&gt;@ComponentScan&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;basePackages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"be.g00glen00b.controller"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WebConfig&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;WebMvcConfigurerAdapter&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Bean&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;InternalResourceViewResolver&lt;/span&gt; &lt;span class="nf"&gt;getInternalResourceViewResolver&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;InternalResourceViewResolver&lt;/span&gt; &lt;span class="n"&gt;resolver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;InternalResourceViewResolver&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setPrefix&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/WEB-INF/views/"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setSuffix&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;".jsp"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;resolver&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;configureDefaultServletHandling&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DefaultServletHandlerConfigurer&lt;/span&gt; &lt;span class="n"&gt;configurer&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;configurer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;enable&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Bean&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;WebContentInterceptor&lt;/span&gt; &lt;span class="nf"&gt;webContentInterceptor&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;WebContentInterceptor&lt;/span&gt; &lt;span class="n"&gt;interceptor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;WebContentInterceptor&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;interceptor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setCacheSeconds&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;interceptor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setUseExpiresHeader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;interceptor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setUseCacheControlHeader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;interceptor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setUseCacheControlNoStore&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;interceptor&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;addResourceHandlers&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ResourceHandlerRegistry&lt;/span&gt; &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addResourceHandler&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/libs/**"&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;addResourceLocations&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/libs/"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addResourceHandler&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/app/**"&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;addResourceLocations&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/app/"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addResourceHandler&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/assets/**"&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;addResourceLocations&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/assets/"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;addInterceptors&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;InterceptorRegistry&lt;/span&gt; &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addInterceptor&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;webContentInterceptor&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Эта настроичный класс, загружающий наш веб-контекст. Он говорит нам какой статичный ресурс может быть обслужен (с &lt;code&gt;addResourceHandlers&lt;/code&gt;. Он добавляет ~~нет кеш-перехватчик~~ (&lt;code&gt;webContentInterceptor()&lt;/code&gt; и &lt;code&gt;addInterceptors()&lt;/code&gt;) и также объяснит нам расположение наших динамических ресурсов (&lt;strong&gt;JSP&lt;/strong&gt; файлов) которые используются в &lt;code&gt;getInternalResourceViewResolver()&lt;/code&gt; бине.&lt;/p&gt;
+&lt;p&gt;И наконец WebSocket конфиг:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Configuration&lt;/span&gt;
+&lt;span class="nd"&gt;@EnableWebSocketMessageBroker&lt;/span&gt;
+&lt;span class="nd"&gt;@ComponentScan&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;basePackages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"be.g00glen00b.controller"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WebSocketConfig&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractWebSocketMessageBrokerConfigurer&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;configureMessageBroker&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MessageBrokerRegistry&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;enableSimpleBroker&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/topic"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setApplicationDestinationPrefixes&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/app"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@Override&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;registerStompEndpoints&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StompEndpointRegistry&lt;/span&gt; &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;registry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addEndpoint&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/chat"&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;withSockJS&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Также как и &lt;code&gt;WebSocket&lt;/code&gt; он сканирует компоненты в контроллер пакетах, потому  что мы определим наш WebSocket траффик в наши контроллеры. Тогда мы должны сконфигурировать брокер сообщений (где связь входит и выходит) используя &lt;code&gt;configMessegeBroker&lt;/code&gt; и мы также должны сконфигурировать наши конечные точки &lt;code&gt;registerStompEndPoints&lt;/code&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;WebSocket'ы не работают во всех броузерах. Много WebSocket библиотек (например SockJS и Socket.io) предоставляют запасной вариант использования &lt;em&gt;long-polling&lt;/em&gt; и &lt;em&gt;polling&lt;/em&gt;. Spring также предоставляет эти запасные варианты совместимые с SockJS. Именно поэтому выбрать SockJS как клиент - это хорошая идея.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="_2"&gt;Объект обмена данными&lt;/h2&gt;
+&lt;p&gt;Наше основное соединение будет проходить через WebSocket. Что бы общаться мы вышлем определенную "полезную нагрузку" и ответ, на специфический &lt;em&gt;Stomp.js&lt;/em&gt; заголовок. Нам необходимо два класса для этого, &lt;code&gt;Message&lt;/code&gt; и &lt;code&gt;OutputMessage&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Во-первых, &lt;code&gt;Message&lt;/code&gt; будет содержать сообщение чата и сгенерированное ID, например: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;getMessage&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setMessage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;getId&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setId&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;OutputMessage&lt;/code&gt; наследуется от  &lt;code&gt;Message&lt;/code&gt;, но также добавит временную метку (текущее время):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;OutputMessage&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;Message&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;OutputMessage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Message&lt;/span&gt; &lt;span class="n"&gt;original&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;super&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;original&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getId&lt;/span&gt;&lt;span class="o"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;original&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getMessage&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+        &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt; &lt;span class="nf"&gt;getTime&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setTime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Date&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="spring-controller"&gt;Spring Controller&lt;/h2&gt;
+&lt;p&gt;Заключительной java частью приложения является контроллер который отображает два случая, первый для HTML/JSP страницы содержащей наше приложение, и остальной WebSocket трафик:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Controller&lt;/span&gt;
+&lt;span class="nd"&gt;@RequestMapping&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;ChatController&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@RequestMapping&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RequestMethod&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;viewApplication&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;"index"&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="nd"&gt;@MessageMapping&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/chat"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="nd"&gt;@SendTo&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/topic/message"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;OutputMessage&lt;/span&gt; &lt;span class="nf"&gt;sendMessage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Message&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;OutputMessage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Что здесь происходит достаточно просто, когда мы идём в context root, мы увидем этот &lt;code&gt;viewApplication()&lt;/code&gt; отображается сюда же, поэтому эта &lt;strong&gt;index.jsp&lt;/strong&gt; страница и использует эту &lt;strong&gt;view&lt;/strong&gt;. Другой метод, &lt;code&gt;sendMessage()&lt;/code&gt; предоставляет нам вещание сообщения в &lt;code&gt;/topic/message&lt;/code&gt; когда сообщение введено в брокер сообщений &lt;code&gt;/app/chat&lt;/code&gt; (не забудьте определить префикс &lt;code&gt;/app&lt;/code&gt; в &lt;code&gt;WebSocketConfig&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="view"&gt;View&lt;/h2&gt;
+&lt;p&gt;Теперь наш внутренний java код написан, далее опишем JSP страницу. Эта страница будет содержавть 2 основных компонента: форму для отправки нового сообщения и список введенных сообщений.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE HTML&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&lt;/span&gt; &lt;span class="na"&gt;lang=&lt;/span&gt;&lt;span class="s"&gt;"en"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700"&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/css"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"assets/style.css"&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/css"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;body&lt;/span&gt; &lt;span class="na"&gt;ng-app=&lt;/span&gt;&lt;span class="s"&gt;"chatApp"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;ng-controller=&lt;/span&gt;&lt;span class="s"&gt;"ChatCtrl"&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"container"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;ng-submit=&lt;/span&gt;&lt;span class="s"&gt;"addMessage()"&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"messageForm"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text"&lt;/span&gt; &lt;span class="na"&gt;placeholder=&lt;/span&gt;&lt;span class="s"&gt;"Compose a new message..."&lt;/span&gt; &lt;span class="na"&gt;ng-model=&lt;/span&gt;&lt;span class="s"&gt;"message"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"info"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+          &lt;span class="nt"&gt;&amp;lt;span&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"count"&lt;/span&gt; &lt;span class="na"&gt;ng-bind=&lt;/span&gt;&lt;span class="s"&gt;"max - message.length"&lt;/span&gt; &lt;span class="na"&gt;ng-class=&lt;/span&gt;&lt;span class="s"&gt;"{danger: message.length &amp;gt; max}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;140&lt;span class="nt"&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+          &lt;span class="nt"&gt;&amp;lt;button&lt;/span&gt; &lt;span class="na"&gt;ng-disabled=&lt;/span&gt;&lt;span class="s"&gt;"message.length &amp;gt; max || message.length === 0"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Send&lt;span class="nt"&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;hr&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;p&lt;/span&gt; &lt;span class="na"&gt;ng-repeat=&lt;/span&gt;&lt;span class="s"&gt;"message in messages | orderBy:'time':true"&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;"message"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;time&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;message.time&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="nf"&gt;date&lt;/span&gt;&lt;span class="s1"&gt;:'HH:mm'&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/time&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;span&lt;/span&gt; &lt;span class="na"&gt;ng-class=&lt;/span&gt;&lt;span class="s"&gt;"{self: message.self}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;message.message&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"libs/sockjs/sockjs.min.js"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"libs/stomp-websocket/lib/stomp.min.js"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"libs/angular/angular.min.js"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"libs/lodash/dist/lodash.min.js"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"app/app.js"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"app/controllers.js"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;"app/services.js"&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"text/javascript"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Прежде всего мы добавим &lt;strong&gt;Open Sans&lt;/strong&gt; шрифт и нашу таблицу стилей (которую опишем позже в этом руководстве). Затем мы описываем тело и загрузку AngularJS прложения, которое мы назвали &lt;code&gt;appChat&lt;/code&gt;. В этом приложении мы добавим один AngularJS контроллер - &lt;code&gt;ChatCtrl&lt;/code&gt;. Не путайте этот с нашим Spring котроллером!&lt;/p&gt;
+&lt;p&gt;В первую очередь что мы должны сделать, это создать форму содержащую текстовое поле. Мы соединим это поле с моделью названной &lt;code&gt;message&lt;/code&gt;. Когда форма будет отправлена, &lt;code&gt;addMessage()&lt;/code&gt; функция в нашем контроллере будет вызвана, которую мы будем использовать для отправки сообщения при помощи WebSocket'ов.&lt;/p&gt;
+&lt;p&gt;Для того что бы форма была попышнее мы также добавим счетчик наподобие того который используеться в Twitter. В каждый момент времени будет отображаться сколько Вы ввели символов (&lt;strong&gt;max&lt;/strong&gt;), при превышении лимита счетчик загораеться красным и тогда Вы больше не можете отправить форму благодаря директиве &lt;code&gt;ng-disabled&lt;/code&gt;. Сообщения отсортированы по их дате, последнее из них показывается сверху списка.&lt;/p&gt;
+&lt;p&gt;В конце страницы мы подгружаем все библиотеки которые нам нужны, и JavaScript файлы нашео приложения.&lt;/p&gt;
+&lt;h2 id="angularjs"&gt;Загрузка AngularJS приложения&lt;/h2&gt;
+&lt;p&gt;Наш первый JavaScript файл - app.js. Этот файл определяет все модули пакетов,в этом случае:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;angular&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"chatApp"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+  &lt;span class="s2"&gt;"chatApp.controllers"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="s2"&gt;"chatApp.services"&lt;/span&gt;
+&lt;span class="p"&gt;]);&lt;/span&gt;
+
+&lt;span class="nx"&gt;angular&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"chatApp.controllers"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[]);&lt;/span&gt;
+&lt;span class="nx"&gt;angular&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"chatApp.services"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[]);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="angularjs_1"&gt;AngularJS контроллер&lt;/h2&gt;
+&lt;p&gt;AngularJS контроллер достаточно простой, как он будет пересывать всё в отдельный сервис, мы опишем далее в этом руководстве. Контроллер содержит три модели свяанные с полями, это &lt;code&gt;message&lt;/code&gt; которое будет содержать только что введенное сообщение в textbox, &lt;code&gt;messages&lt;/code&gt; массив который содержит все отправленные сообщения и также &lt;code&gt;max&lt;/code&gt; - максмум допустимых символов в сообщении, используемое как Twitter счётчик символов для твита.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;angular&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"chatApp.controllers"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;controller&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"ChatCtrl"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;ChatService&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;messages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[];&lt;/span&gt;
+  &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;""&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;max&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;140&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+  &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addMessage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;ChatService&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;""&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;};&lt;/span&gt;
+
+  &lt;span class="nx"&gt;ChatService&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;receive&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;$scope&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;messages&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Мы уже объяснили кто когда форма отправляется, &lt;code&gt;addMessage&lt;/code&gt; ф-я вызывается, которая будет передаст сообщение дальше сервису, и которая очистит поле сбросив модель сообщения как пустую строку. Мы также вызываем сервис для получения сообщений. Эта часть сервиса будет возвращать отложенно, кадлый ра когда сообщения получены, обновит прогресс части директивы. Контроллер будет рагировать на это сообщение добавляя его в массив &lt;code&gt;messages&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="angularjs_2"&gt;AngularJS служба&lt;/h2&gt;
+&lt;p&gt;Последняя часть нашего AngularJS клиентского приложения - это сервис. Сервис немного сложенее поскольку он будет содержать весь код обработки WebSocket трафика. Код этого сервиса: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;angular&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"chatApp.services"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"ChatService"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;$q&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;$timeout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;service&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{},&lt;/span&gt; &lt;span class="nx"&gt;listener&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;$q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;defer&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="nx"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nx"&gt;client&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+      &lt;span class="nx"&gt;stomp&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="nx"&gt;messageIds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[];&lt;/span&gt;
+
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;RECONNECT_TIMEOUT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;30000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;SOCKET_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"/spring-ng-chat/chat"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;CHAT_TOPIC&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"/topic/message"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;CHAT_BROKER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"/app/chat"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;receive&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;listener&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;promise&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Math&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Math&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;random&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;1000000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stomp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;CHAT_BROKER&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;priority&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;
+      &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="nx"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stringify&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;id&lt;/span&gt;
+      &lt;span class="p"&gt;}));&lt;/span&gt;
+      &lt;span class="nx"&gt;messageIds&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;reconnect&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nx"&gt;$timeout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+      &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;RECONNECT_TIMEOUT&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;getMessage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nx"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
+      &lt;span class="nx"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+      &lt;span class="nx"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;time&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;time&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;_&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;contains&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;messageIds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;self&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="nx"&gt;messageIds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;_&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;messageIds&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;message&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;out&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;startListener&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stomp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;subscribe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;CHAT_TOPIC&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;listener&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;notify&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;getMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;body&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+      &lt;span class="p"&gt;});&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;initialize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;SockJS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;SOCKET_URL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stomp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;Stomp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;over&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;client&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stomp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;({},&lt;/span&gt; &lt;span class="nx"&gt;startListener&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="nx"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stomp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;onclose&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;reconnect&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="nx"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;service&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Итак начнём снизу. В самом низу кода вы можете увидеть, что мы выполняем &lt;code&gt;initialize()&lt;/code&gt; ф-ю для настройки сервиса. Это произойдет один раз, поскольку AngularJS сервисы синглтоны, это означает что кадждый раз один и тот же экземпляр будет возвращен.&lt;/p&gt;
+&lt;p&gt;Функция &lt;code&gt;initialize()&lt;/code&gt; настроит SockJS WebSocket клиент и использует его для Stomp.js WebSocket клиента. Stomp.js является дополнением к WebSocket протоколу которое позволяет подписываться и публиковать темы и также позволяет JSON полезную нагрузку.&lt;/p&gt;
+&lt;p&gt;Когда клиент присоединился к WebSocket серверу, затем вызываеться &lt;code&gt;startListener()&lt;/code&gt; ф-я, которая будет слушать &lt;code&gt;/topic/message&lt;/code&gt; заголовок по которому будут получены все сообщения. Он затем отправит отложенные данные, которые будут использоваться контроллерами.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;startListener()&lt;/code&gt; ф-я вызывает &lt;code&gt;getMessage()&lt;/code&gt; функцию, которая переводит WebSocket данные (полезная нагрузка) в модель необходимую контроллеру. В этом случае парсинг JSON строки в объект, и он будет устанавливать время как &lt;code&gt;Date&lt;/code&gt; объект.&lt;/p&gt;
+&lt;p&gt;Если поядковый номер (ID) сообщения был найден в &lt;code&gt;messageIds&lt;/code&gt; массиву, то это означает что сообщение создано в этом клиенте, поэтому свойство &lt;strong&gt;self&lt;/strong&gt; будет обозначено как &lt;strong&gt;true&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Затем она удалит этот ID сообщения из списка, потому что они доступны снова в пуле ID сообщений.&lt;/p&gt;
+&lt;p&gt;Когда соединение с WebSocket'ом сервера потеряно, это вызовет ф-ю &lt;code&gt;recconect()&lt;/code&gt; будет пытаться возобновить совединение после 30 секунд.&lt;/p&gt;
+&lt;p&gt;В конце мы имеем две публичные функции нашего сервиса, &lt;code&gt;receive()&lt;/code&gt; и &lt;code&gt;send()&lt;/code&gt;. Начнём с &lt;code&gt;receive()&lt;/code&gt; функции, так как она простейщая среди них. Единственное что эта функция делает, это возвращает отложено к отправке сообщения.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;send()&lt;/code&gt; функция с другой стороны  отправляет сообщения как JSON объект (поле строка) и генерирует новый ID. Этот ID добавляеться к &lt;code&gt;messageIds&lt;/code&gt; массиву, так что он может быть использован функцией &lt;code&gt;getMessage()&lt;/code&gt; для проверки было ли добавлено сообщение данным клиентом, или другим.&lt;/p&gt;
+&lt;h2 id="_3"&gt;Стилизация&lt;/h2&gt;
+&lt;p&gt;Это весь Java и JavaScript код который необходим, теперь закончим наше приложение добавив в него крутых стилей. Я использую следующий CSS код:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;font-family&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'Open Sans'&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sans-serif&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sizing&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;border&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.container&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;max-width&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1000px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="k"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;80%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;input&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nt"&gt;text&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;100%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;border&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;solid&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt; &lt;span class="m"&gt;#D4D4D1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;transition&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;.7s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1.1em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0.3em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0.2em&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;input&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nt"&gt;text&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="nd"&gt;:focus&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;webkit&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;69&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;155&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;231&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;75&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;moz&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;69&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;155&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;231&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;75&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="n"&gt;box&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;69&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;155&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;231&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;75&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="k"&gt;border-color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#459be7&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;outline&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;none&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.info&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;float&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;right&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;form&lt;/span&gt;&lt;span class="nd"&gt;:after&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;content&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;clear&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;both&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;button&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;background&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#459be7&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#FFF&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;font-weight&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;600&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;.3em&lt;/span&gt; &lt;span class="m"&gt;1.9em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;border&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;none&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1.2em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;text-shadow&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="m"&gt;5px&lt;/span&gt; &lt;span class="n"&gt;rgba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="k"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;pointer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;transition&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;.7s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;button&lt;/span&gt;&lt;span class="nd"&gt;:focus&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;outline&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;none&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;button&lt;/span&gt;&lt;span class="nd"&gt;:hover&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;background&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#1c82dd&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;button&lt;/span&gt;&lt;span class="nd"&gt;:disabled&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;background-color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#90BFE8&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;allowed&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.count&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;font-weight&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;font-size&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1.35em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#CCC&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;transition&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;.7s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.count.danger&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#a94442&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;font-weight&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;600&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.message&lt;/span&gt; &lt;span class="nt"&gt;time&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;80px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#999&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;float&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;left&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.message&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.message&lt;/span&gt; &lt;span class="nc"&gt;.self&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;font-weight&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;600&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.message&lt;/span&gt; &lt;span class="nt"&gt;span&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;calc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;100%&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="m"&gt;80px&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;float&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;left&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding-left&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;20px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;border-left&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;solid&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt; &lt;span class="m"&gt;#F1F1F1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding-bottom&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;.5em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;hr&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;height&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;border&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;border-top&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;solid&lt;/span&gt; &lt;span class="m"&gt;1px&lt;/span&gt; &lt;span class="m"&gt;#F1F1F1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;1em&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="_4"&gt;Демонстрация&lt;/h2&gt;
+&lt;p&gt;Перед тем как запустить наше приложение на веб сервере, сперва проверим некоторые вещи. Во-первых, убедимся, что вы настроили ваш context root на &lt;code&gt;/spring-ng-chat/&lt;/code&gt;. Если вы этого не сделаеле, Ваш AngularJS сервис будет иметь проблемы с соединением к WebSocket серверу, так как он связан с &lt;code&gt;/spring-ng-chat/chat&lt;/code&gt;. Если вы не хотите это, вы можете всегда изменить свойство &lt;code&gt;SOCKET_URL&lt;/code&gt; в AngularJS сервисе.&lt;/p&gt;
+&lt;p&gt;Во-вторых, если вы запустите это приложение из встроенного в Eclipse Tomcat'а, вам прйдеться добавить ваши Maven зависимости в ваш deployment сборку. Вы можете сделать это в настройках проекта, выбрав &lt;em&gt;Deployment assembly&lt;/em&gt; и добавив эти библиотеки.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Окно Deployment assembly" src="https://ipkalm.github.io/images/deployment-assembly.png" title="Окно Deployment assembly"/&gt;&lt;/p&gt;
+&lt;p&gt;В конце концов убедитесь что контейнер который вы используете, поддерживает WebSocket Java API. Если это не так, то вам скорее всегда необходимо обновить ваш веб контейнер.&lt;/p&gt;
+&lt;p&gt;Если всё это готово, то можете начать запуск вашего приложения, которое выглядит вот так:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Стартовый вид приложения" src="https://ipkalm.github.io/images/initial-app.png" title="стартовый вид приложения"/&gt;&lt;/p&gt;
+&lt;p&gt;Если вы начнёте набирать ваше сообщение, вы увидете что кнопка теперь активировалась, и счётчик запустился.&lt;/p&gt;
+&lt;p&gt;&lt;img alt='Набранное сообщение, кнопка активировалась, и заработал счётчик")' src="https://ipkalm.github.io/images/app-message.png" title="набранное сообщение, кнопка активировалась, и заработал счётчик"/&gt;&lt;/p&gt;
+&lt;p&gt;Если вы будете набирать дальше, то увидите, что кнопка деактивировалась снова, и счётчик теперь показывается отрицательное значение в красном цвете:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Слишком длинное сообщение, кнопка неактивна, счетчик отрицательный" src="https://ipkalm.github.io/images/message-limit.png" title="слишком длинное сообщение, кнопка неактивна, счетчик отрицательный"/&gt;&lt;/p&gt;
+&lt;p&gt;Как только Вы введёте сообщение и отправите его, Вы увидите что оно появится в списке сообщений, жирным шрифтом (потому как оно Вы его отправили). Вы также увидите, что поле ввода сообщения было очищено:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Отправленное сообщение выделено жирным, строка ввода очищена" src="https://ipkalm.github.io/images/message-sent.png" title="отправленное сообщение выделено жирным, строка ввода очищена"/&gt;&lt;/p&gt;
+&lt;p&gt;Если вы откроете приложение в новом окне, вы сможете увидеть что оно пустое. Так как WebSocket'ы работают в режиме реального времени, поэтому только сообщения которые были доставлены в положенное время будут видны в списке сообщений, здесь нет истории сообщений.&lt;/p&gt;
+&lt;p&gt;Если Вы отправили сообщение в другом окне, вы должны будете увидеть это сообщение на обоих окнах. Но только на одном будет выделено жирным текстом, а на другом обычным.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Вид чата в разных окнах приложения" src="https://ipkalm.github.io/images/multiple-messages.png" title="вид чата в разных окнах приложения"/&gt;&lt;/p&gt;
+&lt;p&gt;Как Вы можете видеть, WebSocket'ы работают должным образом и вы увидете сообщения появляются в режиме реального времени, потому что клиент отправляет сообщение на сервер, который отправляет это сообщение всем клиентам.&lt;/p&gt;
+&lt;p&gt;Такая сервер-клиентная модель возможно только благодаря WebSocket'ам.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://g00glen00b.be/spring-angular-sockjs/"&gt;&lt;em&gt;source&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;</summary><category term="translate"></category><category term="java"></category><category term="spring"></category><category term="angular"></category><category term="socket"></category></entry><entry><title>Разница между ключевыми словами this и super в Java</title><link href="https://ipkalm.github.io/raznitsa-mezhdu-kliuchevymi-slovami-this-i-super-v-java.html" rel="alternate"></link><published>2015-08-10T17:08:00+06:00</published><updated>2015-08-10T17:08:00+06:00</updated><author><name>ipkalm</name></author><id>tag:ipkalm.github.io,2015-08-10:raznitsa-mezhdu-kliuchevymi-slovami-this-i-super-v-java.html</id><summary type="html">&lt;p&gt;&lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; — это два специальных ключевых слова в Java, которые представляют соответственно текущий экземпляр класса и его суперкласса. Java-программисты часто путают эти слова и обнаруживают слабую осведомленность об их специальных свойствах, о которых нередко спрашивают на интервью по Java Сore.&lt;/p&gt;
+&lt;p&gt;Вот, например, пара вопросов, из того, что сразу приходит на ум, о this и &lt;strong&gt;super&lt;/strong&gt;, Можно ли присвоить другое значение ключевому слову &lt;strong&gt;this&lt;/strong&gt; в Java? и какая разница между ключевыми словами &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; в Java. Не знаете? Ну что ж, здесь я ответа не даю — его можно найти в конце статьи. Так вот, как я уже сказал в начале, главное отличие между &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; в Java в том, что &lt;strong&gt;this&lt;/strong&gt; представляет текущий экземпляр класса, в то время как &lt;strong&gt;super&lt;/strong&gt; — текущий экземпляр родительского класса.&lt;/p&gt;
+&lt;p&gt;Вот один из примеров использования переменных &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; — вы наверняка уже видели примеры вызовов конструкторов одного из другого, т.н. вызовы конструкторов по цепочке, это возможно благодаря использованию ключевых слов &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt;. Внутри класса для вызова своего конструктора без аргументов используется &lt;code&gt;this()&lt;/code&gt;, тогда как &lt;code&gt;super()&lt;/code&gt; используется для вызова конструктора без аргументов, или как его ещё называют, конструктора по умолчанию родительского класса.&lt;/p&gt;
+&lt;p&gt;Между прочим, таким способом вызывать можно не только конструктор без аргументов, а и вообще любой другой конструктор, передав ему соответствующие параметры. Скоро мы увидим пример такого использования &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt;. Ещё &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; в Java используются для обращения к переменным экземпляра класса и его родителя. Вообще-то, к ним можно обращаться и без префиксов &lt;strong&gt;super&lt;/strong&gt; и &lt;strong&gt;this&lt;/strong&gt;, но только если в текущем блоке такие переменные не перекрываются другими переменными, т.е. если в нем нет локальных переменных с такими же именами, в противном же случае использовать имена с префиксами придется обязательно, но это не беда, т.к. в таком виде они даже более читабельны.&lt;/p&gt;
+&lt;p&gt;Классическим примером такого подхода является использование &lt;strong&gt;this&lt;/strong&gt; внутри конструктора, который принимает параметр с таким же именем, как и у переменной экземпляра. Дальше в статье мы узнаем, какие ещё есть отличия между &lt;strong&gt;super&lt;/strong&gt; и &lt;strong&gt;this&lt;/strong&gt;, и рассмотрим некоторые примеры их использования.&lt;/p&gt;
+&lt;h3 id="this-super"&gt;Чем this и super похожи&lt;/h3&gt;
+&lt;p&gt;Прежде чем рассматривать отличия ключевых слов &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt;, давайте посмотрим на некоторые их сходства:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;И &lt;strong&gt;this&lt;/strong&gt;, и &lt;strong&gt;super&lt;/strong&gt; — это нестатические переменные, соответственно их нельзя использовать в статическом контексте, а это означает, что их нельзя использовать в методе main. Это приведет к ошибке во время компиляции «на нестатическую переменную &lt;strong&gt;this&lt;/strong&gt; нельзя ссылаться из статического контекста». То же самое произойдет, если в методе main воспользоваться ключевым словом &lt;strong&gt;super&lt;/strong&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;И &lt;strong&gt;this&lt;/strong&gt;, и &lt;strong&gt;super&lt;/strong&gt; могут использоваться внутри конструкторов для вызова других конструкторов по цепочке, нпр., &lt;code&gt;this()&lt;/code&gt; и &lt;code&gt;super()&lt;/code&gt; вызывают конструктор без аргументов наследующего и родительского классов соответственно.&lt;/p&gt;
+&lt;p&gt;В примере ниже мы сначала передаем вызов из конструктора без аргументов класса B в конструктор этого же класса B, принимающий один параметр типа String, из которого, в свою очередь, с помощью &lt;code&gt;super("")&lt;/code&gt; вызывается конструктор с одним аргументом из суперкласса.&lt;/p&gt;
+&lt;p&gt;:::java
+class A{&lt;/p&gt;
+&lt;p&gt;A(){
+        System.out.println("Конструктор без аргументов класса A");
+    }&lt;/p&gt;
+&lt;p&gt;A(String args){
+        System.out.println("Конструктор с одним аргументом класса A");
+    }
+}&lt;/p&gt;
+&lt;p&gt;class B extends A{&lt;/p&gt;
+&lt;p&gt;B(){
+        this(""); // вызов конструктора с одним аргументом класса B
+        System.out.println("Конструктор без аргументов класса B");
+    }&lt;/p&gt;
+&lt;p&gt;B(String args){
+        super(""); // вызов конструктора с одним аргументом класса A
+        System.out.println("Конструктор с одним аргументом класса B");
+    }
+}&lt;/p&gt;
+&lt;p&gt;// Тест-класс и вывод
+public class Test {&lt;/p&gt;
+&lt;p&gt;public static void main(String args[]) {
+       B b = new B();
+    }&lt;/p&gt;
+&lt;p&gt;}
+Вывод:
+Конструктор с одним аргументом класса A
+Конструктор с одним аргументом класса B
+Конструктор без аргументов класса B&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Внутри конструктора &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; должны стоять выше всех других выражений, в самом начале, иначе компилятор выдаст сообщение об ошибке. Из чего следует, что в одном конструкторе не может быть одновременно и &lt;code&gt;this()&lt;/code&gt;, и &lt;code&gt;super()&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="super-this"&gt;Различия в super и this&lt;/h3&gt;
+&lt;p&gt;Теперь мы знаем как использовать ключевые слова &lt;strong&gt;super&lt;/strong&gt; и &lt;strong&gt;this&lt;/strong&gt; и понимаем для чего они нужны. Но есть ещё один вариант использования этих ключевых слов, о котором я не сказал — во Внутренних классах, где с их помощью очень удобно ссылаться на внешний класс, используя форму записи Outer.&lt;strong&gt;this&lt;/strong&gt; для его текущего экземпляра и Outer.&lt;strong&gt;super&lt;/strong&gt; — для его родителя. Не забудьте вместо Outer подставить имя внешнего класса. А теперь давайте кратко перечислим главные отличия между ключевыми словами &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1) переменная &lt;strong&gt;this&lt;/strong&gt; ссылается на текущий экземпляр класса, в котором она используется, тогда как &lt;strong&gt;super&lt;/strong&gt; — на текущий экземпляр родительского класса.&lt;/p&gt;
+&lt;p&gt;2) Каждый конструктор при отсутствии явных вызовов других конструкторов неявно вызывает с помощью &lt;code&gt;super()&lt;/code&gt; конструктор без аргументов родительского класса, при этом у вас всегда остается возможность явно вызвать любой другой конструктор с помощью либо &lt;code&gt;this()&lt;/code&gt;, либо &lt;code&gt;super()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Пожалуй, это все, что можно сказать о различиях между ключевыми словами &lt;strong&gt;this&lt;/strong&gt; и &lt;strong&gt;super&lt;/strong&gt; в Java и о том, как они используются в программах. Как мы увидели, основное их назначение — вызывать один конструктор из другого и ссылаться на переменные экземпляра, объявленные в текущем классе и его родительском классе. Не забывайте, что это не совсем обычные переменные, а сейчас — ответ на мой вопрос, который я задавал в первом параграфе. Нет, переменной &lt;strong&gt;this&lt;/strong&gt; нельзя присвоить новое значение, потому что она объявлена как final. Можете попробовать сделать это в IDE — получите ошибку компиляции «нельзя присвоить новое значение переменной &lt;strong&gt;this&lt;/strong&gt; — она объявлена как final».&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;a href="http://info.javarush.ru/grishin/2015/03/31/%D0%A0%D0%B0%D0%B7%D0%BD%D0%B8%D1%86%D0%B0-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%B2%D1%8B%D0%BC%D0%B8-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D0%BC%D0%B8-this-%D0%B8-super-%D0%B2-Java.html"&gt;©JavaRush&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</summary><category term="java"></category><category term="programming"></category></entry><entry><title>Java собеседование. Коллекции</title><link href="https://ipkalm.github.io/java-sobesedovanie-kollektsii.html" rel="alternate"></link><published>2015-08-03T19:46:14+06:00</published><updated>2015-08-03T19:46:14+06:00</updated><author><name>ipkalm</name></author><id>tag:ipkalm.github.io,2015-08-03:java-sobesedovanie-kollektsii.html</id><summary type="html">&lt;ol&gt;
+&lt;li&gt;Чем отличается ArrayList от LinkedList?
+В моем рейтинге это один из двух самых популярных вопросов о коллекции, задают в 90% случаев. Вызвал у меня проблему на моем первом собеседовании на Junior Developer`а. Вкратце ответ на этот вопрос сводится к следующему: ArrayList это список, реализованный на основе массива, а LinkedList — это классический связный список, основанный на объектах с ссылками между ними.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Преимущества ArrayList: в возможности доступа к произвольному элементу по индексу за постоянное время (так как это массив), минимум накладных расходов при хранении такого списка, вставка в конец списка в среднем производится так же за постоянное время. В среднем потому, что массив имеет определенный начальный размер n (в коде это параметр capacity), по умолчанию n = 10, при записи n+1 элемента, будет создан новый массив размером (n * 3) / 2 + 1, в него будут помещены все элементы из старого массива + новый, добавляемый элемент. В итоге получаем, что при добавлении элемента при необходимости расширения массива, время добавления будет значительно больше, нежели при записи элемента в готовую пустую ячейку. Тем не менее, в среднем время вставки элемента в конец списка является постоянным. Удаление последнего элемента происходит за константное время. Недостатки ArrayList проявляются при вставке/удалении элемента в середине списка — это взывает перезапись всех элементов размещенных «правее» в списке на одну позицию влево, кроме того, при удалении элементов размер массива не уменьшается, до явного вызова метода trimToSize().&lt;/p&gt;
+&lt;p&gt;LinkedList наоборот, за постоянное время может выполнять вставку/удаление элементов в списке (именно вставку и удаление, поиск позиции вставки и удаления сюда не входит). Доступ к произвольному элементу осуществляется за линейное время (но доступ к первому и последнему элементу списка всегда осуществляется за константное время — ссылки постоянно хранятся на первый и последний, так что добавление элемента в конец списка вовсе не значит, что придется перебирать весь список в поисках последнего элемента). В целом же, LinkedList в абсолютных величинах проигрывает ArrayList и по потребляемой памяти и по скорости выполнения операций. LinkedList предпочтительно применять, когда происходит активная работа (вставка/удаление) с серединой списка или в случаях, когда необходимо гарантированное время добавления элемента в список.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Что вы обычно используете (ArrayList или LinkedList)? Почему?
+Это вопрос является слегка замаскированной версией предыдущего, так как ответ на этот вопрос приведет к постепенному изложению ответа на предыдущей вопрос. В 90% случае ArrayList будет быстрее и экономичнее LinkedList, так что обычно используют ArrayList, но тем не менее всегда есть 10% случаев для LinkedList. Я говорю, что обычно ArrayList использую, ссылаясь на тесты и последний абзац из предыдущего вопроса, но не забываю и про LinkedList (в каких случаях? так же последний абзац предыдущего вопроса помогает).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Что быстрее работает ArrayList или LinkedList?
+Еще одна замаскированная версия первого вопроса. Хитрее приведенных выше вариантов, что постановка вопроса подразумевает односложный ответ с выбором одного из предложенных вариантов, что, по задумке автора вопроса, как я понимаю, должно сразу выявить человека с неглубокими познаниями в collections. Правильным же действием будет встречный вопрос о том, какие действия будут выполняться над структурой. В итоге, диалог плавно переходит к ответу на первый вопрос.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Необходимо добавить 1млн. элемент, какую структуру вы используете?
+Тоже довольно популярная скрытая версия первого вопроса. Так же постановка предполагает выбор одного из предложенных вариантов, хотя на самом деле информации для однозначного выбора нет. Нужно задавать дополнительные вопросы: в какую часть списка происходит добавление элементов? есть ли информация о том, что потом будет происходить с элементами списка? какие то ограничения по памяти или скорости выполнения? В целом, все тот же первый вопрос, но немного с другой стороны: вы через дополнительные вопросы, показываете глубину понимания работы Array и Linked List.
+Однажды я сам «клюнул» на этот крючок, домыслив про себя, что добавить — это «вставить» в конец списка и усиленно продвигал ArrayList, хотя ничего не знал (и не пытался узнать) про дальнейшие действие с этим списком и возможные ограничения.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Как происходит удаление элементов из ArrayList? Как меняется в этом случае размер ArrayList?
+При удалении произвольного элемента из списка, все элементы находящиеся «правее» смещаются на одну ячейку влево и реальный размер массива (его емкость, capacity) не изменяется никак. Механизм автоматического «расширения» массива существует, а вот автоматического «сжатия» нет, можно только явно выполнить «сжатие» командой trimToSize().&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Предложите эффективный алгоритм удаления нескольких рядом стоящих элементов из середины списка, реализуемого ArrayList.
+Допустим нужно удалить n элементов с позиции m в списке. Вместо выполнения удаления одного элемента n раз (каждый раз смещая на 1 позицию элементы, стоящие «правее» в списке), нужно выполнить смещение всех элементов, стоящих «правее» n+m позиции на n элементов левее к началу списка. Таким образом, вместо выполнения n итераций перемещения элементов списка, все выполняется за 1 проход.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Как устроена HashMap?
+Вкратце, HashMap состоит из «корзин» (bucket`ов). С технической точки зрения «корзины» — это элементы массива, которые хранят ссылки на списки элементов. При добавлении новой пары ключ-значение, вычисляет хеш-код ключа, на основании которого вычисляется номер корзины (номер ячейки массива), в которую попадет новый элемент. Если корзина пустая, то в нее сохраняется ссылка на вновь добавляемый элемент, если же там уже есть элемент, то происходит последовательный переход по ссылкам между элементами в цепочке, в поисках последнего элемента, от которого и ставится ссылка на вновь добавленный элемент. Если в списке был найден элемент с таким же ключом, то он заменяется. Добавление, поиск и удаление элементов выполняется за константное время. Вроде все здорово, с одной оговоркой, хеш-функций должна равномерно распределять элементы по корзинам, в этом случае временная сложность для этих 3 операций будет не ниже lg N, а в среднем случае как раз константное время.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Какое начальное количество корзин в HashMap?
+Ответ здесь — 16. Отвечая, стоит заметить, что можно используя конструкторы с параметрами: через параметр capacity задавать свое начальное количество корзин.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Какая оценка временной сложности выборки элемента из HashMap? Гарантирует ли HashMap указанную сложность выборки элемента?
+Ответ на первую часть вопроса, можно найти в ответе на вопрос 7 — константное время необходимо для выборки элемента. Вот на второй части вопроса, я недавно растерялся. И устройство HashMap знал и про хеш-функцию тоже знал, а вот к такому вопросу не был готов, в уме кинулся вообще в другом направлении и сосредоточился на строении HashMap откинув проблему хеш-кода, который в голове всегда привык считать хеш-кодом с равномерным распределением. На самом деле ответ довольно простой и следует из ответа вопроса 7.
+Если вы возьмете хеш-функцию, которая постоянно будет возвращать одно и то же значение, то HashMap превратится в связный список, с отвратной производительностью. Затем даже, если вы будете использовать хеш-функцию с равномерным распределением, в предельном случае гарантироваться будет только временная сложность lg N. Так что, ответ на вторую часть вопроса — нет, не гарантируется.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Роль equals и hashCode в HashMap?
+Ответ на этот вопрос следует из ответа на вопрос 7, хотя явно там и не прописан. hashCode позволяет определить корзину для поиска элемента, а equals используется для сравнения ключей элементов в списке внутри корзины и искомого ключа.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Максимальное число значений hashCode()?
+Здесь все довольно просто, достаточно вспомнить сигнатуру метода: int hashCode(). То есть число значений равно диапазону типа int — 2^32 (точного диапазона никогда не спрашивали, хватало такого ответа).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Как и когда происходит увеличение количества корзин в HashMap?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Вот это довольно тонкий вопрос. Как показал мой мини-опрос, если суть устройства HashMap себе представляют многие более-менее ясно, то этот вопрос часто ставил собеседника в тупик.&lt;/p&gt;
+&lt;p&gt;Помимо capacity в HashMap есть еще параметр loadFactor, на основании которого, вычисляется предельное количество занятых корзин (capacity*loadFactor). По умолчанию loadFactor = 0,75. По достижению предельного значения, число корзин увеличивается в 2 раза. Для всех хранимых элементов вычисляется новое «местоположение» с учетом нового числа корзин.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;В каком случае может быть потерян элемент в HashMap?
+Этот интересный вопрос мне прислал LeoCcoder, у меня подобного не спрашивали и честно признаюсь, после прочтения сходу не смог придумать сценарий для потери элемента. Все опять же оказалось довольно просто, хоть и не так явно: допустим в качестве ключа используется не примитив, а объект с несколькими полями. После добавления элемента в HashMap у объекта, который выступает в качестве ключа, изменяют одно поле, которое участвует в вычислении хеш-кода. В результате при попытке найти данный элемент по исходному ключу, будет происходить обращение к правильной корзине, а вот equals (ведь equals и hashCode должны работать с одним и тем же набором полей) уже не найдет указанный ключ в списке элементов. Тем не менее, даже если equals реализован таким образом, что изменение данного поля объекта не влияет на результат, то после увеличения размера корзин и пересчета хеш-кодов элементов, указанный элемент, с измененным значением поля, с большой долей вероятности попадет совсем в другую корзину и тогда он уже совсем потеряется.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;В чем отличия TreeSet и HashSet?
+Начнем с того, что Set — это множество (так же называют «набором»). Set не допускает хранение двух одинаковых элементов. Формально говоря, термин «множество» и так обозначает совокупность различных элементов, очень важно, что именно различных элементов, так как это главное свойство Set. С учетом такого определения, пояснение про хранение одинаковых элементом не требуется, но в обиходе, понятие «множество» потеряло свой строгий смысл касательно уникальности элементов, входящих в него, поэтому все же уточняйте отдельно данное свойство множества.
+TreeSet обеспечивает упорядоченно хранение элементов в виде красно-черного дерева. Сложность выполнения основных операций в TreeSet lg N. HashSet использует для хранения элементов такой же подход, что и HashMap, за тем отличием, что в HashSet в качестве ключа выступает сам элемент, кроме того HashSet (как и HashMap) не поддерживает упорядоченное хранение элементов и обеспечивает временную сложность выполнения операций аналогично HashMap.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Устройство TreeSet?
+Здесь достаточно краткого ответа, что TreeSet основан на красно-черном дереве. Как правило этого хватает и собеседник сразу переходит к следующему вопросу, у меня ни разу не спрашивали механизм балансировки дерева или другие подробности его реализации.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Что будет, если добавлять элементы в TreeSet по возрастанию?
+Обычно данный вопрос собеседник предваряет фразой, что в основе TreeSet лежит бинарное дерево и если добавлять элементы по возрастанию, то как они будут распределены по дереву.
+Если нет точного представления об устройстве TreeSet, а есть общее понимание о том, что это бинарное дерево (в чем нас дополнительно уверяет собеседник), то данный вопрос может привести к интересному результату: все элементы после доабвления в обычное бинарное дерево будут находится в одной ветви длиной N элементов, что сводит на нет, все преимущества такой структуры, как дерево (фактически получается список). На самом, деле, как выше упоминалось в основе TreeSet лежит красно-черное дерево, которое умеет само себя балансировать. В итоге, TreeSet все равно в каком порядке вы добавляете в него элементы, преимущества этой структуры данных будут сохраняться.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;©habrahabr&lt;/p&gt;</summary><category term="habr"></category><category term="interview"></category></entry><entry><title>Строковый пул Java</title><link href="https://ipkalm.github.io/strokovyi-pul-java.html" rel="alternate"></link><published>2015-07-30T21:39:00+06:00</published><updated>2015-07-30T21:39:00+06:00</updated><author><name>ipkalm</name></author><id>tag:ipkalm.github.io,2015-07-30:strokovyi-pul-java.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;Строковый пул, или множество строк, Java располагается в области памяти, именуемой &lt;strong&gt;Java Heap&lt;/strong&gt; – &lt;strong&gt;куча&lt;/strong&gt;, в которой хранятся все переменные, созданные программно вашим приложением. Естественно, появление этой структуры связано с оптимизацией способов хранения строк как объектов в языке.&lt;/p&gt;
+&lt;p&gt;Тип &lt;strong&gt;String&lt;/strong&gt; – один из самых часто используемых в Java и довольно дорогой для хранения: &lt;strong&gt;4&lt;/strong&gt;-символьная строка занимает &lt;strong&gt;56 байт&lt;/strong&gt; памяти, т.е. реальные данные (4 символа) занимают только &lt;strong&gt;14%&lt;/strong&gt; выделенной под объект памяти. В связи с этим возникает необходимость оптимизировать способ хранения строк в памяти виртуальной машины. Так, было решено использовать подход Flyweight (&lt;em&gt;приспособленец&lt;/em&gt;): если используется множество одинаковых данных (объектов), то гораздо экономнее создать только &lt;em&gt;один&lt;/em&gt; экземпляр, чем несколько копий.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id="1"&gt;1. Работа пула на примерах.&lt;/h2&gt;
+&lt;p&gt;Давайте рассмотрим следующий пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Выводом этого фрагмента кода будет следующее:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Как видите, &lt;code&gt;str1&lt;/code&gt; и &lt;code&gt;str2&lt;/code&gt; ссылаются на один и тот же объект (т.к. равенство &lt;code&gt;==&lt;/code&gt; будет достигнуто только в случае равенства ссылок). Изобразить это можно следующим образом:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Java Pool" src="/static/img/java_pool.png" title="Java Pool" /&gt;&lt;/p&gt;
+&lt;p&gt;Как видите, если вы создаете новый объект &lt;code&gt;String&lt;/code&gt; и вручную, т.е. литерами, задаете его значение (&lt;code&gt;"Hello, world"&lt;/code&gt;), а объект с таким значением уже есть в пуле, то новая строка не создается, а просто переменная, являющаяся указателем, ссылается на уже созданный объект с тем же значением. Равенство, естественно, проверяется методом &lt;code&gt;String.equals(String)&lt;/code&gt;. Таким образом, строковые переменные, имеющие при инициализации одинаковые значения, будут указывать на один и тот же объект.&lt;/p&gt;
+&lt;p&gt;Теперь вы понимаете, почему строки в Java являются неизменяемыми: если бы в одном потоке была создана строка, и с таким же значением в другом потоке была бы создана еще одна строка, то изменение строки в одном из потоков повлекло бы ее изменение в другом.&lt;/p&gt;
+&lt;p&gt;Сравним результат выполнения предыдущего фрагмента кода с этим:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str3&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Вывод в данном случае будет:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;т.к. объекты, на которые указывают &lt;code&gt;str1&lt;/code&gt; и &lt;code&gt;str3&lt;/code&gt; уже отличаются, ведь для создания &lt;code&gt;str3&lt;/code&gt; был вручную вызван конструктор (&lt;code&gt;new&lt;/code&gt;), что повлекло создание нового объекта. И теперь этот объект помещается не в строковом пуле, а в "обычном" сегменте памяти JVM.&lt;/p&gt;
+&lt;p&gt;Теперь рассмотрим такой пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ab&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;c&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;str1 :&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;, str2 :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Вывод:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;abc&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;abc&lt;/span&gt;
+&lt;span class="kc"&gt;false&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Как было указано выше, строки в Java, как объекты, изменить нельзя. Поэтому когда в коде программы мы "изменили" &lt;code&gt;str2&lt;/code&gt; на самом деле был создан новый объект-строка с новым значением. При этом &lt;code&gt;str1&lt;/code&gt;, очевидно, остался указывать на тот же объект, что и раньше, поэтому равенство &lt;code&gt;str1 == str2&lt;/code&gt; на этот раз не выполнилось.&lt;/p&gt;
+&lt;p&gt;Теперь рассмотрим код, где для конкатенации используется &lt;code&gt;StringBuffer&lt;/code&gt;. Его использование гарантирует то, что строка находится не в строковом пуле, а в "нормальной" области памяти.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.BufferedReader&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.IOException&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.io.InputStreamReader&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;StringConcatenationExample&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="kd"&gt;throws&lt;/span&gt; &lt;span class="n"&gt;IOException&lt;/span&gt;
+    &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;BufferedReader&lt;/span&gt; &lt;span class="n"&gt;bufferRead&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;BufferedReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;InputStreamReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;in&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;print&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Type in a string :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bufferRead&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;readLine&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;str1 :&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;, str2 :&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;str1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;str2&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Результатом выполнения этого кода будет следующий вывод:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Type in a string :abc
+str1 :abc, str2 :abc
+false
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Таким образом, в результате тестирования вышележащих сниппетов можно заключить, что строковые переменные будут ссылаться на один и тот же строковый объект только в том случае, если эти объекты были инициализированы одинаковыми значениями.&lt;/p&gt;
+&lt;h2 id="2"&gt;2. Ручное помещение строки в пул&lt;/h2&gt;
+&lt;p&gt;Как мы заметили, строковый пул не всегда используется автоматически. Но что же делать, если его использование может существенно уменьшить количество используемой памяти? Пусть мы создаем класс, описывающий адрес человека. Как известно, более 10 миллионов человек сегодня проживает в Москве. Представляете, как много места может занять использование отдельного объекта-строки для каждого из жителей Москвы? Для того, чтобы вручную поместить строку в пул, необходимо использовать метод &lt;code&gt;String.intern()&lt;/code&gt;. Рассмотрим пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;String &lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+String &lt;span class="nv"&gt;s2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+String &lt;span class="nv"&gt;s3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; new String&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; s2&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; s3&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;s3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; s3.intern&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+System.out.println&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;s1&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;s3&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Результат выполнения этого кода будет представлять из себя следующий набор строк:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;false&lt;/span&gt;
+&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;То есть вызов этого метода равносилен созданию строки, для которой значение введено заново с использованием литер.&lt;/p&gt;
+&lt;p&gt;Но будьте аккуратны. До Java 7 в памяти существовала отдельная область &lt;em&gt;PermGen&lt;/em&gt;, в которой и располагался пул, которому было отведено ограниченное количество памяти. Начиная с &lt;strong&gt;Java 7&lt;/strong&gt;, строковый пул помещается в &lt;strong&gt;той же&lt;/strong&gt; области кучи, &lt;strong&gt;что и все&lt;/strong&gt; остальные объекты, что делает строки доступными для сборщика мусора. Указать объем отводимой под строки памяти (которые хранятся в виде хэш-мапа) можно с использованием опции &lt;code&gt;XX:StringTableSize&lt;/code&gt;. Так Вы, фактически, создаете свой &lt;em&gt;собственный&lt;/em&gt; пул строк, но впрочем, не забивайте голову.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://examples.javacodegeeks.com/core-java/lang/string/java-string-pool-example/"&gt;&lt;em&gt;©javacodegeeks&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;</summary><category term="java"></category><category term="programming"></category></entry></feed>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru"
+>
+<head>
+    <title>Разница между ключевыми словами this и super в Java - astro blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
+
+<link rel="canonical" href="https://ipkalm.github.io/raznitsa-mezhdu-kliuchevymi-slovami-this-i-super-v-java.html">
+
+        <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="java,programming" />
+        <meta name="description" content="this и super — это два специальных ключевых слова в Java, которые представляют соответственно текущий экземпляр класса и его суперкласса. Java-программисты часто путают эти слова и обнаруживают слабую осведомленность об их специальных свойствах, о которых нередко спрашивают на интервью по Java Сore. Вот, например, пара вопросов, из того, что сразу приходит ..." />
+
+        <meta property="og:site_name" content="astro blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Разница между ключевыми словами this и super в Java"/>
+        <meta property="og:url" content="https://ipkalm.github.io/raznitsa-mezhdu-kliuchevymi-slovami-this-i-super-v-java.html"/>
+        <meta property="og:description" content="this и super — это два специальных ключевых слова в Java, которые представляют соответственно текущий экземпляр класса и его суперкласса. Java-программисты часто путают эти слова и обнаруживают слабую осведомленность об их специальных свойствах, о которых нередко спрашивают на интервью по Java Сore. Вот, например, пара вопросов, из того, что сразу приходит ..."/>
+        <meta property="article:published_time" content="2015-08-10" />
+            <meta property="article:section" content="java" />
+            <meta property="article:tag" content="java" />
+            <meta property="article:tag" content="programming" />
+            <meta property="article:author" content="ipkalm" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://ipkalm.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="https://ipkalm.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://ipkalm.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="https://ipkalm.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://ipkalm.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://ipkalm.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="astro blog ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://ipkalm.github.io/" class="navbar-brand">
+astro blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://ipkalm.github.io/pages/about.html">
+                             О сайте
+                          </a></li>
+                        <li >
+                            <a href="https://ipkalm.github.io/category/copypaste.html">Copy\paste</a>
+                        </li>
+                        <li >
+                            <a href="https://ipkalm.github.io/category/crypt.html">Crypt</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://ipkalm.github.io/category/java.html">Java</a>
+                        </li>
+                        <li >
+                            <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
+                        </li>
+                        <li >
+                            <a href="https://ipkalm.github.io/category/python.html">Python</a>
+                        </li>
+                        <li >
+                            <a href="https://ipkalm.github.io/category/unsort.html">Unsort</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><span>
+                <form class="navbar-search" action="/search">
+                  <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+              <li><a href="https://ipkalm.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/raznitsa-mezhdu-kliuchevymi-slovami-this-i-super-v-java.html"
+                       rel="bookmark"
+                       title="Permalink to Разница между ключевыми словами this и super в Java">
+                        Разница между ключевыми словами this и super в Java
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-10T17:08:00+06:00"> Mon 10 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/java.html">java</a>
+        /
+	<a href="https://ipkalm.github.io/tag/programming.html">programming</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p><strong>this</strong> и <strong>super</strong> — это два специальных ключевых слова в Java, которые представляют соответственно текущий экземпляр класса и его суперкласса. Java-программисты часто путают эти слова и обнаруживают слабую осведомленность об их специальных свойствах, о которых нередко спрашивают на интервью по Java Сore.</p>
+<p>Вот, например, пара вопросов, из того, что сразу приходит на ум, о this и <strong>super</strong>, Можно ли присвоить другое значение ключевому слову <strong>this</strong> в Java? и какая разница между ключевыми словами <strong>this</strong> и <strong>super</strong> в Java. Не знаете? Ну что ж, здесь я ответа не даю — его можно найти в конце статьи. Так вот, как я уже сказал в начале, главное отличие между <strong>this</strong> и <strong>super</strong> в Java в том, что <strong>this</strong> представляет текущий экземпляр класса, в то время как <strong>super</strong> — текущий экземпляр родительского класса.</p>
+<p>Вот один из примеров использования переменных <strong>this</strong> и <strong>super</strong> — вы наверняка уже видели примеры вызовов конструкторов одного из другого, т.н. вызовы конструкторов по цепочке, это возможно благодаря использованию ключевых слов <strong>this</strong> и <strong>super</strong>. Внутри класса для вызова своего конструктора без аргументов используется <code>this()</code>, тогда как <code>super()</code> используется для вызова конструктора без аргументов, или как его ещё называют, конструктора по умолчанию родительского класса.</p>
+<p>Между прочим, таким способом вызывать можно не только конструктор без аргументов, а и вообще любой другой конструктор, передав ему соответствующие параметры. Скоро мы увидим пример такого использования <strong>this</strong> и <strong>super</strong>. Ещё <strong>this</strong> и <strong>super</strong> в Java используются для обращения к переменным экземпляра класса и его родителя. Вообще-то, к ним можно обращаться и без префиксов <strong>super</strong> и <strong>this</strong>, но только если в текущем блоке такие переменные не перекрываются другими переменными, т.е. если в нем нет локальных переменных с такими же именами, в противном же случае использовать имена с префиксами придется обязательно, но это не беда, т.к. в таком виде они даже более читабельны.</p>
+<p>Классическим примером такого подхода является использование <strong>this</strong> внутри конструктора, который принимает параметр с таким же именем, как и у переменной экземпляра. Дальше в статье мы узнаем, какие ещё есть отличия между <strong>super</strong> и <strong>this</strong>, и рассмотрим некоторые примеры их использования.</p>
+<h3 id="this-super">Чем this и super похожи</h3>
+<p>Прежде чем рассматривать отличия ключевых слов <strong>this</strong> и <strong>super</strong>, давайте посмотрим на некоторые их сходства:</p>
+<ol>
+<li>
+<p>И <strong>this</strong>, и <strong>super</strong> — это нестатические переменные, соответственно их нельзя использовать в статическом контексте, а это означает, что их нельзя использовать в методе main. Это приведет к ошибке во время компиляции «на нестатическую переменную <strong>this</strong> нельзя ссылаться из статического контекста». То же самое произойдет, если в методе main воспользоваться ключевым словом <strong>super</strong>.</p>
+</li>
+<li>
+<p>И <strong>this</strong>, и <strong>super</strong> могут использоваться внутри конструкторов для вызова других конструкторов по цепочке, нпр., <code>this()</code> и <code>super()</code> вызывают конструктор без аргументов наследующего и родительского классов соответственно.</p>
+<p>В примере ниже мы сначала передаем вызов из конструктора без аргументов класса B в конструктор этого же класса B, принимающий один параметр типа String, из которого, в свою очередь, с помощью <code>super("")</code> вызывается конструктор с одним аргументом из суперкласса.</p>
+<p>:::java
+class A{</p>
+<p>A(){
+        System.out.println("Конструктор без аргументов класса A");
+    }</p>
+<p>A(String args){
+        System.out.println("Конструктор с одним аргументом класса A");
+    }
+}</p>
+<p>class B extends A{</p>
+<p>B(){
+        this(""); // вызов конструктора с одним аргументом класса B
+        System.out.println("Конструктор без аргументов класса B");
+    }</p>
+<p>B(String args){
+        super(""); // вызов конструктора с одним аргументом класса A
+        System.out.println("Конструктор с одним аргументом класса B");
+    }
+}</p>
+<p>// Тест-класс и вывод
+public class Test {</p>
+<p>public static void main(String args[]) {
+       B b = new B();
+    }</p>
+<p>}
+Вывод:
+Конструктор с одним аргументом класса A
+Конструктор с одним аргументом класса B
+Конструктор без аргументов класса B</p>
+</li>
+<li>
+<p>Внутри конструктора <strong>this</strong> и <strong>super</strong> должны стоять выше всех других выражений, в самом начале, иначе компилятор выдаст сообщение об ошибке. Из чего следует, что в одном конструкторе не может быть одновременно и <code>this()</code>, и <code>super()</code>.</p>
+</li>
+</ol>
+<h3 id="super-this">Различия в super и this</h3>
+<p>Теперь мы знаем как использовать ключевые слова <strong>super</strong> и <strong>this</strong> и понимаем для чего они нужны. Но есть ещё один вариант использования этих ключевых слов, о котором я не сказал — во Внутренних классах, где с их помощью очень удобно ссылаться на внешний класс, используя форму записи Outer.<strong>this</strong> для его текущего экземпляра и Outer.<strong>super</strong> — для его родителя. Не забудьте вместо Outer подставить имя внешнего класса. А теперь давайте кратко перечислим главные отличия между ключевыми словами <strong>this</strong> и <strong>super</strong></p>
+<p>1) переменная <strong>this</strong> ссылается на текущий экземпляр класса, в котором она используется, тогда как <strong>super</strong> — на текущий экземпляр родительского класса.</p>
+<p>2) Каждый конструктор при отсутствии явных вызовов других конструкторов неявно вызывает с помощью <code>super()</code> конструктор без аргументов родительского класса, при этом у вас всегда остается возможность явно вызвать любой другой конструктор с помощью либо <code>this()</code>, либо <code>super()</code>.</p>
+<p>Пожалуй, это все, что можно сказать о различиях между ключевыми словами <strong>this</strong> и <strong>super</strong> в Java и о том, как они используются в программах. Как мы увидели, основное их назначение — вызывать один конструктор из другого и ссылаться на переменные экземпляра, объявленные в текущем классе и его родительском классе. Не забывайте, что это не совсем обычные переменные, а сейчас — ответ на мой вопрос, который я задавал в первом параграфе. Нет, переменной <strong>this</strong> нельзя присвоить новое значение, потому что она объявлена как final. Можете попробовать сделать это в IDE — получите ошибку компиляции «нельзя присвоить новое значение переменной <strong>this</strong> — она объявлена как final».</p>
+<p><em><a href="http://info.javarush.ru/grishin/2015/03/31/%D0%A0%D0%B0%D0%B7%D0%BD%D0%B8%D1%86%D0%B0-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%B2%D1%8B%D0%BC%D0%B8-%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D0%BC%D0%B8-this-%D0%B8-super-%D0%B2-Java.html">©JavaRush</a></em></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://github.com/ipkalm"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+                <li class="list-group-item"><a href="https://www.minds.com/stonedastronaut"><i class="fa fa-minds-square fa-lg"></i> minds</a></li>
+                <li class="list-group-item"><a href="/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> rss</a></li>
+              </ul>
+            </li>
+
+
+
+            <li class="list-group-item"><a href="https://ipkalm.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group list-inline tagcloud" id="tags">
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/advice.html">
+                            advice
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/android.html">
+                            android
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/angular.html">
+                            angular
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/awk.html">
+                            awk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/backup.html">
+                            backup
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/bzip2.html">
+                            bzip2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://ipkalm.github.io/tag/crypt.html">
+                            crypt
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/diff.html">
+                            diff
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/emacs.html">
+                            emacs
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://ipkalm.github.io/tag/freelance.html">
+                            freelance
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://ipkalm.github.io/tag/geekbrains.html">
+                            geekbrains
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://ipkalm.github.io/tag/geektimes.html">
+                            geektimes
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/grep.html">
+                            grep
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://ipkalm.github.io/tag/habr.html">
+                            habr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/inline-skates.html">
+                            inline skates
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="https://ipkalm.github.io/tag/interview.html">
+                            interview
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://ipkalm.github.io/tag/java.html">
+                            java
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/links.html">
+                            links
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="https://ipkalm.github.io/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/mysql.html">
+                            mysql
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/orm.html">
+                            orm
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/parallel.html">
+                            parallel
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="https://ipkalm.github.io/tag/programming.html">
+                            programming
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/relax.html">
+                            relax
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/sed.html">
+                            sed
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/socket.html">
+                            socket
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/sport.html">
+                            sport
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/spring.html">
+                            spring
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/sqlalchemy.html">
+                            sqlalchemy
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/tproger.html">
+                            tproger
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/translate.html">
+                            translate
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/vk.html">
+                            vk
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="https://ipkalm.github.io/tag/wget.html">
+                            wget
+                        </a>
+                    </li>
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://getpelican.com/" target="_blank">
+                Pelican
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://python.org/" target="_blank">
+                Python.org
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://jinja.pocoo.org/" target="_blank">
+                Jinja2
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 ipkalm
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://ipkalm.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://ipkalm.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://ipkalm.github.io/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

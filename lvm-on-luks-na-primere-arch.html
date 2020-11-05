@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>LVM on LUKS на примере arch - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,22 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/lvm-on-luks-na-primere-arch.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="linux,crypt" />
+        <meta name="description" content="Создаём разделы физические Вот такая структура диска. /dev/sda1 -&gt; /boot /dev/sda2 -&gt; LVM Шифруем раздел LVM cryptsetup luksFormat -c aes-xts-plain64 -s 512 /dev/sda2 больше о параметрах шифрования см. здесь cryptsetup open --type luks /dev/sda2 lvm Создаём разделы на LVM создаём физический раздел LVM: pvcreate /dev/mapper/lvm создаём ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="LVM on LUKS на примере arch"/>
+        <meta property="og:url" content="https://ipkalm.github.io/lvm-on-luks-na-primere-arch.html"/>
+        <meta property="og:description" content="Создаём разделы физические Вот такая структура диска. /dev/sda1 -&gt; /boot /dev/sda2 -&gt; LVM Шифруем раздел LVM cryptsetup luksFormat -c aes-xts-plain64 -s 512 /dev/sda2 больше о параметрах шифрования см. здесь cryptsetup open --type luks /dev/sda2 lvm Создаём разделы на LVM создаём физический раздел LVM: pvcreate /dev/mapper/lvm создаём ..."/>
+        <meta property="article:published_time" content="2015-07-26" />
+            <meta property="article:section" content="linux" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="crypt" />
+            <meta property="article:author" content="ipkalm" />
 
 
     <!-- Bootstrap -->
@@ -62,7 +69,7 @@ astro blog            </a>
                         <li >
                             <a href="https://ipkalm.github.io/category/java.html">Java</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -90,8 +97,120 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/lvm-on-luks-na-primere-arch.html"
+                       rel="bookmark"
+                       title="Permalink to LVM on LUKS на примере arch">
+                        LVM on LUKS на примере arch
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-26T03:53:00+06:00"> Sun 26 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://ipkalm.github.io/tag/crypt.html">crypt</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2 id="_1">Создаём разделы физические</h2>
+<p>Вот такая структура диска.</p>
+<ul>
+<li>
+<p><code>/dev/sda1 -&gt; /boot</code></p>
+</li>
+<li>
+<p><code>/dev/sda2 -&gt; LVM</code></p>
+</li>
+</ul>
+<h3 id="lvm">Шифруем раздел LVM</h3>
+<div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
+</pre></div>
+
+
+<p>больше о параметрах шифрования см. <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_LUKS_mode">здесь</a></p>
+<div class="highlight"><pre>cryptsetup open --type luks /dev/sda2 lvm
+</pre></div>
+
+
+<h3 id="lvm_1">Создаём разделы на LVM</h3>
+<p>создаём физический раздел LVM:</p>
+<div class="highlight"><pre>pvcreate /dev/mapper/lvm
+</pre></div>
+
+
+<p>создаём группу разделов LVM:</p>
+<div class="highlight"><pre>vgcreate MyStorage /dev/mapper/lvm
+</pre></div>
+
+
+<p>создаём логические разделы LVM:</p>
+<div class="highlight"><pre>lvcreate -L 8G MyStorage -n swapvol
+lvcreate -L 15G MyStorage -n rootvol
+lvcreate -l +100%FREE MyStorage -n homevol
+</pre></div>
+
+
+<p>форматируем разделы:</p>
+<div class="highlight"><pre>mkfs.ext4 /dev/mapper/MyStorage-rootvol
+mkfs.ext4 /dev/mapper/MyStorage-homevol
+mkswap /dev/mapper/MyStorage-swapvol
+</pre></div>
+
+
+<p>наконец-то монтируем</p>
+<div class="highlight"><pre>mount /dev/MyStorage/rootvol /mnt
+mkdir /mnt/home
+mount /dev/MyStorage/homevol /mnt/home
+swapon /dev/MyStorage/swapvol
+</pre></div>
+
+
+<h3 id="boot">подготавливаем boot</h3>
+<div class="highlight"><pre>mkfs.ext2 /dev/sda1
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+</pre></div>
+
+
+<p>Дальше идёт обычная установка системы, до момента генерации <strong>initramfs</strong>.</p>
+<p>Для того, что бы можно было загружаться с lvm надо добавить в <code>/etc/mkinitcpio.conf</code>:</p>
+<div class="highlight"><pre>/etc/mkinitcpio.conf:
+<span class="nv">HOOKS</span><span class="o">=</span><span class="s2">&quot;... encrypt lvm2 resume ... filesystems ...&quot;</span>
+</pre></div>
+
+
+<p><strong>encrypted</strong>, <strong>lvm2</strong> и <strong>resume</strong> должны стоять перед <strong>filesystems</strong></p>
+<h3 id="_2">конфигурация загрузчика</h3>
+<p>Перед генерацией конфига <em>grub</em>, необходимо добавить информацию о зашифрованных разделах в <code>/etc/default/grub</code>:</p>
+<div class="highlight"><pre>...
+<span class="nv">GRUB_CMDLINE_LINUX_DEFAULT</span><span class="o">=</span><span class="s2">&quot;quiet resume=/dev/MyStorage/swapvol&quot;</span>
+<span class="nv">GRUB_CMDLINE_LINUX</span><span class="o">=</span><span class="s2">&quot;cryptdevice=/dev/sda2:MyStorage \</span>
+<span class="s2">root=/dev/mapper/MyStorage-rootvol&quot;</span>
+...
+</pre></div>
+
+
+<p>Собственно всё.</p>
+<p><a href="https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#LUKS_on_LVM">ссылка на оригинал</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

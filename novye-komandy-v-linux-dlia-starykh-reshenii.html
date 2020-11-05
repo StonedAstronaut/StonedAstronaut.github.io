@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>Новые команды в Linux для старых решений - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,21 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="linux" />
+        <meta name="description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Новые команды в Linux для старых решений"/>
+        <meta property="og:url" content="https://ipkalm.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"/>
+        <meta property="og:description" content="Собственно копипаста отсюда вместо netstat используем ss: ss -lpn вместо ifconfig используем ip addr: Раньше для вкл/выкл определенного интерфейса использовали ifconfig eth0 up теперь так: ip link set dev eth0 up Для конфигурирования интерфейса: ifconfig eth0 10.0.0.2/16 теперь: ip addr dev eth0 add 10.0 ..."/>
+        <meta property="article:published_time" content="2015-05-20" />
+            <meta property="article:section" content="linux" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:author" content="ipkalm" />
 
 
     <!-- Bootstrap -->
@@ -62,7 +68,7 @@ astro blog            </a>
                         <li >
                             <a href="https://ipkalm.github.io/category/java.html">Java</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -90,8 +96,74 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/novye-komandy-v-linux-dlia-starykh-reshenii.html"
+                       rel="bookmark"
+                       title="Permalink to Новые команды в Linux для старых решений">
+                        Новые команды в Linux для старых решений
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-05-20T18:17:00+06:00"> Wed 20 May 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Собственно копипаста <a href="http://bneijt.nl/blog/post/new-linux-commands-for-old-habbits/">отсюда</a></p>
+<hr />
+<h3 id="netstat-ss">вместо <em>netstat</em> используем <em>ss</em>:</h3>
+<div class="highlight"><pre>ss -lpn
+</pre></div>
+
+
+<h3 id="ifconfig-ip-addr">вместо <em>ifconfig</em> используем <em>ip addr</em>:</h3>
+<p>Раньше для вкл/выкл определенного интерфейса использовали</p>
+<div class="highlight"><pre>ifconfig eth0 up
+</pre></div>
+
+
+<p>теперь так:</p>
+<div class="highlight"><pre>ip link <span class="nb">set </span>dev eth0 up
+</pre></div>
+
+
+<p>Для конфигурирования интерфейса:</p>
+<div class="highlight"><pre>ifconfig eth0 10.0.0.2/16
+</pre></div>
+
+
+<p>теперь:</p>
+<div class="highlight"><pre>ip addr dev eth0 add 10.0.0.2/16
+</pre></div>
+
+
+<h3 id="ps-aux-grep-pgrep-af">вместо <em>ps aux | grep ...</em> используем <em>pgrep -af</em></h3>
+<div class="highlight"><pre>ps aux <span class="p">|</span> grep rtorrent
+</pre></div>
+
+
+<p>теперь:</p>
+<div class="highlight"><pre>pgrep -af rtorrent
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

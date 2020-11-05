@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>Сравнение каталогов в *unix. diff - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,22 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/sravnenie-katalogov-v-unix-diff.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="linux,diff" />
+        <meta name="description" content="Сравнение каталогов утилитой diff осуществляется следующим образом: $ diff -urN dir1 dir2 &gt; out.diff $ mc -e out.diff где ключи diff -u унифицированный метод -r рекурсивно -N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. &#34;Сравнение каталогов&#34;. Возможно ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Сравнение каталогов в *unix. diff"/>
+        <meta property="og:url" content="https://ipkalm.github.io/sravnenie-katalogov-v-unix-diff.html"/>
+        <meta property="og:description" content="Сравнение каталогов утилитой diff осуществляется следующим образом: $ diff -urN dir1 dir2 &gt; out.diff $ mc -e out.diff где ключи diff -u унифицированный метод -r рекурсивно -N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. &#34;Сравнение каталогов&#34;. Возможно ..."/>
+        <meta property="article:published_time" content="2015-02-04" />
+            <meta property="article:section" content="linux" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="diff" />
+            <meta property="article:author" content="ipkalm" />
 
 
     <!-- Bootstrap -->
@@ -62,7 +69,7 @@ astro blog            </a>
                         <li >
                             <a href="https://ipkalm.github.io/category/java.html">Java</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -90,8 +97,61 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/sravnenie-katalogov-v-unix-diff.html"
+                       rel="bookmark"
+                       title="Permalink to Сравнение каталогов в *unix. diff">
+                        Сравнение каталогов в *unix. diff
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-02-04T21:00:00+06:00"> Wed 04 February 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://ipkalm.github.io/tag/diff.html">diff</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Сравнение каталогов утилитой diff осуществляется следующим образом:</p>
+<div class="highlight"><pre><span class="nv">$ </span>diff -urN dir1 dir2  &gt; out.diff
+
+
+<span class="nv">$ </span>mc -e out.diff
+</pre></div>
+
+
+<p>где
+ключи diff</p>
+<p>-u унифицированный метод</p>
+<p>-r рекурсивно </p>
+<p>-N При сравнении каталогов, если файл найден только в одном каталоге, считает что он находится и во втором, но является пустым. См. "Сравнение каталогов". </p>
+<p>Возможно использование 'diff' для сравнения некоторых или всех файлов в двух каталогах. Когда оба аргумента-имена файлов для 'diff' ­ каталоги, он сравнивает каждый файл, содержащийся в обоих каталогах, в алфавитном порядке имен файлов. Обычно 'diff' не упоминает о парах неотличающихся файлов, но с опцией '-s' или '--report-identical-files', он будет сообщать и о таких парах. Обычно 'diff' сообщает о подкаталогах, общих для обоих каталогов, не сравнивая файлы в них, но с помощью опции '-r' или '--recursive', он бужет сравнивать соответствующие файлы в дереве каталогов, опускаясь до самых глубоких каталогов.</p>
+<p>Для имен файлов, содержащихся только в одном каталоге, 'diff' обычно не показывает текста этих файлов, сообщая только, что файлы находятся в одном каталоге и отсутствуют в другом. Можно заставить 'diff' поступать так, как если бы соответствующие файлы существовали и в другом каталоге, но являлись пустыми, тогда в результатах будет присутствовать полный текст таких файлов. (Такие отличия будут рассматриваться как вставки или удаления, в зависимости от того существует файл в первой или второй директории.) Чтобы добиться этого используйте опцию '-N' или '--new-file'.</p>
+<p>Если в более старом каталоге содержится один или более больших файлов, не содержащихся в более новом, можно уменьшить patch с помощью опции '-P' или '--unidirectional-new-file' вместо '-N'. Эта опция подобна '-N', за исключением того, что она вставляет только содержимое файлов, появившихся во втором каталоге, а не в первом (т.е. добавленных файлов). В начале patch пишется инструкция для пользователей, применяющих patch, - стереть удаленные файлы, перед применением (см. подробнее о составлении patch-ей: "Составление patch-ей").</p>
+<p>Для игнорирования некоторых файлов при сравнении каталогов, используйте опцию '-x PATTERN' или '--exclude=PATTERN'. Эта опция игнорирует все файлы или поддиректории, чьи базовые имена соответствуют шаблону оболочки PATTERN. В отличие от оболочки, точка в начале имени файла рассматривается так же, как символ <em>. Следует заключать PATTERN в апострофы, чтобы оболочка не истоловала их неправильно. Например, опция '-x '</em>.[ao]'' игнорирует все файлы, имена которых заканчиваются на '.a' или '.o'.</p>
+<p>Информация, указанная в этой опции, сохраняется, если ее использовать несколько раз. Например, использование опций '-x 'RCS' -x '*,v'' задает игнорирование всех файлов и подкаталогов, имеющих имя 'RCS' или заканчивающихся на ',v'.</p>
+<p>Если необходимо использовать эту опцию по несколько раз, можно вместо этого поместить шаблоны в файл, по одному на строку и использовать опцию '-X FILE' или '--exclude-from=FILE'.</p>
+<p>Если два каталога находились в процессе сравнения и этот процесс был прерван, позже возможно вернуться к сравнению и продолжить его с того же места с помощью опции '-S FILE' или '--starting-file=FILE'. После этого сравниваться будут только файл и FILE и следующеи за ним в алфавитном порядке, в верхнем уровне директории.</p>
+<p>Стырено с <a href="http://rus-linux.net">rus-linux.net</a> и <a href="http://genaev.com">genaev.com</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

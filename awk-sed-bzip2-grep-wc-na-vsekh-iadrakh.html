@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>awk, sed, bzip2, grep, wc на всех ядрах - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,26 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="linux,grep,awk,sed,bzip2,parallel" />
+        <meta name="description" content="Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (grep) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты grep, bzip2, wc, awk, sed и т.д. однопоточные ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="awk, sed, bzip2, grep, wc на всех ядрах"/>
+        <meta property="og:url" content="https://ipkalm.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html"/>
+        <meta property="og:description" content="Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (grep) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты grep, bzip2, wc, awk, sed и т.д. однопоточные ..."/>
+        <meta property="article:published_time" content="2015-08-03" />
+            <meta property="article:section" content="linux" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="grep" />
+            <meta property="article:tag" content="awk" />
+            <meta property="article:tag" content="sed" />
+            <meta property="article:tag" content="bzip2" />
+            <meta property="article:tag" content="parallel" />
+            <meta property="article:author" content="ipkalm" />
 
 
     <!-- Bootstrap -->
@@ -62,7 +73,7 @@ astro blog            </a>
                         <li >
                             <a href="https://ipkalm.github.io/category/java.html">Java</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://ipkalm.github.io/category/linux.html">Linux</a>
                         </li>
                         <li >
@@ -90,8 +101,105 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/awk-sed-bzip2-grep-wc-na-vsekh-iadrakh.html"
+                       rel="bookmark"
+                       title="Permalink to awk, sed, bzip2, grep, wc на всех ядрах">
+                        awk, sed, bzip2, grep, wc на всех ядрах
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-03T17:32:00+06:00"> Mon 03 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://ipkalm.github.io/tag/grep.html">grep</a>
+        /
+	<a href="https://ipkalm.github.io/tag/awk.html">awk</a>
+        /
+	<a href="https://ipkalm.github.io/tag/sed.html">sed</a>
+        /
+	<a href="https://ipkalm.github.io/tag/bzip2.html">bzip2</a>
+        /
+	<a href="https://ipkalm.github.io/tag/parallel.html">parallel</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                    <div class="toc">
+                    <div class="toc">
+<ul>
+<li><a href="#bzip2">BZIP2</a></li>
+<li><a href="#grep">GREP</a></li>
+<li><a href="#awk">AWK</a></li>
+<li><a href="#wc">WC</a></li>
+<li><a href="#sed">SED</a></li>
+</ul>
+</div>
+                    </div>
+                <p>Существует такая проблема: вы хотите добавить огромный список (сотни мегабайт) или запустить поиск по регулярному выражению (<strong>grep</strong>) на нем, или совершить какую-то еще трудно распараллеливаемую операцию. У вас, вероятно, есть четыре ядра или даже больше, но наши проверенные и надежные инструменты <strong>grep</strong>, <strong>bzip2</strong>, <strong>wc</strong>, <strong>awk</strong>, <strong>sed</strong> и т.д. однопоточные и будут использовать всего одно ядро. Как сказал бы Картман, «Как мне добраться до этих ядер?» Давайте использовать все четыре ядра нашей Linux-машины с помощью <strong>GNU Parallel</strong>, небольшой map-reduce магии и малоизвестного параметра <code>--pipes</code> (также известного как <code>--spreadstdin</code>). Поверьте, удовольствие от работы прямо пропорционально количеству задействованных ядер!</p>
+
+<h3 id="bzip2">BZIP2</h3>
+<p><strong>bzip2</strong> сжимает лучше, чем <strong>gzip</strong>, но он такой медленый! К счатью, эта проблема решаема. Просто вместо этого:</p>
+<div class="highlight"><pre>cat bigfile.bin <span class="p">|</span> bzip2 --best <span class="p">&amp;</span>gt<span class="p">;</span> compressedfile.bz2
+</pre></div>
+<p>можно написать вот это:</p>
+<div class="highlight"><pre>cat bigfile.bin <span class="p">|</span> parallel --pipe --recend <span class="s1">''</span> -k bzip2 --best <span class="p">&amp;</span>gt<span class="p">;</span> compressedfile.bz2
+</pre></div>
+<p><strong>GNU Parallel</strong> особенно ускоряет <strong>bzip2</strong> за счет работы на нескольких ядрах. Дайте ему свободу и вы будете вознаграждены.</p>
+<h3 id="grep">GREP</h3>
+<p>Если у вас имеется огромный текстовый файл для прогона <strong>grep</strong>'ом, то лучше используйте вместо этого:</p>
+<div class="highlight"><pre>grep pattern bigfile.txt
+</pre></div>
+<p>вот это:</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe grep <span class="s1">'pattern'</span>
+</pre></div>
+<p>или это:</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --block 10M --pipe grep <span class="s1">'pattern'</span>
+</pre></div>
+<p>Вторая рекомендуемая команда показывает, как использовать команду <code>--block</code> с 10<strong>MB</strong> данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.</p>
+<h3 id="awk">AWK</h3>
+<p>А вот это пример того, как с помощью <strong>awk</strong> добавить числа в очень большой файл. Вместо этого:</p>
+<div class="highlight"><pre>cat rands20M.txt <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
+<p>попробуйте это:</p>
+<div class="highlight"><pre>cat rands20M.txt <span class="p">|</span> parallel --pipe awk <span class="se">\'</span><span class="o">{</span>s+<span class="o">=</span><span class="se">\$</span>1<span class="o">}</span> END <span class="o">{</span>print s<span class="o">}</span><span class="se">\'</span> <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
+<p>Здесь <code>--pipe</code> позволяет использовать несколько чанков для вызова <strong>awk</strong>, записывая промежуточные результаты, а которые затем сливаются в конечный.</p>
+<h3 id="wc">WC</h3>
+<p>Хотите запустить супер-распараллеленный подсчет строк в файле? Тогда вместо этого:</p>
+<div class="highlight"><pre>wc -l bigfile.txt
+</pre></div>
+<p>запустите вот это:</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe wc -l <span class="p">|</span> awk <span class="s1">'{s+=$1} END {print s}'</span>
+</pre></div>
+<p>Вот это уже здорово. Что происходит? При распараллеленном вызове мы направляем несколько вызовов <code>wc -l</code>, формируя промежуточные результаты, а затем вызываем awk.</p>
+<h3 id="sed">SED</h3>
+<p>Захотелось сделать огромное количество перемещений в большом файле? Тогда забудьте об этом:</p>
+<div class="highlight"><pre>sed s^old^new^g bigfile.txt
+</pre></div>
+<p>и используйте вот это:</p>
+<div class="highlight"><pre>cat bigfile.txt <span class="p">|</span> parallel --pipe sed s^old^new^g
+</pre></div>
+<p>... и затем направьте вывод в ваш любимый файл.</p>
+<p><a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">source</a></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

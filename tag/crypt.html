@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>crypt - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -12,7 +12,8 @@
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
 
-        <meta name="author" content="ipkalm" />
+    <meta name="author" content="ipkalm" />
+    <meta name="keywords" content="crypt" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
@@ -90,8 +91,76 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+            <article>
+                <h2><a href="https://ipkalm.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">Извлечение ключей RSA методом акустического криптоанализа</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-03T17:38:00+06:00"> Mon 03 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/crypt.html">crypt</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Известный криптограф Ади Шамир с коллегами опубликовал научную работу под названием «Извлечение ключа RSA путем криптоанализа с низкой частотой дискретизации» (http://www.tau.ac.il/~tromer/papers/acoustic-20131218..).</p>
+<p>Многие компьютеры издают высокочастотный звук во время работы, из-за вибрации в некоторых электронных компонентах (конденсаторах) из-за микроскопического изменения напряжения в CPU при ...</p>
+                    <a class="btn btn-default btn-xs" href="https://ipkalm.github.io/izvlechenie-kliuchei-rsa-metodom-akusticheskogo-kriptoanaliza.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+            <article>
+                <h2><a href="https://ipkalm.github.io/lvm-on-luks-na-primere-arch.html">LVM on LUKS на примере arch</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-07-26T03:53:00+06:00"> Sun 26 July 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/linux.html">linux</a>
+        /
+	<a href="https://ipkalm.github.io/tag/crypt.html">crypt</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><h2 id="_1">Создаём разделы физические</h2>
+<p>Вот такая структура диска.</p>
+<ul>
+<li>
+<p><code>/dev/sda1 -&gt; /boot</code></p>
+</li>
+<li>
+<p><code>/dev/sda2 -&gt; LVM</code></p>
+</li>
+</ul>
+<h3 id="lvm">Шифруем раздел LVM</h3>
+<div class="highlight"><pre>cryptsetup luksFormat -c aes-xts-plain64 -s <span class="m">512</span> /dev/sda2
+</pre></div>
+
+
+<p>больше о параметрах шифрования см. <a href="https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Encryption_options_for_LUKS_mode">здесь</a></p>
+<div class="highlight"><pre>cryptsetup open --type luks /dev/sda2 lvm
+</pre></div>
+
+
+<h3 id="lvm_1">Создаём разделы на LVM</h3>
+<p>создаём физический раздел LVM:</p>
+<div class="highlight"><pre>pvcreate /dev/mapper/lvm
+</pre></div>
+
+
+<p>создаём ...</p>
+                    <a class="btn btn-default btn-xs" href="https://ipkalm.github.io/lvm-on-luks-na-primere-arch.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>О сайте - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,16 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/pages/about.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="description" content="Привет. Этот блог сделан на Pelican. Здесь буду размещать всякие материалы о IT. Пример кода: @app.route(&#39;/&#39;) def index(): return render_template(&#39;index.html&#39;, posts=blog.posts)" />
 
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+    <meta property="og:site_name" content="astro blog" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="О сайте"/>
+    <meta property="og:url" content="https://ipkalm.github.io/pages/about.html"/>
+    <meta property="og:description" content="Привет. Этот блог сделан на Pelican. Здесь буду размещать всякие материалы о IT. Пример кода: @app.route(&#39;/&#39;) def index(): return render_template(&#39;index.html&#39;, posts=blog.posts)" />
 
 
     <!-- Bootstrap -->
@@ -50,7 +51,7 @@ astro blog            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                         <li><a href="https://ipkalm.github.io/pages/about.html">
+                         <li class="active"><a href="https://ipkalm.github.io/pages/about.html">
                              О сайте
                           </a></li>
                         <li >
@@ -90,8 +91,20 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content" class="body">
+        <h1 class="entry-title">О сайте</h1>
+        
+        <div class="entry-content">
+            <h2 id="_1">Привет.</h2>
+<p>Этот блог сделан на <strong>Pelican</strong>.</p>
+<p>Здесь буду размещать всякие материалы о IT.</p>
+<p>Пример кода:</p>
+<div class="highlight"><pre><span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+   <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">&#39;index.html&#39;</span><span class="p">,</span> <span class="n">posts</span><span class="o">=</span><span class="n">blog</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>
+</pre></div>
+        </div>
+    </section>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

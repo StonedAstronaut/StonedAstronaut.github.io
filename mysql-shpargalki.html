@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>MySQL шпаргалки - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -11,15 +11,22 @@
 
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
+<link rel="canonical" href="https://ipkalm.github.io/mysql-shpargalki.html">
 
         <meta name="author" content="ipkalm" />
+        <meta name="keywords" content="mysql,habr" />
+        <meta name="description" content="Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных. Сегодня я решил опубликовать свои шпаргалки, на самые часто встречающиеся ошибки при работе с MySQL. Работа с бекапами Делаем бекап mysqldump -u USER -pPASSWORD DATABASE &gt; /path/to/file/dump.sql Создаём структуру ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="astro blog"/>
-        <meta property="og:url" content="https://ipkalm.github.io"/>
-        <meta property="og:description" content="astro blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="MySQL шпаргалки"/>
+        <meta property="og:url" content="https://ipkalm.github.io/mysql-shpargalki.html"/>
+        <meta property="og:description" content="Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных. Сегодня я решил опубликовать свои шпаргалки, на самые часто встречающиеся ошибки при работе с MySQL. Работа с бекапами Делаем бекап mysqldump -u USER -pPASSWORD DATABASE &gt; /path/to/file/dump.sql Создаём структуру ..."/>
+        <meta property="article:published_time" content="2015-08-03" />
+            <meta property="article:section" content="copy\paste" />
+            <meta property="article:tag" content="mysql" />
+            <meta property="article:tag" content="habr" />
+            <meta property="article:author" content="ipkalm" />
 
 
     <!-- Bootstrap -->
@@ -53,7 +60,7 @@ astro blog            </a>
                          <li><a href="https://ipkalm.github.io/pages/about.html">
                              О сайте
                           </a></li>
-                        <li >
+                        <li class="active">
                             <a href="https://ipkalm.github.io/category/copypaste.html">Copy\paste</a>
                         </li>
                         <li >
@@ -90,8 +97,111 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ipkalm.github.io/mysql-shpargalki.html"
+                       rel="bookmark"
+                       title="Permalink to MySQL шпаргалки">
+                        MySQL шпаргалки
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-08-03T18:28:00+06:00"> Mon 03 August 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/mysql.html">mysql</a>
+        /
+	<a href="https://ipkalm.github.io/tag/habr.html">habr</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Часто, когда разрабатываешь сайт, замечаешь, как на одни и те же грабли наступают разработчики при проектировании базы данных.
+Сегодня я решил опубликовать свои шпаргалки, на самые часто встречающиеся ошибки при работе с MySQL.</p>
+<p>Работа с бекапами
+Делаем бекап
+mysqldump -u USER -pPASSWORD DATABASE &gt; /path/to/file/dump.sql</p>
+<p>Создаём структуру базы без данных
+mysqldump —no-data - u USER -pPASSWORD DATABASE &gt; /path/to/file/schema.sql</p>
+<p>Если нужно сделать дамп только одной или нескольких таблиц
+mysqldump -u USER -pPASSWORD DATABASE TABLE1 TABLE2 TABLE3 &gt; /path/to/file/dump_table.sql</p>
+<p>Создаём бекап и сразу его архивируем
+mysqldump -u USER -pPASSWORD DATABASE | gzip &gt; /path/to/outputfile.sql.gz</p>
+<p>Создание бекапа с указанием его даты
+mysqldump -u USER -pPASSWORD DATABASE | gzip &gt; <code>date +/path/to/outputfile.sql.%Y%m%d.%H%M%S.gz</code></p>
+<p>Заливаем бекап в базу данных
+mysql -u USER -pPASSWORD DATABASE &lt; /path/to/dump.sql</p>
+<p>Заливаем архив бекапа в базу
+gunzip &lt; /path/to/outputfile.sql.gz | mysql -u USER -pPASSWORD DATABASE
+или так
+zcat /path/to/outputfile.sql.gz | mysql -u USER -pPASSWORD DATABASE</p>
+<p>Создаём новую базу данных
+mysqladmin -u USER -pPASSWORD create NEWDATABASE</p>
+<p>Удобно использовать бекап с дополнительными опциями -Q -c -e, т.е.
+mysqldump -Q -c -e -u USER -pPASSWORD DATABASE &gt; /path/to/file/dump.sql, где:
+-Q оборачивает имена обратными кавычками
+-c делает полную вставку, включая имена колонок
+-e делает расширенную вставку. Итоговый файл получается меньше и делается он чуть быстрее</p>
+<p>Для просмотра списка баз данных можно использовать команду:
+mysqlshow -u USER -pPASSWORD</p>
+<p>А так же можно посмотреть список таблиц базы:
+mysqlshow -u USER -pPASSWORD DATABASE</p>
+<p>Для таблиц InnoDB надо добавлять —single-transaction, это гарантирует целостность данных бекапа.
+Для таблиц MyISAN это не актуально, ибо они не поддерживают транзакционность.</p>
+<p>Подробнее</p>
+<p>Общие факты
+Полезно под каждую базу на боевом сервере создавать своего пользователя
+Кодировка базы может быть любой, если она UTF8
+В большинстве случаев лучше использовать движок InnoDB
+В php лучше забыть про сильно устаревшее расширение mysql и по-возможности использовать pdo или mysqli
+Новую копию MySQL всегда можно настроить и оптимизировать
+Без особой нужды не стоит открывать MySQL наружу. Вместо этого можно сделать проброс портов
+ssh -fNL LOCAL_PORT:localhost:3306 REMOTE_USER@REMOTE_HOST</p>
+<p>Работа с данными</p>
+<p>Числа
+На 32-битных системах практически нет смысла ставить для типа INTEGER свойство UNSIGNED, так как такие большие числа в php не поддерживаются.
+На 64-битных системах, php поддерживает большие числа, вплоть до MySQL BIGINT со знаком.
+Связанные таблицы («Foreign keys») должны иметь полное сходство по структуре ключей. Т.е. если у нас на одной таблице для поля указано «INTEGER UNSIGNED DEFAULT 0 NOT NULL» то и на другой должно быть указано аналогично
+Для хранения булевых значений, нужно использовать TINYINT(1)
+А деньги лучше хранить в DECIMAL(10, 2), где первое число обозначает количество всех знаков, включая запятую, а второе — количество знаков после запятой. Итого, у нас получится что DECIMAL(10,2) может сохранить 9999999,99</p>
+<p>Строки
+В старых версиях (до 5.0.3) VARCHAR была ограничена 255 символами, но сейчас можно указывать до 65535 символов
+Помните, что тип TEXT ограничен только 64 килобитами, поэтому что бы сохранять «Войну и Мир» пользуйтесь «LONGTEXT»
+Самая правильная кодировка для вашей БД UTF8</p>
+<p>Даты
+Не забывайте, что
+DATE, TIME, DATETIME — выводятся в виде строк, поэтому поиск и сравнение дат происходит через преобразование
+TIMESTAMP — хранится в виде UNIX_TIMESTAMP, и можно указать автоматически обновлять колонку
+Сравнивая типы данных DATETIME и TIMESTAMP, не забывайте делать преобразование типов, например:
+SELECT * FROM table WHERE <code>datetime</code> = DATE(<code>timestamp</code>)</p>
+<p>Перечисления
+Для перечислений правильно использовать тип ENUM
+Правильно пишется так: ENUM('мама', 'мыла', 'раму')
+Можно ставить значение по-умолчанию, как и для любой строки
+В базе поле с перечислением хранится как число, поэтому скорость работы — потрясающе высокая
+Количество перечислений ~ 65 тысяч</p>
+<p>dev.mysql.com/doc/refman/4.1/en/storage-requirements...
+help.scibit.com/mascon/masconMySQL_Field_Types.html</p>
+<p>Отладка
+Если запросы тормозят, то можно включить лог для медленных запросов в /etc/mysql/my.cnf
+А потом оптимизировать запросы через EXPLAIN
+И наблюдать за запросами удобно через программу mytop</p>
+<p>©habrahabr</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>

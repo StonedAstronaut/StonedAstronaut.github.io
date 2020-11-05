@@ -2,7 +2,7 @@
 <html lang="ru"
 >
 <head>
-    <title>Authors - astro blog</title>
+    <title>sqlalchemy - astro blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -12,7 +12,8 @@
     <link href="https://ipkalm.github.io/images/favicon.png" rel="icon">
 
 
-        <meta name="author" content="ipkalm" />
+    <meta name="author" content="ipkalm" />
+    <meta name="keywords" content="sqlalchemy" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="astro blog" />
@@ -90,8 +91,38 @@ astro blog            </a>
     <div class="row">
         <div class="col-sm-9">
 
-    <h1>Authors on astro blog</h1>
-        <li><a href="https://ipkalm.github.io/author/ipkalm.html">ipkalm</a> (38)</li>
+            <article>
+                <h2><a href="https://ipkalm.github.io/postroenie-sviazei-v-sqlalchemy.html">Построение связей в SQLAlchemy</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-03-04T09:30:00+06:00"> Wed 04 March 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ipkalm.github.io/tag/sqlalchemy.html">sqlalchemy</a>
+        /
+	<a href="https://ipkalm.github.io/tag/orm.html">orm</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary"><p>Связи в sqlachemy бывают 4-х видов:</p>
+<ul>
+<li>OTM (one-to-many) - один к многим</li>
+<li>MTO (many-to-one) - многие к одному</li>
+<li>OTO (one-to-one) - один к одному</li>
+<li>MTM (many-to-many) - многие к многим</li>
+</ul>
+<p>Релизация этих связей:</p>
+<h3 id="otm">OTM :</h3>
+<p>Для указания связи OTM, создается колонка с ForeignKey в дочернем классе. При этом сама связь (relationship()) объявляется в Родителе. Для ...</p>
+                    <a class="btn btn-default btn-xs" href="https://ipkalm.github.io/postroenie-sviazei-v-sqlalchemy.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
