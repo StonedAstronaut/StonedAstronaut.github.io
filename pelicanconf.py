@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'ipkalm'
 SITENAME = 'astro blog'
-SITEURL = ''
+SITEURL = 'https://ipkalm.github.io'
 
 PLUGIN_PATHS = ['plugins',]
 PLUGINS = [
