@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = 'Stoned Astronaut'
-SITENAME = 'Astro blog'
+AUTHOR = 'ipkalm'
+SITENAME = 'astro blog'
 SITEURL = ''
 
 PLUGIN_PATHS = ['plugins',]
@@ -54,7 +54,7 @@ LINKS = (('Pelican', 'http://getpelican.com/'),
          )
 
 # Social widget
-SOCIAL = (('github','https://github.com/StonedAstronaut'),
+SOCIAL = (('github','https://github.com/ipkalm'),
           ('minds', 'https://www.minds.com/stonedastronaut'),
           ('rss','/feeds/all.atom.xml'),
           )
@@ -73,8 +73,8 @@ FAVICON = 'images/favicon.png'
 
 #GOOGLE_ANALYTICS = 'UA-43336913-2'
 
-# GITHUB_URL = 'https://github.com/StonedAstronaut'
-# GITHUB_USER = 'StonedAstronaut'
+# GITHUB_URL = 'https://github.com/ipkalm'
+# GITHUB_USER = 'ipkalm'
 # GITHUB_REPO_COUNT = True
 # GITHUB_SHOW_USER_LINK = True
 
