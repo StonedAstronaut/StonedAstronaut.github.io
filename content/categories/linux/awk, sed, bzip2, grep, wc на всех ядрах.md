@@ -38,6 +38,11 @@ tags: linux, grep, awk, sed, bzip2, parallel
     :::bash
     cat bigfile.txt | parallel --block 10M --pipe grep 'pattern'
 
+или это:
+
+    :::bash
+    parallel --pipepart -a bigfile.txt --block 30m wc -l | awk '{s+=$1} END {print s}'
+
 Вторая рекомендуемая команда показывает, как использовать команду `--block` с 10**MB** данных из вашего файла. С этим параметром можно поиграться, чтобы понять, какой объем данных вы хотите обрабатывать одним ядром. Вот здесь можно посмотреть, как обрабатывать grep'ом не один файл, а несколько.
 
 ### AWK
